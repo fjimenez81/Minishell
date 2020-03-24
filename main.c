@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/24 18:08:22 by fernando         ###   ########.fr       */
+/*   Updated: 2020/03/24 21:34:55 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int main(int ac, char **av, char **envp)
    	{
 		//if (!(getcwd(pwd, -1)))
 			//return (1);
-		ft_putstr_fd("[Minishell] ~> ", 1);
+		ft_putstr_fd("\033[1;92m[Minishell] ~>\033[0m ", 1);
 		if (get_next_line(0, &line) <= 0)
 			break ;
 		args = ft_split(line, ';');
@@ -85,6 +85,11 @@ int main(int ac, char **av, char **envp)
 			{
 				if (!ft_strcmp(args[1], ".."))
 	  				chdir("..");
+				else
+				{
+					ft_arg_cd(args, command);
+					//ft_putstr_fd("\n", 1);
+				}	
 			}
 			else
 				continue ;	
@@ -96,7 +101,7 @@ int main(int ac, char **av, char **envp)
 		}
 		else
 		{
-			ft_putstr_fd("[Minishell] : ", 1);
+			ft_putstr_fd("\033[1;31m[Minishell] : ", 1);
 			ft_putstr_fd("command not found : ", 1);
 			ft_putstr_fd(line, 1);
 			ft_putstr_fd("\n", 1);
@@ -105,5 +110,6 @@ int main(int ac, char **av, char **envp)
 		
 	  	//status = 0;
    	}
+	system("leaks minishell");
     return (0);
 }

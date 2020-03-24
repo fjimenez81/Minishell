@@ -6,7 +6,7 @@
 #    By: fernando <fernando@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/18 08:07:14 by fjimenez          #+#    #+#              #
-#    Updated: 2020/03/24 13:50:03 by fernando         ###   ########.fr        #
+#    Updated: 2020/03/24 20:33:39 by fernando         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,8 @@ RED = \033[1;31m
 GREEN = \033[1;32m
 BLUE = \033[1;34m
 RESET = \033[0m
+PURPLE = \033[0;35m
+YELLOW = \033[0;33m
 
 .PHONY: re clean fclean all
 
@@ -62,7 +64,7 @@ bonus:
 
 clean:
 	@rm -f $(OFILES) $(BONUSOBJ)
-	@echo "$(RED)(LIBFT)\t$(GREEN)====REMOVED====$(RESET)"
+	@echo "$(RED)(LIBFT)\t$(PURPLE)====REMOVED====$(RESET)"
 
 fclean: clean
 	@rm -f $(NAME)

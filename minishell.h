@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/24 15:37:42 by fernando         ###   ########.fr       */
+/*   Updated: 2020/03/24 21:09:04 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,6 @@ char	*ft_strnew(size_t size);
 int     ft_count_args(char **args);
 
 int     ft_arg_echo(char **args, int command);
+int     ft_arg_cd(char **args, int command);
 
 #endif

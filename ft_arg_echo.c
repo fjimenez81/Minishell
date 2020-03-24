@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 15:26:37 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/24 18:07:03 by fernando         ###   ########.fr       */
+/*   Updated: 2020/03/24 20:28:52 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,20 @@ static char *ft_echo_aux(char *args)
 {
     char *tmp;
     char **aux;
+    int len;
     int i;
-
+    
+    len = ft_strlen(args) - 1;
     i = 0;
     while (args[i])
     {
-        if (args[i] == '\"')
+        if (args[i] == '\"' && args[len] == '\"')
             aux =ft_split(args, '\"');
-        else if (args[i] == '\'')
+        else if (args[i] == '\'' && args[len] == '\'')
             aux =ft_split(args, '\'');
+        else if ((args[i] == '\'' && args[i + len] == '\"') ||
+            (args[i] == '\"' && args[i + len] == '\''))
+            return (NULL);
         else
             aux = &args;
         tmp = aux[0];
