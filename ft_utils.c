@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/23 16:53:06 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/24 15:28:35 by fernando         ###   ########.fr       */
+/*   Updated: 2020/03/26 18:28:51 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,15 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 char	*ft_strnew(size_t size)
 {
-	return ((char *)malloc(sizeof(char) * (size + 1)));
+	char	*str;
+
+	if (!(str = (char*)malloc(sizeof(char) * size + 1)))
+        return (NULL);
+	ft_memset((char*)str, (int)'\0', size + 1);
+	return (str);
 }
 
-int ft_count_args(char **args)
+int ft_len_tab(char **args)
 {
 	int i;
 
@@ -35,4 +40,22 @@ int ft_count_args(char **args)
 	while(*args++)
 		i++;
 	return (i);
+}
+
+void	*ft_memalloc(size_t size)
+{
+	unsigned char *mem;
+
+	if (!(mem = (unsigned char*)malloc(sizeof(size_t) * size)))
+        return (NULL);
+	ft_bzero(mem, size);
+	return (mem);
+}
+
+void	ft_str_free(char **as)
+{
+	if (!as || !*as)
+		return ;
+	free(*as);
+	*as = NULL;
 }

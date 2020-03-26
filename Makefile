@@ -6,7 +6,7 @@
 #    By: fernando <fernando@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/18 21:02:40 by fernando          #+#    #+#              #
-#    Updated: 2020/03/24 21:09:33 by fernando         ###   ########.fr        #
+#    Updated: 2020/03/26 12:02:22 by fernando         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,8 @@ SRC =	main \
 		ft_utils \
 		ft_arg_echo \
 		ft_arg_cd \
+		ft_arg_env \
+		ft_str_tok \
 
 SRCGNL = gnl/get_next_line.c gnl/get_next_line_utils.c
 

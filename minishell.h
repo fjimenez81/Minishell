@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/24 21:09:04 by fernando         ###   ########.fr       */
+/*   Updated: 2020/03/26 18:29:05 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,19 @@
 
 # define BUFFER_SIZE 2
 
+char    **g_envp;
+
 int	    ft_strcmp(const char *s1, const char *s2);
 char	*ft_strnew(size_t size);
-int     ft_count_args(char **args);
+int     ft_len_tab(char **args);
+void	*ft_memalloc(size_t size);
+void	ft_str_free(char **as);
 
-int     ft_arg_echo(char **args, int command);
+
+char	**ft_str_tok(char *s, char *sep);
+
+int     ft_arg_echo(char *command, char **vars, int args);
 int     ft_arg_cd(char **args, int command);
+int     ft_arg_env(char **args, int command);
 
 #endif

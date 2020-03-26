@@ -1,36 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_arg_cd.c                                        :+:      :+:    :+:   */
+/*   ft_arg_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/03/24 21:08:07 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/26 12:30:29 by fernando         ###   ########.fr       */
+/*   Created: 2020/03/25 13:11:06 by fernando          #+#    #+#             */
+/*   Updated: 2020/03/26 12:29:53 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_dir(char *path)
+static int		print_env(char **env)
 {
-	struct stat s;
+	int i;
 
-	stat(path, &s);
-	if (s.st_mode & S_IFDIR)
-		return (1);
-	return (0);
+	i = -1;
+	while (env[++i])
+		if (ft_strcmp(env[i], "") != 0)
+			ft_putendl_fd(env[i], 1);
+	return (1);
 }
 
-int ft_arg_cd(char **vars, int args)
+int             ft_arg_env(char **vars, int args)
 {
-    char *tmp;
-    if (args)
-    {
-        tmp = ft_strdup(vars[1]);
-        if (!is_dir(tmp))
-            return (-1);
-        chdir(tmp);
-    }
-    return(1);
+    //char	**tmpenv;
+
+    (void)vars;
+	if (args == 1)
+		return (print_env(g_envp));
+	/*else
+	{
+		tmpenv = ft_tabcpy(g_envp);
+		//env_help(args, tmpenv);
+		//free_command(tmpenv);
+	}*/
+	return (1);
 }

@@ -6,109 +6,95 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/24 21:34:55 by fernando         ###   ########.fr       */
+/*   Updated: 2020/03/26 20:19:33 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*void despedida()
-{
-   	printf("Hasta luego compi!!\n");
-   	exit(1);
-}*/
-
-/*static char	*read_line(void)
-{
-	char	*line;
-
-	line = NULL;
-	get_next_line(0, &line);
-	return (line);
-}*/
-
-/*static void	init_env(char ***env, char **envp)
+static void	init_env(char **env)
 {
 	int		i;
-	int		j;
 
+	i = 0;
+	while (env[i])
+		i++;
+	if (!(g_envp = (char **)malloc(sizeof(char*) * (i + 1))))
+		return ;
+	g_envp[i] = NULL;
 	i = -1;
-	while (envp[++i])
-		NULL;
-	(*env) = (char **)malloc(sizeof(char*) * i);
-	i = -1;
-	while (envp[++i])
-	{
-		(*env)[i] = (char *)malloc(PATH_MAX + 1);
-		j = -1;
-		while (envp[i][++j])
-			(*env)[i][j] = envp[i][j];
-		(*env)[i][j] = 0;
-	}
-	(*env)[i] = NULL;
-	i = -1;
+	while (env[++i])
+		g_envp[i] = ft_strdup(env[i]);
 	return ;
-}*/
+}
 
-int main(int ac, char **av, char **envp)
+int main(int ac, char **av, char **env)
 {
-	int status;
-	int command;
+	int args;
+	int j;
+	int i;
+	char **vars;
 	char pwd[PATH_MAX];
 	char *line;
-	char **args;
+	char **command;
 
     //signal(SIGINT, despedida);
 	(void)ac;
 	(void)av;
-	(void)envp;
-	//init_env(&env, envp);
-	status = 1;
-    while(status)
+	init_env(env);
+    while(1)
    	{
-		//if (!(getcwd(pwd, -1)))
-			//return (1);
 		ft_putstr_fd("\033[1;92m[Minishell] ~>\033[0m ", 1);
 		if (get_next_line(0, &line) <= 0)
 			break ;
-		args = ft_split(line, ';');
-		command = ft_count_args(args);
-		if (!ft_strcmp(args[0], "echo"))
+		command = ft_split(line, ';');
+		j = 0;
+		while (command[j])
 		{
-			if (args[1])
-				ft_arg_echo(args, command);
-			ft_putstr_fd("\n", 1);
-		}	
-	  	else if (!ft_strcmp(args[0], "cd") || !ft_strcmp(args[0], "CD"))
-		{
-			if (args[1])
+			vars = ft_str_tok(command[j], " \t\n\r\a\"");
+			args = ft_len_tab(vars);
+			if (!ft_strcmp(vars[0], "echo"))
 			{
-				if (!ft_strcmp(args[1], ".."))
-	  				chdir("..");
-				else
+				if (vars[1])
+					ft_arg_echo(command[j], vars, args);
+				//ft_str_free(&line);
+			}	
+	  		else if (!ft_strcmp(vars[0], "cd") || !ft_strcmp(vars[0], "CD"))
+			{
+				if (vars[1])
 				{
-					ft_arg_cd(args, command);
-					//ft_putstr_fd("\n", 1);
+					if (!ft_strcmp(vars[1], ".."))
+	  					chdir("..");
+					else
+						ft_arg_cd(vars, args);	
 				}	
 			}
+	  		else if (!ft_strcmp(vars[0], "pwd") || !ft_strcmp(vars[0], "PWD"))
+			{
+	  			ft_putendl_fd(getcwd(pwd, -1), 1);
+				ft_str_free(vars);
+			}
+			else if (!ft_strcmp(vars[0], "env"))
+				ft_arg_env(vars, args);
+			else if(!ft_strcmp(vars[0], "exit"))
+			{
+				//printf("Es es un leak : %p\n", 0x7f83d8c02f40);
+				system("leaks minishell");
+				exit(1);
+			}
 			else
-				continue ;	
+			{
+				ft_putstr_fd("\033[1;31m[Minishell] : ", 1);
+				ft_putstr_fd("command not found : ", 1);
+				ft_putendl_fd(line, 1);
+			}
+			j += 1;
 		}
-	  	else if (!ft_strcmp(args[0], "pwd") || !ft_strcmp(args[0], "PWD"))
-		{
-	  		ft_putstr_fd(getcwd(pwd, -1), 1);
-			ft_putstr_fd("\n", 1);
-		}
-		else
-		{
-			ft_putstr_fd("\033[1;31m[Minishell] : ", 1);
-			ft_putstr_fd("command not found : ", 1);
-			ft_putstr_fd(line, 1);
-			ft_putstr_fd("\n", 1);
-			continue ;
-		}
-		
-	  	//status = 0;
+		i = 0;
+		while (command[i])
+			free(command[i++]);
+		free(line);
+		//ft_str_free(vars);
    	}
 	system("leaks minishell");
     return (0);

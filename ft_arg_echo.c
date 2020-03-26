@@ -6,58 +6,71 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 15:26:37 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/24 20:28:52 by fernando         ###   ########.fr       */
+/*   Updated: 2020/03/26 20:09:48 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *ft_echo_aux(char *args)
+static char *ft_echo_aux(char *vars)
 {
     char *tmp;
     char **aux;
     int len;
     int i;
     
-    len = ft_strlen(args) - 1;
+    len = ft_strlen(vars) - 1;
     i = 0;
-    while (args[i])
+    while (vars[i])
     {
-        if (args[i] == '\"' && args[len] == '\"')
-            aux =ft_split(args, '\"');
-        else if (args[i] == '\'' && args[len] == '\'')
-            aux =ft_split(args, '\'');
-        else if ((args[i] == '\'' && args[i + len] == '\"') ||
-            (args[i] == '\"' && args[i + len] == '\''))
+        if (vars[i] == '\"' && vars[len] == '\"')
+            aux =ft_split(vars, '\"');
+        else if (vars[i] == '\'' && vars[len] == '\'')
+            aux =ft_split(vars, '\'');
+        else if ((vars[i] == '\'' && vars[i + len] == '\"') ||
+            (vars[i] == '\"' && vars[i + len] == '\''))
             return (NULL);
         else
-            aux = &args;
+            aux = &vars;
         tmp = aux[0];
         i++;
     }
     return (tmp);
 }
 
-int ft_arg_echo(char **args, int command)
+int ft_arg_echo(char *command, char **vars, int args)
 {
     char *aux;
+    char *tmp;
+	char *tmp2;
+	//char *tmp3;
 
-    if (command)
+    
+    if (args)
     {
-        if (!ft_strcmp(args[1], "-n"))
+        if (!ft_strcmp(vars[1], "-n"))
         {
-            if (args[2])
+            if (vars[2])
             {
-                aux = ft_echo_aux(args[2]);
-                ft_putstr_fd(ft_strdup(aux), 1);
+                tmp = ft_strtrim(command, "echo");
+                tmp2 = ft_strtrim(tmp, " \t-n");
+                aux = ft_echo_aux(tmp2);
+                ft_putendl_fd(ft_strdup(aux), 1);
             }
             else
                 return (0);
         }
-        else if (ft_strcmp(args[1], "-n") != 0)
+        else if (ft_strcmp(vars[1], "-n") != 0)
         {
-            aux = ft_echo_aux(args[1]);
-            ft_putstr_fd(aux, 1);
+            tmp = ft_strtrim(command, "echo");
+            tmp2 = ft_strtrim(tmp, " \t");
+            aux = ft_echo_aux(tmp2);
+			//tmp3 = tmp2;
+            ft_putendl_fd(aux, 1);
+			ft_str_free(vars);
+			free(tmp);
+			//free(command);
+			free(aux);
         }
         return (1);
     }
