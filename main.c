@@ -6,11 +6,20 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/26 20:19:33 by fernando         ###   ########.fr       */
+/*   Updated: 2020/03/27 14:55:33 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static char	*read_line(void)
+{
+	char	*line;
+
+	line = NULL;
+	get_next_line(0, &line);
+	return (line);
+}
 
 static void	init_env(char **env)
 {
@@ -45,8 +54,9 @@ int main(int ac, char **av, char **env)
     while(1)
    	{
 		ft_putstr_fd("\033[1;92m[Minishell] ~>\033[0m ", 1);
-		if (get_next_line(0, &line) <= 0)
-			break ;
+		//if (get_next_line(0, &line) <= 0)
+			//break ;
+		line = read_line();
 		command = ft_split(line, ';');
 		j = 0;
 		while (command[j])
@@ -57,8 +67,8 @@ int main(int ac, char **av, char **env)
 			{
 				if (vars[1])
 					ft_arg_echo(command[j], vars, args);
-				//ft_str_free(&line);
-			}	
+				ft_str_free(vars);
+			}
 	  		else if (!ft_strcmp(vars[0], "cd") || !ft_strcmp(vars[0], "CD"))
 			{
 				if (vars[1])
@@ -78,7 +88,6 @@ int main(int ac, char **av, char **env)
 				ft_arg_env(vars, args);
 			else if(!ft_strcmp(vars[0], "exit"))
 			{
-				//printf("Es es un leak : %p\n", 0x7f83d8c02f40);
 				system("leaks minishell");
 				exit(1);
 			}
@@ -86,15 +95,19 @@ int main(int ac, char **av, char **env)
 			{
 				ft_putstr_fd("\033[1;31m[Minishell] : ", 1);
 				ft_putstr_fd("command not found : ", 1);
-				ft_putendl_fd(line, 1);
+				ft_putendl_fd(vars[0], 1);
+				ft_str_free(vars);
 			}
 			j += 1;
+			//free(command);
 		}
 		i = 0;
-		while (command[i])
-			free(command[i++]);
+		ft_str_free(command);
+		command = NULL;
+		free(vars);
+		vars = NULL;
 		free(line);
-		//ft_str_free(vars);
+		line = NULL;
    	}
 	system("leaks minishell");
     return (0);

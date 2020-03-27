@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 15:26:37 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/26 20:09:48 by fernando         ###   ########.fr       */
+/*   Updated: 2020/03/27 14:41:59 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ static char *ft_echo_aux(char *vars)
     while (vars[i])
     {
         if (vars[i] == '\"' && vars[len] == '\"')
-            aux =ft_split(vars, '\"');
+            aux = ft_str_tok(vars, "\"");
         else if (vars[i] == '\'' && vars[len] == '\'')
-            aux =ft_split(vars, '\'');
+            aux = ft_str_tok(vars, "\'");
         else if ((vars[i] == '\'' && vars[i + len] == '\"') ||
             (vars[i] == '\"' && vars[i + len] == '\''))
             return (NULL);
@@ -35,6 +35,8 @@ static char *ft_echo_aux(char *vars)
         tmp = aux[0];
         i++;
     }
+	//free(vars);
+	//free(aux);
     return (tmp);
 }
 
@@ -65,12 +67,11 @@ int ft_arg_echo(char *command, char **vars, int args)
             tmp = ft_strtrim(command, "echo");
             tmp2 = ft_strtrim(tmp, " \t");
             aux = ft_echo_aux(tmp2);
-			//tmp3 = tmp2;
             ft_putendl_fd(aux, 1);
 			ft_str_free(vars);
 			free(tmp);
-			//free(command);
 			free(aux);
+			//free(tmp2);
         }
         return (1);
     }
