@@ -6,7 +6,7 @@
 #    By: fernando <fernando@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/18 21:02:40 by fernando          #+#    #+#              #
-#    Updated: 2020/03/26 12:02:22 by fernando         ###   ########.fr        #
+#    Updated: 2020/03/28 21:34:46 by fernando         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ OFILES = $(addsuffix .o, $(SRC))
 
 SRC =	main \
 		ft_utils \
+		ft_utils2 \
 		ft_arg_echo \
 		ft_arg_cd \
 		ft_arg_env \

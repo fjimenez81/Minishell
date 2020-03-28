@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/26 18:29:05 by fernando         ###   ########.fr       */
+/*   Updated: 2020/03/28 21:34:24 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ char	*ft_strnew(size_t size);
 int     ft_len_tab(char **args);
 void	*ft_memalloc(size_t size);
 void	ft_str_free(char **as);
+
+int     ft_search_c(char *s, int c);
 
 
 char	**ft_str_tok(char *s, char *sep);
