@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/28 21:49:41 by fernando         ###   ########.fr       */
+/*   Updated: 2020/03/31 22:02:57 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,69 @@
 	get_next_line(0, &line);
 	return (line);
 }*/
+
+static char *ft_execute(char **command, char **vars, int args)
+{
+	char *aux;
+	char pwd[PATH_MAX];
+	int j;
+	int i;
+
+	j = 0;
+	i = 0;
+	while (command[j])
+	{
+		if (!ft_strcmp(vars[j], "echo"))
+		{
+			if (vars[j])
+				ft_arg_echo(command[j], vars, args);
+			ft_str_free(vars);
+		}
+		else if (!ft_strcmp(vars[j], "cd") || !ft_strcmp(vars[j], "CD"))
+		{
+			if (vars[1])
+			{
+				if (!ft_strcmp(vars[j], ".."))
+				{
+					chdir("..");
+					ft_str_free(vars);
+					free(command[j]);
+
+					}
+					else
+						ft_arg_cd(vars, args);	
+				}
+				ft_str_free(vars);
+		}
+		else if (!ft_strcmp(vars[j], "pwd") || !ft_strcmp(vars[j], "PWD"))
+		{
+			ft_str_free(vars);
+			ft_str_free(command);
+			return (getcwd(pwd, -1));
+		}
+		else if (!ft_strcmp(vars[j], "env"))
+		{
+			ft_arg_env(vars, args);
+			ft_str_free(vars);
+		}
+		else if(!ft_strcmp(vars[j], "exit"))
+		{
+			ft_str_free(vars);
+			system("leaks minishell");
+			exit(0);
+		}
+		else
+		{
+			ft_putstr_fd("\033[1;31m[Minishell] : ", 1);
+			ft_putstr_fd("command not found : ", 1);
+			aux = vars[j];
+			ft_str_free(vars);
+			return (aux);
+		}
+		j++;
+	}
+	return (NULL);
+}
 
 static void	init_env(char **env)
 {
@@ -41,10 +104,10 @@ int main(int ac, char **av, char **env)
 {
 	int args;
 	int j;
-	//int i;
+	int i;
 	char **vars;
-	char pwd[PATH_MAX];
 	char *line;
+	char *tmp;
 	char **command;
 
     //signal(SIGINT, despedida);
@@ -60,62 +123,23 @@ int main(int ac, char **av, char **env)
 			free(line);
 		command = ft_split(line, ';');
 		j = 0;
+		i = 0;
 		while (command[j])
-		{		
-			vars = ft_str_tok(command[j], " \t\n\r\a\"");
+		{	
+			vars = ft_str_tok(command[j], TOK_LIMITS);
 			args = ft_len_tab(vars);
-			/*if (ft_search_c(vars[j], '\0'))
-			{
-				printf("hola");
-				free(line);	
-			}*/
-			if (!ft_strcmp(vars[j], "echo"))
-			{
-				if (vars[j])
-					ft_arg_echo(command[j], vars, args);
-				ft_str_free(vars);
-			}
-	  		else if (!ft_strcmp(vars[j], "cd") || !ft_strcmp(vars[j], "CD"))
-			{
-				if (vars[j])
-				{
-					if (!ft_strcmp(vars[j], ".."))
-	  					chdir("..");
-					else
-						ft_arg_cd(vars, args);	
-				}	
-			}
-	  		else if (!ft_strcmp(vars[j], "pwd") || !ft_strcmp(vars[j], "PWD"))
-			{
-				ft_str_free(vars);
-	  			ft_putendl_fd(getcwd(pwd, -1), 1);
-			}
-			else if (!ft_strcmp(vars[j], "env"))
-				ft_arg_env(vars, args);
-			else if(!ft_strcmp(vars[j], "exit"))
-			{
-				system("leaks minishell");
-				exit(0);
-			}
-			else
-			{
-				ft_putstr_fd("\033[1;31m[Minishell] : ", 1);
-				ft_putstr_fd("command not found : ", 1);
-				ft_putendl_fd(vars[j], 1);
-				ft_str_free(vars);
-			}
+			tmp = ft_execute(command, vars, args);
+			ft_putendl_fd(tmp, 1);
+			while (vars[i])
+				free(vars[i++]);
+			(vars) ? free(vars) : 0;
 			j++;
-			//free(command[j]);
-			//free(vars[j]);
-			
-			
+			i = 0;	
 		}
-		ft_str_free(command);
-		command = NULL;
-		free(vars);
-		vars = NULL;
+		while (command[i])
+			free(command[i++]);
+		(command) ? free(command) : 0;
 		free(line);
-		line = NULL;
    	}
     return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/28 21:34:24 by fernando         ###   ########.fr       */
+/*   Updated: 2020/03/31 19:28:41 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include "libft/libft.h"
 
 # define BUFFER_SIZE 2
+# define TOK_LIMITS " \n\r\a\""
 
 char    **g_envp;
 

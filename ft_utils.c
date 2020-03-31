@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/23 16:53:06 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/26 18:28:51 by fernando         ###   ########.fr       */
+/*   Updated: 2020/03/31 21:41:47 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,9 @@ void	*ft_memalloc(size_t size)
 
 void	ft_str_free(char **as)
 {
-	if (!as || !*as)
-		return ;
-	free(*as);
-	*as = NULL;
+	if (as != NULL)
+	{
+		free(*as);
+		*as = NULL;
+	}
 }
