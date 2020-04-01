@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/23 16:53:06 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/31 21:41:47 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/01 15:57:01 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,12 @@ void	*ft_memalloc(size_t size)
 	return (mem);
 }
 
-void	ft_str_free(char **as)
+void ft_free_tab(char **str)
 {
-	if (as != NULL)
-	{
-		free(*as);
-		*as = NULL;
-	}
+	int i;
+
+	i = 0;
+	while (str[i])
+		free(str[i++]);
+	(str) ? free(str) : 0;
 }

@@ -6,20 +6,11 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/31 22:02:57 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/01 18:30:59 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*static char	*read_line(void)
-{
-	char	*line;
-
-	line = NULL;
-	get_next_line(0, &line);
-	return (line);
-}*/
 
 static char *ft_execute(char **command, char **vars, int args)
 {
@@ -36,7 +27,6 @@ static char *ft_execute(char **command, char **vars, int args)
 		{
 			if (vars[j])
 				ft_arg_echo(command[j], vars, args);
-			ft_str_free(vars);
 		}
 		else if (!ft_strcmp(vars[j], "cd") || !ft_strcmp(vars[j], "CD"))
 		{
@@ -45,29 +35,27 @@ static char *ft_execute(char **command, char **vars, int args)
 				if (!ft_strcmp(vars[j], ".."))
 				{
 					chdir("..");
-					ft_str_free(vars);
+					ft_strdel(vars);
 					free(command[j]);
 
 					}
 					else
 						ft_arg_cd(vars, args);	
 				}
-				ft_str_free(vars);
+				ft_strdel(vars);
 		}
 		else if (!ft_strcmp(vars[j], "pwd") || !ft_strcmp(vars[j], "PWD"))
 		{
-			ft_str_free(vars);
-			ft_str_free(command);
+			ft_strdel(vars);
 			return (getcwd(pwd, -1));
 		}
 		else if (!ft_strcmp(vars[j], "env"))
 		{
 			ft_arg_env(vars, args);
-			ft_str_free(vars);
+			ft_strdel(vars);
 		}
 		else if(!ft_strcmp(vars[j], "exit"))
 		{
-			ft_str_free(vars);
 			system("leaks minishell");
 			exit(0);
 		}
@@ -76,7 +64,7 @@ static char *ft_execute(char **command, char **vars, int args)
 			ft_putstr_fd("\033[1;31m[Minishell] : ", 1);
 			ft_putstr_fd("command not found : ", 1);
 			aux = vars[j];
-			ft_str_free(vars);
+			ft_strdel(vars);
 			return (aux);
 		}
 		j++;
@@ -100,14 +88,28 @@ static void	init_env(char **env)
 	return ;
 }
 
-int main(int ac, char **av, char **env)
+static void ft_commands(char **command)
 {
 	int args;
 	int j;
-	int i;
+	char *exe;
 	char **vars;
+
+	j = 0;
+	while (command[j])
+	{	
+		vars = ft_str_tok(command[j], TOK_LIMITS);
+		args = ft_len_tab(vars);
+		exe = ft_execute(command, vars, args);
+		ft_putendl_fd(exe, 1);
+		ft_free_tab(vars);
+		j++;	
+	}
+}
+
+int main(int ac, char **av, char **env)
+{
 	char *line;
-	char *tmp;
 	char **command;
 
     //signal(SIGINT, despedida);
@@ -122,23 +124,8 @@ int main(int ac, char **av, char **env)
 		if (!ft_strcmp(line, "\0"))
 			free(line);
 		command = ft_split(line, ';');
-		j = 0;
-		i = 0;
-		while (command[j])
-		{	
-			vars = ft_str_tok(command[j], TOK_LIMITS);
-			args = ft_len_tab(vars);
-			tmp = ft_execute(command, vars, args);
-			ft_putendl_fd(tmp, 1);
-			while (vars[i])
-				free(vars[i++]);
-			(vars) ? free(vars) : 0;
-			j++;
-			i = 0;	
-		}
-		while (command[i])
-			free(command[i++]);
-		(command) ? free(command) : 0;
+		ft_commands(command);
+		ft_free_tab(command);
 		free(line);
    	}
     return (0);

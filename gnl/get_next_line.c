@@ -6,14 +6,14 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 09:53:29 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/03/18 21:17:23 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/01 15:54:53 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include "../minishell.h"
 
-static void	ft_strdel(char **str)
+void	ft_strdel(char **str)
 {
 	if (str != NULL && *str != NULL)
 	{
