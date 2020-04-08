@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 21:08:07 by fernando          #+#    #+#             */
-/*   Updated: 2020/03/26 12:30:29 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/08 20:48:03 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,15 @@ static int	is_dir(char *path)
 int ft_arg_cd(char **vars, int args)
 {
     char *tmp;
+
     if (args)
     {
         tmp = ft_strdup(vars[1]);
         if (!is_dir(tmp))
             return (-1);
         chdir(tmp);
+        free(tmp);
     }
+    
     return(1);
 }

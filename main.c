@@ -6,11 +6,20 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/01 18:30:59 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/08 21:41:07 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*char	*read_line(void)
+{
+	char	*line;
+
+	line = NULL;
+	get_next_line(0, &line);
+	return (line);
+}*/
 
 static char *ft_execute(char **command, char **vars, int args)
 {
@@ -23,6 +32,11 @@ static char *ft_execute(char **command, char **vars, int args)
 	i = 0;
 	while (command[j])
 	{
+		if (ft_search_c(vars[j], '='))
+		{
+			g_equal = ft_str_tok(vars[j], "=");
+			break ;
+		}
 		if (!ft_strcmp(vars[j], "echo"))
 		{
 			if (vars[j])
@@ -33,16 +47,10 @@ static char *ft_execute(char **command, char **vars, int args)
 			if (vars[1])
 			{
 				if (!ft_strcmp(vars[j], ".."))
-				{
 					chdir("..");
-					ft_strdel(vars);
-					free(command[j]);
-
-					}
-					else
-						ft_arg_cd(vars, args);	
-				}
-				ft_strdel(vars);
+				else
+					ft_arg_cd(vars, args);
+			}
 		}
 		else if (!ft_strcmp(vars[j], "pwd") || !ft_strcmp(vars[j], "PWD"))
 		{
