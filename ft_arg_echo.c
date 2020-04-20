@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 15:26:37 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/08 21:44:24 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/20 20:33:18 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,12 @@ int ft_arg_echo(char *command, char **vars, int args)
 	int i;
 
 	i = 0;
+    ignore_space(&command);
     if (args)
     {
-        if (!ft_strcmp(vars[1], "-n"))
+        if (vars[1] == NULL)
+            return (1);
+        else if (!ft_strcmp(vars[1], "-n"))
         {
             if (vars[2])
             {
@@ -68,17 +71,13 @@ int ft_arg_echo(char *command, char **vars, int args)
         {
             command = ft_strtrim(command, "echo");
 			tmp = ft_strtrim(command, " \t\a\r");
-            if (!ft_strcmp(vars[1], ft_strjoin("$", g_equal[0])))
-            {
-                ft_putstr_fd(g_equal[1], 1);
-                return (1);
-            }
 			while (tmp[i])
 			{
 				if (tmp[i] == '\"' || tmp[i] == '\'')
 					i++;
 				ft_putchar_fd(tmp[i++], 1);
 			}
+            ft_putchar_fd('\n', 1);
 			free(tmp);
 			free(command);
         }
