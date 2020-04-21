@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 20:14:59 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/20 21:17:33 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/21 17:13:44 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,39 @@
 	return (0);
 }*/
 
+static char *ft_strstr(char *str, char *to_find)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		j = 0;
+		while (to_find[j] == str[i + j])
+		{
+			if (to_find[j + 1] == '\0')
+			{
+				return (str + i);
+			}
+			j++;
+		}
+		i++;
+	}
+	return (0);
+}
+
 int ft_arg_unset(char **vars, int args)
 {
 	int i;
-	//char **tmp;
+	int j;
+	int len;
+	char *unset;
 
+	//if (!(tmp = (char**)malloc(sizeof(char*) * (ft_len_tab(g_envp) + 1))))
+		//return (-1);
+
+	len = ft_len_tab(vars);
 	i = -1;
 	if (args)
 	{
@@ -49,13 +77,22 @@ int ft_arg_unset(char **vars, int args)
             return (1);
 		else if (ft_strchr(vars[1], '='))
 		{
-			//tmp = ft_str_unset(g_envp, vars[1], ft_len_tab(g_envp));
-			//ft_putstr_fd(tmp[0], 1);
+			while (g_envp[++i])
+			{
+				j = 0;
+				while (++j < len)
+				{
+					unset = ft_strstr(g_envp[i], vars[j]);
+					if (unset != NULL)
+						ft_memmove(g_envp[i], "", ft_strlen(g_envp[i]));
+				}
+					
+			}
+			//ft_memmove(g_envp[j - 1], "", ft_strlen(g_envp[j - 1]));
+			//ft_putstr_fd(g_envp[j - 1], 1);
+			//ft_free_tab(tmp);
 			return (1);
 		}
-		else
-			return (1);
-		
 	}
 	return (-1);
 }
