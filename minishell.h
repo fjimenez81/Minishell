@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/21 19:55:06 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/23 12:15:40 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 
 char    **g_envp;
 char    **g_var;
-int		g_bool;
+char    **g_backup;
 
 int	    ft_strcmp(const char *s1, const char *s2);
 char	*ft_strnew(size_t size);
@@ -46,6 +46,7 @@ void	ignore_space(char **line);
 
 
 char	**ft_str_tok(char *s, char *sep);
+char    *ft_strstr(char *str, char *to_find);
 
 int     ft_arg_echo(char *command, char **vars, int args);
 int     ft_arg_cd(char **args, int command);

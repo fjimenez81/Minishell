@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 20:14:59 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/21 17:13:44 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/23 12:15:26 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 	return (0);
 }*/
 
-static char *ft_strstr(char *str, char *to_find)
+char *ft_strstr(char *str, char *to_find)
 {
 	int i;
 	int j;
@@ -75,7 +75,7 @@ int ft_arg_unset(char **vars, int args)
 	{
 		if (vars[1] == NULL)
             return (1);
-		else if (ft_strchr(vars[1], '='))
+		else if (ft_len_tab(vars) > 1)
 		{
 			while (g_envp[++i])
 			{
