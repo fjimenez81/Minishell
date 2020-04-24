@@ -6,11 +6,36 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/23 13:54:10 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/24 14:31:01 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void ft_sort_export(void)
+{
+	int i;
+    int j;
+	int len;
+	char **export;
+    
+	export = g_envp;
+	len = ft_len_tab(export);
+    i = -1;
+    while (++i < (len - 1))
+	{
+        j = i + 1;
+        while(++j < len)
+            if(ft_strcmp(export[i], export[j]) > 0)
+                ft_swap(&export[i], &export[j]);
+    }
+	i = -1;
+	while (export[++i])
+	{
+		ft_putstr_fd(export[i], 1);
+		ft_putchar_fd('\n', 1);
+	}
+}
 
 static void ft_change_var(char **g_envp, char *vars)
 {
@@ -90,7 +115,7 @@ int		ft_arg_export(char **vars, int args)
 	{
 		if (vars[1] == NULL)
 		{
-			ft_arg_env(vars,args);
+			ft_sort_export();
             return (1);
 		}
 		else if (ft_len_tab(vars) > 1)
@@ -112,6 +137,13 @@ int		ft_arg_export(char **vars, int args)
 			i = 0;
 			while (vars[++i])
 			{
+				if (!ft_isalpha(vars[i][0]) && vars[i][0] != '_')
+				{
+					ft_putstr_fd("\033[1;31m[Minishell] : no matches foundd : ", 1);
+					ft_putstr_fd(vars[i], 1);
+					ft_putstr_fd("\n", 1);
+					break ;
+				}
 				k = -1;
 				j = 0;
 				while (vars[++k] && ++j < len)

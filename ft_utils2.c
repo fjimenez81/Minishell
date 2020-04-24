@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/28 21:33:51 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/20 12:25:00 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/24 14:24:48 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,3 +49,18 @@ void	ignore_space(char **line)
 	*line += 1;
 		
 }
+
+void ft_swap(char **a, char **b)
+{
+    char *c;
+
+    c = *a;
+    *a = *b;
+    *b = c;
+}
+
+int		ft_isalpha(int c)
+{
+	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
+}
+
