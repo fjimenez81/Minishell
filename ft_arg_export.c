@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/24 14:31:01 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/26 21:55:28 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,12 +102,42 @@ static char	**ft_join_env(char **g_envp, char *vars)
 	
 }*/
 
+static int ft_check_var(char *vars)
+{
+	//int i;
+
+	if (!ft_isalpha(vars[0]) && vars[0] != '_')
+		return (0);
+	vars++;
+	while (*vars)
+	{
+		if (*vars == '=')
+			break ;
+		if (!ft_isalnum(*vars) && !ft_isdigit(*vars) && *vars != '_')
+			return (0);
+		vars++;
+	}
+	return (1);
+}
+
+/*static void ft_dollar(char **vars, int len)
+{
+    int i;
+    //char **ret;
+
+    if (!(g_var = (char**)malloc(sizeof(char*) * len + 2)))
+        return ;
+    i = 0;
+    while (vars[++i])
+    	g_var[i] = vars[i];
+    g_var[i] = NULL;
+}*/
+
 int		ft_arg_export(char **vars, int args)
 {
 	int i;
 	int j;
 	int k;
-	//int bool;
 	int len;
 	
 	len = ft_len_tab(vars);
@@ -120,42 +150,33 @@ int		ft_arg_export(char **vars, int args)
 		}
 		else if (ft_len_tab(vars) > 1)
 		{
-			/*i = 0;
-			bool = 0;
-			while (vars[++i])
-			{
-				if (!ft_strchr(vars[i], '='))
-				{
-					bool = 1;
-					ft_putstr_fd("\033[1;31m[Minishell] : no matches foundd : ", 1);
-					ft_putstr_fd(vars[i], 1);
-					ft_putstr_fd("\n", 1);
-					return (1);
-				}
-					
-			}*/
 			i = 0;
 			while (vars[++i])
 			{
-				if (!ft_isalpha(vars[i][0]) && vars[i][0] != '_')
+				if (!ft_check_var(vars[i]))
 				{
-					ft_putstr_fd("\033[1;31m[Minishell] : no matches foundd : ", 1);
-					ft_putstr_fd(vars[i], 1);
-					ft_putstr_fd("\n", 1);
-					break ;
+					j = 0;
+					while (vars[++j])
+					{
+						if (!ft_strchr(vars[j], '=') || ft_isalnum(*vars[j]))
+							break ;
+					}
+					ft_putstr_fd("\033[1;31m export : no matches found : ", 1);
+					ft_putendl_fd(vars[j], 1);
+					return (1) ;
 				}
-				k = -1;
-				j = 0;
-				while (vars[++k] && ++j < len)
-					g_envp = ft_join_env(g_envp, vars[j]);
 			}
+			k = -1;
+			j = 0;
+			while (vars[++k] && ++j < len)
+				g_envp = ft_join_env(g_envp, vars[j]);
 			return (1);
 			
 		}
 		else
 		{
 			ft_putstr_fd("\033[1;31m[Minishell] : ", 1);
-			ft_putstr_fd("no matches found : ", 1);
+			ft_putendl_fd("no matches found : ", 1);
 			return (1);
 		}
 			

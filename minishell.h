@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/24 14:25:04 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/24 20:18:00 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # define TOK_LIMITS " \n\r\a\""
 
 char    **g_envp;
-char    **g_export;
+char    **g_var;
 
 int	    ft_strcmp(const char *s1, const char *s2);
 char	*ft_strnew(size_t size);

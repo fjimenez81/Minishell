@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 15:26:37 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/20 20:33:18 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/26 22:02:54 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,15 @@
 int ft_arg_echo(char *command, char **vars, int args)
 {
     char *tmp;
+    char *aux;
+    char **split;
+    int len;
 	int i;
+    int j;
 
 	i = 0;
     ignore_space(&command);
+    len = ft_len_tab(vars);
     if (args)
     {
         if (vars[1] == NULL)
@@ -71,6 +76,21 @@ int ft_arg_echo(char *command, char **vars, int args)
         {
             command = ft_strtrim(command, "echo");
 			tmp = ft_strtrim(command, " \t\a\r");
+            if (ft_strchr(tmp, '$'))
+            {
+                i = -1;
+                aux = ft_strtrim(tmp, "$");
+                while (g_envp[++i])
+                {
+                    j = 0;
+                    while (++j < len)
+                    {
+                        free(tmp);
+                        tmp = ft_strstr(g_envp[i], aux);
+                    }
+                }
+            }
+            i = 0;
 			while (tmp[i])
 			{
 				if (tmp[i] == '\"' || tmp[i] == '\'')
@@ -79,6 +99,7 @@ int ft_arg_echo(char *command, char **vars, int args)
 			}
             ft_putchar_fd('\n', 1);
 			free(tmp);
+            free(aux);
 			free(command);
         }
         return (1);

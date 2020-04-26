@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/20 20:31:37 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/26 20:43:40 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ int main(int ac, char **av, char **env)
 		ft_putstr_fd("\033[1;92m[Minishell] ~>\033[0m ", 1);
 		if (get_next_line(0, &line) <= 0)
 			break ;
-		if (!ft_strcmp(line, "\0"))
-			free(line);
+		//if (!ft_strcmp(line, "\0"))
+			//free(line);
 		command = ft_split(line, ';');
 		ft_commands(command);
 		ft_free_tab(command);
