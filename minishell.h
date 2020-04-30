@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/24 20:18:00 by fernando         ###   ########.fr       */
+/*   Updated: 2020/04/30 20:52:18 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@
 # include "libft/libft.h"
 
 # define BUFFER_SIZE 2
-# define TOK_LIMITS " \n\r\a\""
+# define Q_DOUBLE '\"'
+# define Q_SIMPLE '\''
+# define TOK_LIMITS " \n\r\a"
 
 char    **g_envp;
 char    **g_var;
@@ -43,6 +45,8 @@ int 	ft_isspace(int c);
 void	ignore_space(char **line);
 void    ft_swap(char **a, char **b);
 int		ft_isalpha(int c);
+int     ft_first_chr(char **s, char c);
+char    *ft_cutstr(char *src, char *cut, size_t len);
 
 
 
