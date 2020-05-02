@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 15:26:37 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/30 21:29:19 by fernando         ###   ########.fr       */
+/*   Updated: 2020/05/02 23:07:27 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,12 @@ static char *ft_echo_var(char *tmp, int len)
 
 int ft_arg_echo(char *command, char **vars, int args)
 {
-    //char *tmp;
+    //char **tmp;
     char *aux;
     int len;
 	int i;
     int bool;
-    int j;
+    //int j;
     (void)command;
 
 	i = 0;
@@ -95,46 +95,58 @@ int ft_arg_echo(char *command, char **vars, int args)
         else if (vars[1])//(ft_strcmp(vars[1], "-n") != 0)
         {
             command =ft_cutstr(command, "echo", ft_strlen(command));
-            command = ft_strtrim(command, " \t\r\"\'");
+            //command = ft_strtrim(command, " \t\r");
+			//tmp = ft_str_tok(command, "\"\'");
+			//if (tmp != NULL)
+				//bool = 1;
             i = 0;
+			
 			while (vars[++i])
 			{
                 if (!ft_strcmp(vars[1], "-n"))
                     i++;
-                if (ft_first_chr(&vars[i], Q_DOUBLE) || ft_first_chr(&vars[i], '\''))
+				if (!ft_search_c(vars[i], Q_DOUBLE) && !ft_first_chr(&vars[i], '$')) 
                 {
-                    j = 0;
-                    while (command[j])
-                    {
-                        /*if (ft_first_chr(&command, '$'))
-                        {
-                            aux = ft_echo_var(vars[i], len);
-                            ft_print_echo(aux);
-                        }*/
-                        if (command[j] == Q_DOUBLE || command[j] == Q_SIMPLE)
-                            break ;
-                        else
-                            ft_putchar_fd(command[j], 1);
-                        //command++;
-                        j++;
-                    }
-                    ft_putchar_fd(' ', 1);
-                    bool = 1;
+                    ft_print_echo(vars[i]);
+				    ft_putchar_fd(' ', 1);
+                }
+                if (ft_search_c(vars[i], Q_DOUBLE) && ft_strcmp(vars[i], "\""))
+                {
+					while (*command)
+    				{ 
+        				if (*command == ' ' || *command == '\t')
+            				command++;
+       					else
+           					break ;
+    				}
+					//command = ft_strrchr(command, " ") + 1;
+					while (*command)
+					{
+						if (*command == Q_DOUBLE && (*(command + 1) == '\0' || *(command + 1) == ' '))
+						{
+							//i++;
+							//printf("%s\n", vars[i]);
+							if (*(command + 1) == ' ')
+								ft_putchar_fd(' ', 1);
+							break ;
+						}
+						if (*command == ' ' && *(command + 1) != ' ')
+							i++;
+						if (*command != '\"')
+							ft_putchar_fd(*command, 1);
+						command++;
+					}
                 }
                 if (ft_first_chr(&vars[i], '$'))
                 {
                     aux = ft_echo_var(vars[i], len);
                     ft_print_echo(aux);
                 }
-                else if (!bool)
-                {
-                    ft_putstr_fd(vars[i], 1);
-				    ft_putchar_fd(' ', 1);
-                }
+                
 			}
             if (ft_strcmp(vars[1], "-n"))
 			    ft_putchar_fd('\n', 1);
-            free(command);
+           // free(command);
             /*command = ft_cutstr(command, "echo", ft_strlen(command));
 			tmp = ft_strtrim(command, " \t\a\r");
             if (ft_first_chr(&tmp, '$') || (tmp[0] == '\"' && tmp[1] == '$'))
