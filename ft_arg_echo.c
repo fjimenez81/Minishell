@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 15:26:37 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/03 21:44:03 by fernando         ###   ########.fr       */
+/*   Updated: 2020/05/04 14:09:07 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,20 +122,23 @@ int ft_arg_echo(char *command, char **vars, int args)
                     {
                         ft_print_echo(vars[i]);
 				        ft_putchar_fd(' ', 1);
+						command += ft_strlen(vars[i]) + 1;
                     }  
                 }
-                if (ft_search_c(vars[i], Q_DOUBLE) && ft_strcmp(vars[i], "\""))
+                if (ft_search_c(vars[i], Q_DOUBLE))//&& ft_strcmp(vars[i], "\""))
                 {
                     j = 0;
 					while (*command)
     				{ 
         				if (*command == ' ' || *command == '\t')
             				command++;
-       					else
+       					else if (*command == '\"')
                         {
                             command++;
            					break ;
                         }
+                        else
+                            ft_putchar_fd(*command++, 1);
     				}
 					while (*command)
 					{
@@ -153,32 +156,31 @@ int ft_arg_echo(char *command, char **vars, int args)
                             command++;
 							break ;
 						}
-						if (*(command - 1) != '\"' && (*command == ' ' && *(command + 1) != ' ' && (i + 1) < len))
+						if (*(command + 1) == '\0')
+                        {
+							ft_putchar_fd(*command, 1);
+							bool = 1;
+							break ;
+                        } 
+						if (*(command - 1) != '\"' && (*command == ' ' &&
+							*(command + 1) != ' ' && (i + 1) < len))
 							i++;
 						if (*command != '\"')
 							ft_putchar_fd(*command, 1);
 						command++;
 					}
                 }
-                if (ft_first_chr(&vars[i], '$'))
+                if (ft_first_chr(&vars[i], '$') && !bool)
                 {
                     aux = ft_echo_var(vars[i], len);
                     ft_print_echo(aux);
-                    command += ft_strlen(vars[i]);
+					ft_putchar_fd(' ', 1);
+                    command += ft_strlen(vars[i]) + 1;
                 }
                 
 			}
             if (ft_strcmp(vars[1], "-n"))
 			    ft_putchar_fd('\n', 1);
-           // free(command);
-            /*command = ft_cutstr(command, "echo", ft_strlen(command));
-			tmp = ft_strtrim(command, " \t\a\r");
-            if (ft_first_chr(&tmp, '$') || (tmp[0] == '\"' && tmp[1] == '$'))
-            {
-                tmp = ft_echo_var(tmp, len);
-            }
-            //ft_print_echo(tmp);
-			//free(tmp);*/
         }
         return (1);
     }
