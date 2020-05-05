@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 15:26:37 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/04 21:45:47 by fernando         ###   ########.fr       */
+/*   Updated: 2020/05/05 11:52:52 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int ft_arg_echo(char *command, char **vars, int args)
             i = 0;
 			while (vars[++i])
 			{
-                if (!ft_strcmp(vars[i], "-n"))
+                if (!ft_strcmp(vars[i], "-n") && i == 1)
                 {
                     i++;
                     while (*command)
@@ -113,7 +113,7 @@ int ft_arg_echo(char *command, char **vars, int args)
                     }                         
                     command += 2;
                 }
-				if (!ft_search_c(vars[i], Q_DOUBLE) && !ft_first_chr(&vars[i], '$'))
+				if (!ft_search_c(vars[i], Q_DOUBLE) && !ft_search_c(vars[i], Q_SIMPLE) && !ft_first_chr(&vars[i], '$'))
                 {
                     if (ft_search_c(vars[i], '$'))
                     {
@@ -155,7 +155,8 @@ int ft_arg_echo(char *command, char **vars, int args)
     				}
 					while (*command)
 					{
-						if (*command == Q_DOUBLE && (*(command + 1) == '\0'|| *(command + 1) == ' ' ||
+						if ((*command == Q_DOUBLE || *command == Q_SIMPLE) &&
+                            (*(command + 1) == '\0'|| *(command + 1) == ' ' ||
                             *(command + 1) == '$'))
 						{
                             if (*(command + 1) == '$')
@@ -169,15 +170,25 @@ int ft_arg_echo(char *command, char **vars, int args)
                             command++;
 							break ;
 						}
+                        if (*command == '\\')
+                        {
+                            if (*(command + 1) == Q_DOUBLE || *(command + 1) == Q_SIMPLE)
+                            {
+                                command++;
+                                ft_putchar_fd(*command, 1);
+                            }
+                        }
 						if (*(command + 1) == '\0')
                         {
 							ft_putchar_fd(*command, 1);
 							bool = 1;
 							break ;
                         } 
-						if (*(command - 1) != Q_DOUBLE  && *command == ' ' && *(command + 1) != ' ' && (i + 1) < len)
+						if (*(command - 1) != Q_DOUBLE &&
+                            *(command - 1) != Q_SIMPLE && *command == ' ' &&
+                            *(command + 1) != ' ' && (i + 1) < len)
 							i++;
-						if (*command != Q_DOUBLE || *command != Q_SIMPLE)
+						if (*command != Q_DOUBLE && *command != Q_SIMPLE)
 							ft_putchar_fd(*command, 1);
 						command++;
 					}
