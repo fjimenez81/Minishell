@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 15:26:37 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/05 11:52:52 by fernando         ###   ########.fr       */
+/*   Updated: 2020/05/05 21:23:45 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,56 +38,88 @@
     return (tmp);
 }*/
 
-static void ft_print_echo(char *str)
-{
-    int i;
-
-    i = 0;
-	while (str[i])
-	{
-		if (str[i] == Q_DOUBLE || str[i] == Q_SIMPLE)
-			i++;
-		ft_putchar_fd(str[i++], 1);
-	}  
-}
-
-static char *ft_echo_var(char *tmp, int len)
+char *ft_echo_var(char *tmp)
 {
 	int i;
-	int j;
 	char *aux;
 
 	i = -1;
     aux = ft_strrchr(tmp, '$') + 1;
     while (g_envp[++i])
     {
-        j = 0;
-        while (++j < len)
-        {
-            tmp = ft_strstr(g_envp[i], aux);
-            if (tmp != NULL)
-				tmp = ft_strrchr(tmp, '=') + 1;
-            else
-                tmp = "";   
-        }
+        tmp = ft_strstr(g_envp[i], aux);
+        if (tmp != NULL)
+			tmp = ft_strrchr(tmp, '=') + 1;
+        else
+            tmp = "";   
     }
     return (tmp);
 }
 
+static void ft_not_quote(char *vars, char *command, int *cont)
+{
+	char *aux;
+    int i;
+
+	if (ft_search_c(vars, '$'))
+    {
+        i = -1;
+        while (command[++i])
+        {
+            if (command[i] == ' ')
+                i++;
+            if (command[i] == '$')
+                break ;
+            else
+                ft_putchar_fd(command[i], 1); 
+        }
+        aux = ft_echo_var(vars);
+        ft_putstr_fd(aux, 1);
+        ft_putchar_fd(' ', 1);
+        *cont += ft_strlen(vars) + i - 2;
+    }
+    else
+    {
+        ft_putstr_fd(vars, 1);
+        ft_putchar_fd(' ', 1);
+		*cont += ft_strlen(vars) + 1;
+    }
+}
+
+static void ft_echo_n(char *command, int *cont)
+{
+    int i;
+
+    i = -1;
+    while (command[++i])
+    {
+        if (command[i] == ' ')
+        {
+            i++;
+            *cont += 1;
+        } 
+        else
+        {
+            *cont += 1;
+            break ;
+        }
+    }
+}
+
 int ft_arg_echo(char *command, char **vars, int args)
 {
-    //char **tmp;
+    //char *tmp;
     char *aux;
-    int len;
+    //int len;
 	int i;
     int bool;
-    int j;
-    (void)command;
+    //int j;
+    int cont;
 
 	i = 0;
     bool = 0;
     //ignore_space(&command);
-    len = ft_len_tab(vars);
+    g_args= args;
     if (args)
     {
         if (vars[1] == NULL)
@@ -96,63 +128,28 @@ int ft_arg_echo(char *command, char **vars, int args)
         {
             command =ft_cutstr(command, "echo", ft_strlen(command));
             i = 0;
+            
 			while (vars[++i])
 			{
+                cont = 0;
                 if (!ft_strcmp(vars[i], "-n") && i == 1)
                 {
                     i++;
-                    while (*command)
-                    {
-                        if (*command == ' ')
-                            command++; 
-                        else
-                        {
-                            command++;
-                            break ;
-                        }
-                    }                         
-                    command += 2;
+                    ft_echo_n(command, &cont);                      
+                    command += cont + 2;
                 }
-				if (!ft_search_c(vars[i], Q_DOUBLE) && !ft_search_c(vars[i], Q_SIMPLE) && !ft_first_chr(&vars[i], '$'))
-                {
-                    if (ft_search_c(vars[i], '$'))
+				if (!ft_search_c(vars[i], Q_DOUBLE) &&
+					!ft_search_c(vars[i], Q_SIMPLE) &&
+					!ft_first_chr(&vars[i], '$'))
                     {
-                        while (*command)
-                        {
-                            if (*command == ' ')
-                                command++;
-                            if (*command == '$')
-                                break ;
-                            else
-                                ft_putchar_fd(*command, 1);
-                            command++;  
-                        }
-                        aux = ft_echo_var(vars[i], len);
-                        ft_print_echo(aux);
-                        command += ft_strlen(vars[i]);
-                    }
-                    else
-                    {
-                        ft_print_echo(vars[i]);
-                        ft_putchar_fd(' ', 1);
-						command += ft_strlen(vars[i]) + 1;
+						ft_not_quote(vars[i], command, &cont); 
+                        command += cont;
                     }  
-                }
                 if (ft_search_c(vars[i], Q_DOUBLE) || ft_search_c(vars[i], Q_SIMPLE))
                 {
-                    j = 0;
-					while (*command)
-    				{ 
-        				if (*command == ' ' || *command == '\t')
-            				command++;
-       					else if (*command == Q_DOUBLE || *command == Q_SIMPLE)
-                        {
-                            command++;
-           					break ;
-                        }
-                        else
-                            ft_putchar_fd(*command++, 1);
-    				}
+                    ft_quote_fst(vars[i], command, &cont);
+                    command += cont + 1;
+                    //ft_quote_snd(vars[i], command, &i, &cont);
 					while (*command)
 					{
 						if ((*command == Q_DOUBLE || *command == Q_SIMPLE) &&
@@ -161,8 +158,8 @@ int ft_arg_echo(char *command, char **vars, int args)
 						{
                             if (*(command + 1) == '$')
                             {
-                                aux = ft_echo_var(vars[i], len);
-                                ft_print_echo(aux);
+                                aux = ft_echo_var(vars[i]);
+                                ft_putstr_fd(aux, 1);
                                 command += ft_strlen(aux) + 1;
                             }
 							if (*(command + 1) == ' ')
@@ -186,7 +183,7 @@ int ft_arg_echo(char *command, char **vars, int args)
                         } 
 						if (*(command - 1) != Q_DOUBLE &&
                             *(command - 1) != Q_SIMPLE && *command == ' ' &&
-                            *(command + 1) != ' ' && (i + 1) < len)
+                            *(command + 1) != ' ' && (i + 1) < g_args)
 							i++;
 						if (*command != Q_DOUBLE && *command != Q_SIMPLE)
 							ft_putchar_fd(*command, 1);
@@ -196,8 +193,8 @@ int ft_arg_echo(char *command, char **vars, int args)
                 if (ft_first_chr(&vars[i], '$') && !bool)
                 {
                     
-                    aux = ft_echo_var(vars[i], len);
-                    ft_print_echo(aux);
+                    aux = ft_echo_var(vars[i]);
+                    ft_putstr_fd(aux, 1);
                     if (vars[i + 1] != NULL)
 					    ft_putchar_fd(' ', 1);
                     command += ft_strlen(vars[i]) + 1;

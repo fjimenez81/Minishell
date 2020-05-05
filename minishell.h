@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/30 20:52:18 by fernando         ###   ########.fr       */
+/*   Updated: 2020/05/05 20:38:04 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define TOK_LIMITS " \n\r\a"
 
 char    **g_envp;
-char    **g_var;
+int     g_args;
 
 int	    ft_strcmp(const char *s1, const char *s2);
 char	*ft_strnew(size_t size);
@@ -47,6 +47,7 @@ void    ft_swap(char **a, char **b);
 int		ft_isalpha(int c);
 int     ft_first_chr(char **s, char c);
 char    *ft_cutstr(char *src, char *cut, size_t len);
+char    *ft_cut_end(char *s, int a, int b);
 
 
 
@@ -60,5 +61,9 @@ int		ft_arg_export(char **vars, int args);
 int		ft_arg_unset(char **vars, int args);
 
 void	init_env(char **env);
+
+char    *ft_echo_var(char *tmp);
+
+void    ft_quote_fst(char *vars, char *command, int *cont);
 
 #endif
