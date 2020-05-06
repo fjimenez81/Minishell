@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/05 20:38:04 by fernando         ###   ########.fr       */
+/*   Updated: 2020/05/06 22:12:16 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 
 char    **g_envp;
 int     g_args;
+int     g_bool;
 
 int	    ft_strcmp(const char *s1, const char *s2);
 char	*ft_strnew(size_t size);
@@ -47,7 +48,7 @@ void    ft_swap(char **a, char **b);
 int		ft_isalpha(int c);
 int     ft_first_chr(char **s, char c);
 char    *ft_cutstr(char *src, char *cut, size_t len);
-char    *ft_cut_end(char *s, int a, int b);
+char    *ft_cut_end(char *s, int a, int b, int c);
 
 
 
@@ -64,6 +65,10 @@ void	init_env(char **env);
 
 char    *ft_echo_var(char *tmp);
 
-void    ft_quote_fst(char *vars, char *command, int *cont);
+void	ft_loop_echo(char **vars, char *command);
+int 	ft_not_quote(char *vars, char *command);
+int 	ft_echo_n(char *command);
+int		ft_quote_fst(char *command);
+int		ft_quote_snd(char *command, int *i);
 
 #endif

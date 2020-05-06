@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/28 21:33:51 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/05 18:52:02 by fernando         ###   ########.fr       */
+/*   Updated: 2020/05/06 13:16:07 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ char *ft_cutstr(char *src, char *cut, size_t len)
     return (NULL);
 }
 
-char *ft_cut_end(char *s, int a, int b)
+char *ft_cut_end(char *s, int a, int b, int c)
 {
     int i;
     int j;
@@ -101,7 +101,7 @@ char *ft_cut_end(char *s, int a, int b)
     i = -1;
     while (s[++i])
     {
-        if (s[i] == a || s[i] == b)
+        if (s[i] == a || s[i] == b || s[i] == c)
             break ;
     }
     if (!(dest = (char*)malloc(sizeof(char) * i + 1)))
