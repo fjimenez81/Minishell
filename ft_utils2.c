@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/28 21:33:51 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/06 13:16:07 by fernando         ###   ########.fr       */
+/*   Updated: 2020/05/07 20:34:40 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,10 @@ int 	ft_isspace(int c)
 			|| c == '\v');
 }
 
-void	ignore_space(char **line)
+void	ignore_space(char **command)
 {
-	while (ft_isspace(**line))
-	*line += 1;
-		
+	while (ft_isspace(**command))
+        **command += 1;
 }
 
 void ft_swap(char **a, char **b)

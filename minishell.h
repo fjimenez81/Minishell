@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/06 22:12:16 by fernando         ###   ########.fr       */
+/*   Updated: 2020/05/07 21:28:26 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # define BUFFER_SIZE 2
 # define Q_DOUBLE '\"'
 # define Q_SIMPLE '\''
-# define TOK_LIMITS " \n\r\a"
+# define TOK_LIMITS " \t\n\r\a"
 
 char    **g_envp;
 int     g_args;
@@ -69,6 +69,6 @@ void	ft_loop_echo(char **vars, char *command);
 int 	ft_not_quote(char *vars, char *command);
 int 	ft_echo_n(char *command);
 int		ft_quote_fst(char *command);
-int		ft_quote_snd(char *command, int *i);
+int		ft_quote_snd(char *cmd, int *i);
 
 #endif

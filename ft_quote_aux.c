@@ -6,70 +6,73 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/05 19:20:42 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/07 14:30:19 by fernando         ###   ########.fr       */
+/*   Updated: 2020/05/07 21:28:16 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_quote_dollar(char *command, int *j)
+static void	ft_quote_dollar(char *cmd, int *j)
 {
 	char *tmp;
 	char *aux;
 
-	tmp = ft_cut_end(ft_strrchr(command, '$'), Q_DOUBLE, Q_SIMPLE, ' ');
+	tmp = ft_cut_end(ft_strrchr(cmd, '$'), Q_DOUBLE, Q_SIMPLE, ' ');
     aux = ft_echo_var(tmp);
     ft_putstr_fd(aux, 1);
 	*j += ft_strlen(tmp) + 1;//aux == 0 ? ft_strlen(tmp) : ft_strlen(tmp) + 1;
-	if (command[*j] == ' ')
+	if (cmd[*j] == ' ')
 		ft_putchar_fd(' ', 1);
 	free(tmp);
 }
 
-static void ft_quote_aux(char *command, int *j)
+static void ft_quote_aux(char *cmd, int *j)
 {
-	if (command[*j] == '\\')
-        if (command[*j + 1] == Q_DOUBLE || command[*j + 1] == Q_SIMPLE)
+	if (cmd[*j] == '\\')
+	{
+        if (cmd[*j + 1] == Q_DOUBLE || cmd[*j + 1] == Q_SIMPLE)
 		{
 			*j += 1;
-            ft_putchar_fd(command[*j], 1);
+            ft_putchar_fd(cmd[*j], 1);
 		}
-	if (command[*j + 1] == '\0')
+	}
+	if (cmd[*j + 1] == '\0')
     {
-			ft_putchar_fd(command[*j], 1);
+			ft_putchar_fd(cmd[*j], 1);
 			g_bool = 1;
+			return ;
 			*j += 1;
     }
-	if (command[*j] != Q_DOUBLE && command[*j] != Q_SIMPLE)
-			ft_putchar_fd(command[*j], 1);
+	if (cmd[*j] != Q_DOUBLE && cmd[*j] != Q_SIMPLE)
+			ft_putchar_fd(cmd[*j], 1);
 }
 
-int	ft_quote_snd(char *command, int *i)
+int	ft_quote_snd(char *cmd, int *i)
 {
 	int j;
 
 	j = -1;
-	while (command[++j])
+	while (cmd[++j])
 	{
-		if ((command[j] == Q_DOUBLE || command[j] == Q_SIMPLE) &&
-            (command[j + 1] == '\0'|| command[j + 1] == ' ' ||
-            command[j + 1] == '$'))
+		if ((cmd[j] == Q_DOUBLE || cmd[j] == Q_SIMPLE) &&
+            (cmd[j + 1] == '\0'|| cmd[j + 1] == ' ' ||
+            cmd[j + 1] == '$'))
 			{
-                if (command[j + 1] == '$')
+                if (cmd[j + 1] == '$')
                 {
-					ft_quote_dollar(command, &j);
-					if (command[j] == Q_DOUBLE || command[j] == Q_SIMPLE)
+					ft_quote_dollar(cmd, &j);
+					if (cmd[j] == Q_DOUBLE || cmd[j] == Q_SIMPLE)
 						continue ;
                 }
-				if (command[j + 1] == ' ')
+				if (cmd[j + 1] == ' ')
 					ft_putchar_fd(' ', 1);
 				j++;
 				break ;
 			}
-		if (command[j - 1] != Q_DOUBLE && command[j - 1] != Q_SIMPLE &&
-			command[j] == ' ' && command[j + 1] != ' ' )
+		if (cmd[j - 1] != Q_DOUBLE && cmd[j - 1] != Q_SIMPLE &&
+			cmd[j] == ' ' && cmd[j + 1] != ' ' && cmd[j + 1] != '\0')
 				*i += 1;
-		ft_quote_aux(command, &j);
+		ft_quote_aux(cmd, &j);
 	}
 	return (j);
 }
