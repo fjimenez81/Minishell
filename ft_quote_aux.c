@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/05 19:20:42 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/06 22:12:09 by fernando         ###   ########.fr       */
+/*   Updated: 2020/05/07 14:30:19 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ static void	ft_quote_dollar(char *command, int *j)
     aux = ft_echo_var(tmp);
     ft_putstr_fd(aux, 1);
 	*j += ft_strlen(tmp) + 1;//aux == 0 ? ft_strlen(tmp) : ft_strlen(tmp) + 1;
+	if (command[*j] == ' ')
+		ft_putchar_fd(' ', 1);
 	free(tmp);
 }
 
@@ -56,9 +58,7 @@ int	ft_quote_snd(char *command, int *i)
                 if (command[j + 1] == '$')
                 {
 					ft_quote_dollar(command, &j);
-					if (command[j] == ' ')
-						ft_putchar_fd(' ', 1);
-					else if (command[j] == Q_DOUBLE || command[j] == Q_SIMPLE)
+					if (command[j] == Q_DOUBLE || command[j] == Q_SIMPLE)
 						continue ;
                 }
 				if (command[j + 1] == ' ')
@@ -66,10 +66,10 @@ int	ft_quote_snd(char *command, int *i)
 				j++;
 				break ;
 			}
-		ft_quote_aux(command, &j);
 		if (command[j - 1] != Q_DOUBLE && command[j - 1] != Q_SIMPLE &&
 			command[j] == ' ' && command[j + 1] != ' ' )
 				*i += 1;
+		ft_quote_aux(command, &j);
 	}
 	return (j);
 }
@@ -90,15 +90,15 @@ int ft_quote_fst(char *command)
 			tmp = ft_cut_end(command, Q_DOUBLE, Q_SIMPLE, '\0');
     		aux = ft_echo_var(tmp);
     		ft_putstr_fd(aux, 1);
-    		i += ft_strlen(ft_strrchr(tmp, '$'));
+    		i += ft_strlen(ft_strrchr(tmp, '$')) - 1;
 			free(tmp);
 		}
        	else if (command[i] == Q_DOUBLE || command[i] == Q_SIMPLE)
            	break ;
-        else
+        else if (command[i] != ' ')
             ft_putchar_fd(command[i], 1);
     }
-	return (i + 1);
+	return (i);
 }
 
 void ft_loop_echo(char **vars, char *command)
