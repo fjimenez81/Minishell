@@ -6,22 +6,11 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/28 21:33:51 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/07 20:34:40 by fernando         ###   ########.fr       */
+/*   Updated: 2020/05/08 12:52:35 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*int ft_search_c(char *s, int c)
-{
-	int len;
-
-	len = ft_strlen(s);
-	if (s[len] == c)
-		return (1);
-	else
-		return (0);
-}*/
 
 int ft_search_c(char *s, int c)
 {

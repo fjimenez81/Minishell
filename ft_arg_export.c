@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/26 21:55:28 by fernando         ###   ########.fr       */
+/*   Updated: 2020/05/08 12:50:34 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,28 +84,8 @@ static char	**ft_join_env(char **g_envp, char *vars)
 	return (res);
 }
 
-/*static char **ft_var_box(char *vars, int len)
-{
-	int i;
-	int j;
-	char **res;
-
-	if (!(res = (char**)malloc(sizeof(char*) * len)))
-		return (NULL);
-	i = -1;
-	j = -1;
-	while (++j < len)
-		res[j] = ft_strdup(vars);
-	res[j] = NULL;
-	//ft_strdel(vars);
-	return (res);
-	
-}*/
-
 static int ft_check_var(char *vars)
 {
-	//int i;
-
 	if (!ft_isalpha(vars[0]) && vars[0] != '_')
 		return (0);
 	vars++;
@@ -120,66 +100,50 @@ static int ft_check_var(char *vars)
 	return (1);
 }
 
-/*static void ft_dollar(char **vars, int len)
+static int ft_check_var_loop(char **vars)
 {
-    int i;
-    //char **ret;
+	int i;
+	int j;
 
-    if (!(g_var = (char**)malloc(sizeof(char*) * len + 2)))
-        return ;
-    i = 0;
-    while (vars[++i])
-    	g_var[i] = vars[i];
-    g_var[i] = NULL;
-}*/
+	i = 0;
+	while (vars[++i])
+	{
+		if (!ft_check_var(vars[i]))
+		{
+			j = 0;
+			while (vars[++j])
+			{
+				if (!ft_strchr(vars[j], '=') || ft_isalnum(*vars[j]))
+					break ;
+			}
+			ft_putstr_fd("\033[1;31m export : no matches found : ", 1);
+			ft_putendl_fd(vars[j], 1);
+			return (0) ;
+		}
+	}
+	return (1);
+}
 
 int		ft_arg_export(char **vars, int args)
 {
 	int i;
 	int j;
-	int k;
-	int len;
 	
-	len = ft_len_tab(vars);
 	if (args)
 	{
 		if (vars[1] == NULL)
-		{
 			ft_sort_export();
-            return (1);
-		}
 		else if (ft_len_tab(vars) > 1)
 		{
-			i = 0;
-			while (vars[++i])
-			{
-				if (!ft_check_var(vars[i]))
-				{
-					j = 0;
-					while (vars[++j])
-					{
-						if (!ft_strchr(vars[j], '=') || ft_isalnum(*vars[j]))
-							break ;
-					}
-					ft_putstr_fd("\033[1;31m export : no matches found : ", 1);
-					ft_putendl_fd(vars[j], 1);
-					return (1) ;
-				}
-			}
-			k = -1;
+			if (!ft_check_var_loop(vars))
+				return (1);
+			i = -1;
 			j = 0;
-			while (vars[++k] && ++j < len)
+			while (vars[++i] && ++j < args)
 				g_envp = ft_join_env(g_envp, vars[j]);
-			return (1);
 			
 		}
-		else
-		{
-			ft_putstr_fd("\033[1;31m[Minishell] : ", 1);
-			ft_putendl_fd("no matches found : ", 1);
-			return (1);
-		}
-			
+		return (1);	
 	}
 	return (-1);
 }
