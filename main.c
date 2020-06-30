@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/07 21:28:04 by fernando         ###   ########.fr       */
+/*   Updated: 2020/06/30 16:13:38 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,12 @@ static void	ft_execute(char **command, char ** vars)
 	ignore_space(command);
 	if (!ft_strcmp(vars[0], "echo"))
 		ft_arg_echo(command[0], vars, args);	
-	else if (!ft_strcmp(vars[0], "cd") || !ft_strcmp(vars[0], "CD"))
+	else if (!ft_strcmp(vars[0], "cd") || !ft_strcmp(vars[0], "~"))
 	{
-		if (vars[1])
-		{
-			if (!ft_strcmp(vars[0], ".."))
-				chdir("..");
-			else
-				ft_arg_cd(vars, args);
-		}
+		if (!ft_strcmp(vars[0], ".."))
+			chdir("..");
+		else
+			ft_arg_cd(vars, args);
 	}
 	else if (!ft_strcmp(vars[0], "pwd") || !ft_strcmp(vars[0], "PWD"))
 		ft_putendl_fd(getcwd(pwd, -1), 1);
@@ -83,7 +80,7 @@ int main(int ac, char **av, char **env)
 			break ;
 		//if (!ft_strcmp(line, "\0"))
 			//free(line);
-		command = ft_split(line, ';');
+		command = ft_split_cmd(line, ';');
 		ft_commands(command);
 		ft_free_tab(command);
 		free(line);

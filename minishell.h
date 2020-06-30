@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/07 21:28:26 by fernando         ###   ########.fr       */
+/*   Updated: 2020/06/30 18:05:54 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@
 # define TOK_LIMITS " \t\n\r\a"
 
 char    **g_envp;
-int     g_args;
 int     g_bool;
 
 int	    ft_strcmp(const char *s1, const char *s2);
@@ -70,5 +69,8 @@ int 	ft_not_quote(char *vars, char *command);
 int 	ft_echo_n(char *command);
 int		ft_quote_fst(char *command);
 int		ft_quote_snd(char *cmd, int *i);
+
+
+char	**ft_split_cmd(char const *s, char c);
 
 #endif

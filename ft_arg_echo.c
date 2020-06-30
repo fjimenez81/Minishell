@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_arg_echo.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 15:26:37 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/07 14:38:52 by fernando         ###   ########.fr       */
+/*   Updated: 2020/06/30 18:04:15 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ int ft_arg_echo(char *command, char **vars, int args)
 	i = 0;
     g_bool = 0;
     //ignore_space(&command);
-    g_args= args;
     if (args)
     {
         if (vars[1] == NULL)
