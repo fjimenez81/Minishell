@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/06/30 18:05:54 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/01 19:32:13 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,14 @@
 # define Q_DOUBLE '\"'
 # define Q_SIMPLE '\''
 # define TOK_LIMITS " \t\n\r\a"
+
+typedef struct s_shell
+{
+    char        **pipesplit;
+    char        **cmd;
+    int         args;
+    char        **cmp;
+}               t_shell;
 
 char    **g_envp;
 int     g_bool;
@@ -55,9 +63,9 @@ char	**ft_str_tok(char *s, char *sep);
 char    *ft_strstr(char *str, char *to_find);
 
 int     ft_arg_echo(char *command, char **vars, int args);
-int     ft_arg_cd(char **args, int command);
-int     ft_arg_env(char **args, int command);
-int		ft_arg_export(char **vars, int args);
+int     ft_arg_cd(t_shell *pcs);
+int     ft_arg_env(t_shell *pcs);
+int		ft_arg_export(t_shell *pcs);
 int		ft_arg_unset(char **vars, int args);
 
 void	init_env(char **env);

@@ -3,38 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   ft_arg_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/25 13:11:06 by fernando          #+#    #+#             */
-/*   Updated: 2020/04/26 21:14:23 by fernando         ###   ########.fr       */
+/*   Updated: 2020/07/01 19:27:27 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int		print_env(char **env)
+int             ft_arg_env(t_shell *pcs)
 {
 	int i;
 
-	i = -1;
-	while (env[++i])
-		if (ft_strcmp(env[i], "") != 0)
-			ft_putendl_fd(env[i], 1);
-	return (1);
-}
-
-int             ft_arg_env(char **vars, int args)
-{
-    //char	**tmpenv;
-
-    (void)vars;
-	if (args == 1)
-		return (print_env(g_envp));
-	/*else
+	if (pcs->args == 1)
 	{
-		tmpenv = ft_tabcpy(g_envp);
-		//env_help(args, tmpenv);
-		//free_command(tmpenv);
-	}*/
-	return (1);
+		i = -1;
+		while (g_envp[++i])
+			if (ft_strcmp(g_envp[i], "") != 0)
+				ft_putendl_fd(g_envp[i], 1);
+		return (1);
+	}
+	return (0);
 }

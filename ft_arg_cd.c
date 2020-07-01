@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 21:08:07 by fernando          #+#    #+#             */
-/*   Updated: 2020/06/30 18:19:55 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/01 17:51:09 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,31 +53,37 @@ static char *ft_get_var(char *str)
 	return (NULL);
 }
 
-int ft_arg_cd(char **vars, int args)
+static void ft_cd_two_arg(t_shell *pcs, char *oldpath)
+{
+	if (pcs->args == 1 || !ft_strcmp(pcs->cmp[0], "~"))
+	{
+        if (chdir(ft_get_var("HOME")) == 0)
+			ft_get_up_var(oldpath);
+	}
+	else if (pcs->args == 2 && chdir(pcs->cmp[1]) == 0)
+		ft_get_up_var(oldpath);
+}
+
+int ft_arg_cd(t_shell *pcs)
 {
 	char oldpath[PATH_MAX];
 
 	getcwd(oldpath, -1);
-    if (args > 2)
+    if (pcs->args > 2)
     {
         ft_putstr_fd("cd: too many arguments\n", 1);
         return (0);
     }
-    else if (args <= 2)
+	else if (pcs->args == 2 && !ft_strcmp(pcs->cmp[1], ".."))
     {
-        if (args == 1 || !ft_strcmp(vars[1], "~"))
-        {
-            if (chdir(ft_get_var("HOME")) == 0)
-			{
-				ft_get_up_var(oldpath);
-				return (1);
-			}
-        }
-		else if (args == 2 && chdir(vars[1]) == 0)
-		{
-			ft_get_up_var(oldpath);
-			return (1);
-		}
+        chdir("..");
+		getcwd(oldpath, -1);
+		return (1);
+    }
+    else if (pcs->args <= 2)
+    {
+		ft_cd_two_arg(pcs, oldpath);
+		return (1);
     }
     ft_putstr_fd("Error: No such file or directory\n", 1);
     return(0);

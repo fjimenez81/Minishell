@@ -6,68 +6,80 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/06/30 16:13:38 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/01 19:32:04 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_execute(char **command, char ** vars)
+static void	ft_execute(t_shell *pcs)
 {
 	char pwd[PATH_MAX];
-	int args;
+	int i;
 
-	args = ft_len_tab(vars);
-	ignore_space(command);
-	if (!ft_strcmp(vars[0], "echo"))
-		ft_arg_echo(command[0], vars, args);	
-	else if (!ft_strcmp(vars[0], "cd") || !ft_strcmp(vars[0], "~"))
+	i = -1;
+	while (pcs->pipesplit && pcs->pipesplit[++i])
 	{
-		if (!ft_strcmp(vars[0], ".."))
-			chdir("..");
+		pcs->cmp = ft_str_tok(pcs->pipesplit[i], TOK_LIMITS);
+		pcs->args = ft_len_tab(pcs->cmp);
+		if (!ft_strcmp(pcs->cmp[0], "echo"))
+			ft_arg_echo(pcs->pipesplit[i], pcs->pipesplit, pcs->args);	
+		else if (!ft_strcmp(pcs->cmp[0], "cd") || !ft_strcmp(pcs->cmp[0], "~"))
+			ft_arg_cd(pcs);
+		else if (!ft_strcmp(pcs->cmp[0], "pwd") || !ft_strcmp(pcs->cmp[0], "PWD"))
+			ft_putendl_fd(getcwd(pwd, -1), 1);
+		else if (!ft_strcmp(pcs->cmp[0], "env"))
+			ft_arg_env(pcs);
+		else if(!ft_strcmp(pcs->cmp[0], "export"))
+			ft_arg_export(pcs);
+		else if(!ft_strcmp(pcs->cmp[0], "unset"))
+			ft_arg_unset(pcs->pipesplit, pcs->args);
+		else if(!ft_strcmp(pcs->cmp[0], "exit"))
+		{
+			system("leaks minishell");
+			exit(0);
+		}
 		else
-			ft_arg_cd(vars, args);
+		{
+			ft_putstr_fd("\033[1;31m[Minishell] : ", 1);
+			ft_putstr_fd("command not found : ", 1);
+			ft_putendl_fd(pcs->cmp[0], 1);
+		}
 	}
-	else if (!ft_strcmp(vars[0], "pwd") || !ft_strcmp(vars[0], "PWD"))
-		ft_putendl_fd(getcwd(pwd, -1), 1);
-	else if (!ft_strcmp(vars[0], "env"))
-		ft_arg_env(vars, args);
-	else if(!ft_strcmp(vars[0], "export"))
-		ft_arg_export(vars, args);
-	else if(!ft_strcmp(vars[0], "unset"))
-		ft_arg_unset(vars, args);
-	else if(!ft_strcmp(vars[0], "exit"))
-	{
-		system("leaks minishell");
-		exit(0);
-	}
-	else
-	{
-		ft_putstr_fd("\033[1;31m[Minishell] : ", 1);
-		ft_putstr_fd("command not found : ", 1);
-		ft_putendl_fd(vars[0], 1);
-	}
+	ft_free_tab(pcs->cmp);
+	
+
 }
 
 static void ft_commands(char **command)
 {
-	int i;
-	char **vars;
-	
+	int		i;
+	char	**aux;
+	char	*tmp;
+	t_shell	*pcs;
+
+	if (!(pcs = malloc(sizeof(t_shell) * (ft_len_tab(command) + 1))))
+		return ;
 	i = -1;
-	while (command[++i])
+	pcs->cmd = command;
+	while (pcs->cmd && pcs->cmd[++i])
 	{
-		vars = ft_str_tok(command[i], TOK_LIMITS);
-		ft_execute(command, vars);
-		ft_free_tab(vars);	
+		aux = ft_split_cmd(pcs->cmd[i], '|');
+		pcs->pipesplit = aux;
+		tmp = ft_strtrim(pcs->pipesplit[i], " \t");
+		free(pcs->pipesplit[i]);
+		pcs->pipesplit[i] = tmp;
+		ft_execute(pcs);
 	}
+	ft_free_tab(aux);
+	free(pcs);
+	//free(tmp);
 }
 
 int main(int ac, char **av, char **env)
 {
 	char *line;
 	char **command;
-	
 
     //signal(SIGINT, despedida);
 	(void)ac;
@@ -78,8 +90,6 @@ int main(int ac, char **av, char **env)
 		ft_putstr_fd("\033[1;92m[Minishell] ~>\033[0m ", 1);
 		if (get_next_line(0, &line) <= 0)
 			break ;
-		//if (!ft_strcmp(line, "\0"))
-			//free(line);
 		command = ft_split_cmd(line, ';');
 		ft_commands(command);
 		ft_free_tab(command);

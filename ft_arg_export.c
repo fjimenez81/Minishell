@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_arg_export.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/08 12:50:34 by fernando         ###   ########.fr       */
+/*   Updated: 2020/07/01 20:10:34 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void ft_sort_export(void)
 	}
 }
 
-static void ft_change_var(char **g_envp, char *vars)
+static void ft_change_var(char *vars)
 {
 	int		i;
 	char	**split;
@@ -64,7 +64,7 @@ static void ft_change_var(char **g_envp, char *vars)
 	}
 }
 
-static char	**ft_join_env(char **g_envp, char *vars)
+static char	**ft_join_env(char *vars)
 {
 	int		i;
 	size_t len1;
@@ -73,7 +73,7 @@ static char	**ft_join_env(char **g_envp, char *vars)
 	len1 = ft_len_tab(g_envp);
 	if (!(res = (char **)malloc(sizeof(char*) * (len1 + 2))))
 		return (NULL);
-	ft_change_var(g_envp, vars);
+	ft_change_var(vars);
 	i = -1;
 	while (g_envp[++i])
 		res[i] = ft_strdup(g_envp[i]);
@@ -124,26 +124,21 @@ static int ft_check_var_loop(char **vars)
 	return (1);
 }
 
-int		ft_arg_export(char **vars, int args)
+int		ft_arg_export(t_shell *pcs)
 {
 	int i;
 	int j;
-	
-	if (args)
+
+	if (pcs->args == 1)
+		ft_sort_export();
+	else if (pcs->args > 1)
 	{
-		if (vars[1] == NULL)
-			ft_sort_export();
-		else if (ft_len_tab(vars) > 1)
-		{
-			if (!ft_check_var_loop(vars))
-				return (1);
-			i = -1;
-			j = 0;
-			while (vars[++i] && ++j < args)
-				g_envp = ft_join_env(g_envp, vars[j]);
-			
-		}
-		return (1);	
+		if (!ft_check_var_loop(pcs->cmp))
+			return (1);
+		i = -1;
+		j = 0;
+		while (pcs->cmp[++i] && ++j < pcs->args)
+			g_envp = ft_join_env(pcs->cmp[j]);
 	}
-	return (-1);
+	return (1);
 }
