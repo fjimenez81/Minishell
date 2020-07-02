@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/01 19:32:13 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/02 17:41:41 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@
 # define BUFFER_SIZE 2
 # define Q_DOUBLE '\"'
 # define Q_SIMPLE '\''
-# define TOK_LIMITS " \t\n\r\a"
+# define TOK_LIMITS " \t"
+
 
 typedef struct s_shell
 {
@@ -37,6 +38,7 @@ typedef struct s_shell
     char        **cmd;
     int         args;
     char        **cmp;
+    char        *tst;
 }               t_shell;
 
 char    **g_envp;
