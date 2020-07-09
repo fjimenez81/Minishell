@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/02 17:41:41 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/08 19:00:17 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,17 @@
 typedef struct s_shell
 {
     char        **pipesplit;
-    char        **cmd;
+    char        **setfd;
+    char        *cmd;
+    char        *out;
+    char        *in;
+    char        *redir;
+    char        *rderror;
     int         args;
+    int         fd;
+    int         check_fd;
     char        **cmp;
-    char        *tst;
+    char        *lnarg;
 }               t_shell;
 
 char    **g_envp;
@@ -82,5 +89,7 @@ int		ft_quote_snd(char *cmd, int *i);
 
 
 char	**ft_split_cmd(char const *s, char c);
+
+char    *ft_pass_quotes(char *s, int n, int size);
 
 #endif

@@ -3,20 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fernando <fernando@student.42.fr>          +#+  +:+       +#+         #
+#    By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/18 21:02:40 by fernando          #+#    #+#              #
-#    Updated: 2020/05/16 16:50:16 by fernando         ###   ########.fr        #
+#    Updated: 2020/07/06 19:01:40 by fjimenez         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 INC = minishell.h
-
-CFILES = $(addsuffix .c, $(SRC))
-
-OFILES = $(addsuffix .o, $(SRC))
 
 SRC =	main \
 		ft_utils \
@@ -30,6 +26,11 @@ SRC =	main \
 		ft_init_env \
 		ft_quote_aux \
 		ft_split_cmd \
+		ft_pass_quote \
+
+CFILES = $(addsuffix .c, $(SRC))
+
+OFILES = $(addsuffix .o, $(SRC))
 
 SRCGNL = gnl/get_next_line.c gnl/get_next_line_utils.c
 

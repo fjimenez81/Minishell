@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/28 21:33:51 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/08 12:52:35 by fernando         ###   ########.fr       */
+/*   Updated: 2020/07/03 19:49:32 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,11 @@ int ft_search_c(char *s, int c)
 
 int 	ft_isspace(int c)
 {
-	return (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f'
-			|| c == '\v');
+	c = (unsigned char)c;
+	if (c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r' \
+		|| c == ' ')
+		return (1);
+	return (0);
 }
 
 void	ignore_space(char **command)
