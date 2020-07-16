@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/08 19:00:17 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/16 17:55:57 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,24 @@ typedef struct s_shell
 {
     char        **pipesplit;
     char        **setfd;
+    char        **env;
     char        *cmd;
     char        *out;
     char        *in;
     char        *redir;
     char        *rderror;
+    char        *export;
     int         args;
     int         fd;
+    int         quotes;
+    int         equal;
     int         check_fd;
     char        **cmp;
     char        *lnarg;
 }               t_shell;
 
-char    **g_envp;
+char     **g_envp;
+char        **g_export;
 int     g_bool;
 
 int	    ft_strcmp(const char *s1, const char *s2);
@@ -74,8 +79,8 @@ char    *ft_strstr(char *str, char *to_find);
 int     ft_arg_echo(char *command, char **vars, int args);
 int     ft_arg_cd(t_shell *pcs);
 int     ft_arg_env(t_shell *pcs);
-int		ft_arg_export(t_shell *pcs);
-int		ft_arg_unset(char **vars, int args);
+int		ft_arg_export(t_shell *pcs, char *str);
+int		ft_arg_unset(char *vars);
 
 void	init_env(char **env);
 

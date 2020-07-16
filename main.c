@@ -6,30 +6,30 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/09 20:42:42 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/16 18:54:41 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_execute(t_shell *pcs)
+static void	ft_execute(t_shell *pcs, int i)
 {
 	char pwd[PATH_MAX];
-	int i;
-	i = -1;
+	//int i;
+	//i = -1;
 	
-	//if (!ft_strcmp(pcs->cmp[0], "echo"))
-		//ft_arg_echo(pcs->pipesplit[i], pcs->pipesplit, pcs->args);	
-	if (!ft_strcmp(pcs->cmp[0], "cd") || !ft_strcmp(pcs->cmp[0], "~"))
+	if (!ft_strcmp(pcs->cmp[0], "echo"))
+		ft_arg_echo(pcs->pipesplit[i], pcs->cmp, pcs->args);	
+	else if (!ft_strcmp(pcs->cmp[0], "cd") || !ft_strcmp(pcs->cmp[0], "~"))
 		ft_arg_cd(pcs);
 	else if (!ft_strcmp(pcs->cmp[0], "pwd") || !ft_strcmp(pcs->cmp[0], "PWD"))
 		ft_putendl_fd(getcwd(pwd, -1), 1);
 	else if (!ft_strcmp(pcs->cmp[0], "env"))
 		ft_arg_env(pcs);
 	else if(!ft_strcmp(pcs->cmp[0], "export"))
-		ft_arg_export(pcs);
-	//else if(!ft_strcmp(pcs->cmp[0], "unset"))
-		//ft_arg_unset(pcs->pipesplit, pcs->args);
+		ft_arg_export(pcs, pcs->pipesplit[i]);
+	else if(!ft_strcmp(pcs->cmp[0], "unset"))
+		ft_arg_unset(pcs->pipesplit[i]);
 	else if(!ft_strcmp(pcs->cmp[0], "exit"))
 	{
 		system("leaks minishell");
@@ -168,10 +168,10 @@ static void ft_loop_pipes(char **aux)
 		tmp = ft_strtrim(pcs->pipesplit[j], " \t");
 		free(pcs->pipesplit[j]);
 		pcs->pipesplit[j] = tmp;
-		pcs->cmp = ft_str_tok(pcs->pipesplit[j], TOK_LIMITS);
+		pcs->cmp = ft_split(pcs->pipesplit[j], ' ');//cuidado con echo fuciona con ft_split
 		pcs->args = ft_len_tab(pcs->cmp);
 		pcs->fd = ft_check_redir(pcs, j);
-		ft_execute(pcs);
+		ft_execute(pcs, j);
 	}
 	ft_free_tab(aux);
 	free(pcs);

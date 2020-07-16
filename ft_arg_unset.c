@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_arg_unset.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 20:14:59 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/08 12:31:59 by fernando         ###   ########.fr       */
+/*   Updated: 2020/07/14 17:14:51 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,31 +32,31 @@ char *ft_strstr(char *str, char *to_find)
 	return (0);
 }
 
-int ft_arg_unset(char **vars, int args)
+int ft_arg_unset(char *vars)
 {
 	int i;
 	int j;
 	char *unset;
+	char **aux;
 
+	aux = ft_split_cmd(vars, ' ');
 	i = -1;
-	if (args)
+	if (aux[1] == NULL)
+        return (1);
+	else if (ft_len_tab(aux) > 1)
 	{
-		if (vars[1] == NULL)
-            return (1);
-		else if (args > 1)
+		while (g_envp[++i])
 		{
-			while (g_envp[++i])
+			j = 0;
+			while (++j < ft_len_tab(aux))
 			{
-				j = 0;
-				while (++j < args)
-				{
-					unset = ft_strstr(g_envp[i], vars[j]);
-					if (unset != NULL)
-						ft_memmove(g_envp[i], "", ft_strlen(g_envp[i]));
-				}
+				unset = ft_strstr(g_envp[i], aux[j]);
+				if (unset != NULL)
+					ft_memmove(g_envp[i], "", ft_strlen(g_envp[i]));
 			}
-			return (1);
 		}
+		ft_free_tab(aux);
+		return (1);
 	}
-	return (-1);
+	return (0);
 }

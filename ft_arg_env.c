@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/25 13:11:06 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/01 19:27:27 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/16 17:40:19 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int             ft_arg_env(t_shell *pcs)
 		while (g_envp[++i])
 			if (ft_strcmp(g_envp[i], "") != 0)
 				ft_putendl_fd(g_envp[i], 1);
+		//ft_free_tab(pcs->env);
 		return (1);
 	}
 	return (0);

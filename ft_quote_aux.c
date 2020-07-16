@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_quote_aux.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/05 19:20:42 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/07 21:28:16 by fernando         ###   ########.fr       */
+/*   Updated: 2020/07/16 15:59:16 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int ft_quote_fst(char *command)
 	i = -1;
     while (command[++i])
     { 
-        if (command[i] == ' ' || command[i] == '\t')
+        if (command[i] == ' ') //|| command[i] == '\t')
 			i++;
         if (command[i] == '$')
 		{

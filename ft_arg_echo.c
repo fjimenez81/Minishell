@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 15:26:37 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/01 15:37:20 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/16 16:02:19 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,10 @@ int ft_echo_n(char *command)
 int ft_arg_echo(char *command, char **vars, int args)
 {
 	int i;
+    //char *aux;
 
 	i = 0;
     g_bool = 0;
-    //ignore_space(&command);
     if (args)
     {
         if (vars[1] == NULL)
@@ -103,6 +103,7 @@ int ft_arg_echo(char *command, char **vars, int args)
         else if (vars[1])
         {
             command = ft_cutstr(command, "echo", ft_strlen(command));
+            //aux = ft_pass_quotes(command, 0, ft_strlen(command));
             ft_loop_echo(vars, command);
             if (ft_strcmp(vars[1], "-n"))
 			    ft_putchar_fd('\n', 1);
