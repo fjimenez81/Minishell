@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/16 19:55:46 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/17 21:41:39 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ static char	**ft_join_env(char *vars)
 	aux = ft_pass_quotes(vars, 0, ft_strlen(vars));
 	i = -1;
 	while (g_envp[++i])
-		res[i] = ft_strdup(g_envp[i]);
+		res[i] = g_envp[i];
 	res[i] = ft_strdup(aux);
 	i++;
 	res[i] = NULL;

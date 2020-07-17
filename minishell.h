@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/16 17:55:57 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/17 20:23:04 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void    ft_swap(char **a, char **b);
 int		ft_isalpha(int c);
 int     ft_first_chr(char **s, char c);
 char    *ft_cutstr(char *src, char *cut, size_t len);
-char    *ft_cut_end(char *s, int a, int b, int c);
+char    *ft_cut_end(char *s);
 
 
 
@@ -81,6 +81,9 @@ int     ft_arg_cd(t_shell *pcs);
 int     ft_arg_env(t_shell *pcs);
 int		ft_arg_export(t_shell *pcs, char *str);
 int		ft_arg_unset(char *vars);
+
+
+int     ft_arg_echo_two(char *cmd, char **vars, int args);
 
 void	init_env(char **env);
 

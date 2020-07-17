@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/28 21:33:51 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/16 15:35:26 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/17 21:04:46 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char *ft_cutstr(char *src, char *cut, size_t len)
     return (NULL);
 }
 
-char *ft_cut_end(char *s, int a, int b, int c)
+char *ft_cut_end(char *s)
 {
     int i;
     int j;
@@ -92,7 +92,8 @@ char *ft_cut_end(char *s, int a, int b, int c)
     i = -1;
     while (s[++i])
     {
-        if (s[i] == a || s[i] == b || s[i] == c)
+        if (s[i] == '\"' || s[i] == '\'' || s[i] == ' '||
+            s[i] == '\\' || s[i] == '\0')
             break ;
     }
     if (!(dest = (char*)malloc(sizeof(char) * i + 1)))

@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/16 18:54:41 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/17 18:21:48 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	ft_execute(t_shell *pcs, int i)
 	//i = -1;
 	
 	if (!ft_strcmp(pcs->cmp[0], "echo"))
-		ft_arg_echo(pcs->pipesplit[i], pcs->cmp, pcs->args);	
+		ft_arg_echo_two(pcs->pipesplit[i], pcs->cmp, pcs->args);	
 	else if (!ft_strcmp(pcs->cmp[0], "cd") || !ft_strcmp(pcs->cmp[0], "~"))
 		ft_arg_cd(pcs);
 	else if (!ft_strcmp(pcs->cmp[0], "pwd") || !ft_strcmp(pcs->cmp[0], "PWD"))
