@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/17 20:23:04 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/19 18:32:55 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_shell
     int         quotes;
     int         equal;
     int         check_fd;
+    int         ok;
     char        **cmp;
     char        *lnarg;
 }               t_shell;
@@ -76,7 +77,6 @@ char    *ft_cut_end(char *s);
 char	**ft_str_tok(char *s, char *sep);
 char    *ft_strstr(char *str, char *to_find);
 
-int     ft_arg_echo(char *command, char **vars, int args);
 int     ft_arg_cd(t_shell *pcs);
 int     ft_arg_env(t_shell *pcs);
 int		ft_arg_export(t_shell *pcs, char *str);

@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 18:07:07 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/07/17 21:28:49 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/19 21:35:29 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int ft_arg_echo_two(char *cmd, char **vars, int args)
     char *aux;
 	char *dollar;
 	char *var;
+	char *cut;
+	char **tmp;
 
 	i = 0;
     g_bool = 0;
@@ -66,21 +68,43 @@ int ft_arg_echo_two(char *cmd, char **vars, int args)
 				if ((*cmd == '$' && *(cmd + 1) != ' ') && quotes == 0)
 				{
 					dollar = ft_cut_end(cmd);
-					aux = ft_strrchr(dollar, '$') + 1;
-					i = -1;
-					while (g_envp[++i])
+					if (dollar != NULL)
 					{
-						var = ft_strstr(g_envp[i], aux);
-						if (var != NULL)
-							var = ft_strrchr(g_envp[i], '=') + 1;
-						else
-							var = ft_strdup("");	
+						aux = ft_strjoin(ft_strrchr(dollar, '$') + 1, "=");
+						i = -1;
+						while (g_envp[++i])
+						{
+							tmp = ft_split(g_envp[i], '=');
+							var = ft_strstr(g_envp[i], aux);
+							if (var != NULL)
+							{
+								cut = ft_cut_end(var);
+								if (!ft_strcmp(cut, tmp[0]))
+								{
+									var = ft_strrchr(g_envp[i], '=') + 1;
+									ft_free_tab(tmp);
+									break ;
+								}
+								else
+									var = "";
+							}
+							else
+								var = "";
+							ft_free_tab(tmp);
+						}
+						ft_putstr_fd(var, 1);
+						cmd += ft_strlen(dollar);
+						if (ft_strlen(cut) > 0)
+							free(cut);
+						free(aux);
+						free(dollar);
 					}
-					ft_putstr_fd(var, 1);
-					cmd += ft_strlen(dollar);
-					if (ft_strlen(var) == 0)
-						free(var);
-					free(dollar);
+					else
+					{
+						while (*cmd != ' ')
+							cmd++;
+						cmd++;
+					}
 				}
                 else
                 {

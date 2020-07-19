@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/28 21:33:51 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/17 21:04:46 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/19 21:24:06 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,10 @@ char *ft_cut_end(char *s)
     while (s[++i])
     {
         if (s[i] == '\"' || s[i] == '\'' || s[i] == ' '||
-            s[i] == '\\' || s[i] == '\0')
+            s[i] == '\\' || s[i] == '\0' || s[i] == '=')
             break ;
+        else if (ft_isdigit(s[i]) == 1)
+            return (NULL);    
     }
     if (!(dest = (char*)malloc(sizeof(char) * i + 1)))
         return (NULL);
