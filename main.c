@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/19 18:33:01 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/20 16:19:05 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ int ft_check_redir(t_shell *pcs, int j)
 	pcs->redir = pcs->pipesplit[j];
 	while (pcs->redir[++i])
 	{
-		if (pcs->redir[i] == '>')
+		if (pcs->redir[0] == '>')
 		{
 			i++;
 			if (pcs->redir[i] == '>')
@@ -141,13 +141,14 @@ int ft_check_redir(t_shell *pcs, int j)
 			}
 			else
 				ft_redir_fd(pcs, O_TRUNC | O_RDWR | O_CREAT, ">", &i);
+			i += ft_strlen(pcs->redir) - i;
 		}
-		else if (pcs->redir[i] == '<')
+		else if (pcs->redir[0] == '<')
 		{
 			i++;
 			ft_redir_fd(pcs, O_RDONLY, "<", &i);
+			i += ft_strlen(pcs->redir) - i;
 		}
-		i += ft_strlen(pcs->redir) - i;
 	}
 	return (pcs->fd);
 }
