@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/20 16:19:05 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/21 17:32:04 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,17 @@ void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 
 	while (ft_isspace(pcs->redir[*i]))
 		*i += 1;
-	k = -1;
 	j = 0;
+	while (pcs->redir[j] != '>' && pcs->redir[j] != '<')
+		j++;
+	j++;
+	k = j - 1;
 	size = 0;
 	prespace = 1;
 	bfquotes = 1;
 	aftquotes = 0;
 	inquotes = 0;
-	final = 0;
+	final = 0;	
 	while (pcs->redir[++k])
 	{
 		if ((pcs->redir[k] == '<' || pcs->redir[k] == '>' ||
@@ -131,7 +134,7 @@ int ft_check_redir(t_shell *pcs, int j)
 	pcs->redir = pcs->pipesplit[j];
 	while (pcs->redir[++i])
 	{
-		if (pcs->redir[0] == '>')
+		if (pcs->redir[i] == '>')
 		{
 			i++;
 			if (pcs->redir[i] == '>')
@@ -143,7 +146,7 @@ int ft_check_redir(t_shell *pcs, int j)
 				ft_redir_fd(pcs, O_TRUNC | O_RDWR | O_CREAT, ">", &i);
 			i += ft_strlen(pcs->redir) - i;
 		}
-		else if (pcs->redir[0] == '<')
+		else if (pcs->redir[i] == '<')
 		{
 			i++;
 			ft_redir_fd(pcs, O_RDONLY, "<", &i);

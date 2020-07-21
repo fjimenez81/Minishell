@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/20 15:43:15 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/21 15:34:24 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <signal.h>
 # include <limits.h>
 # include <dirent.h>
+# include <fcntl.h>
 # include "gnl/get_next_line.h"
 # include "libft/libft.h"
 
