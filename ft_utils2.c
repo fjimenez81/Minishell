@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/28 21:33:51 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/20 15:33:56 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/22 20:52:48 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,15 @@ char *ft_cutstr(char *src, char *cut, size_t len)
         else
             j = 0;
         if (cut[j] == '\0')
-            return (src + j);
+        {
+            i++;
+            while(ft_isspace(src[i]))
+            {
+                i += 1;
+                j += 1;
+            }
+            return (src + j);   
+        }    
     }
     return (NULL);
 }
@@ -93,10 +101,9 @@ char *ft_cut_end(char *s)
     while (s[++i])
     {
         if (s[i] == '\"' || s[i] == '\'' || s[i] == ' '||
-            s[i] == '\\' || s[i] == '\0' || s[i] == '=')
-            break ;
-        else if (ft_isdigit(s[i]) == 1)
-            return (NULL);    
+            s[i] == '\\' || s[i] == '\0' || s[i] == '=' ||
+            (s[i] == '$' && (s[i + 1] == '\0' || s[i + 1] != ' ') && i != 0))
+                break ;
     }
     if (!(dest = (char*)malloc(sizeof(char) * i + 1)))
         return (NULL);

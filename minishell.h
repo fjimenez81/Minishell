@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/21 15:34:24 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/22 20:16:34 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ typedef struct s_shell
     int         quotes;
     int         equal;
     int         check_fd;
-    int         ok;
+    int         bool_redir;
     char        **cmp;
     char        *lnarg;
 }               t_shell;
@@ -85,6 +85,7 @@ int		ft_arg_unset(char *vars);
 
 
 int     ft_arg_echo_two(char *cmd, char **vars, int args);
+char    *ft_print_var(char *aux);
 
 void	init_env(char **env);
 

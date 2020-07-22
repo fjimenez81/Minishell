@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/21 17:32:04 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/22 21:17:52 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,19 +46,50 @@ void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 {
 	int		k;
 	int		j;
+	int		cont;
 	int		size;
 	int		prespace;
 	int		bfquotes;
 	int		aftquotes;
 	int		inquotes;
 	int		final;
+	int		std_out;
 	char	*aux;
+	char    *dupout;
+	char	*dollar;
+	//char	*tmp;
 
 	while (ft_isspace(pcs->redir[*i]))
 		*i += 1;
+	k = -1;
+	cont = 0;
+	while (pcs->redir[++k])
+	{
+		if (pcs->redir[k] == '$' && pcs->redir[k + 1] != ' ' &&
+			pcs->redir[k + 1] != '\0')
+		{
+			dollar = ft_cut_end(pcs->redir + k);
+			aux = ft_strjoin(ft_strrchr(dollar, '$') + 1, "=");
+			cont += ft_strlen(ft_print_var(aux)) - ft_strlen(dollar);
+			k += ft_strlen(dollar);
+			free(aux);
+			free(dollar);
+		}
+	}
 	j = 0;
 	while (pcs->redir[j] != '>' && pcs->redir[j] != '<')
 		j++;
+	std_out = dup(1);
+	if (j > 0 && !ft_strcmp(pcs->cmp[0], "echo"))
+	{
+		dupout = ft_cutstr(pcs->redir, "echo", ft_strlen(pcs->redir));
+		aux = ft_pass_quotes(dupout, 0, ft_strlen(dupout));
+		cont = 0;
+		while (aux[cont] != '>' && aux[cont] != '<')
+			cont++;
+		dupout = ft_substr(aux, 0, cont);
+		free(aux);
+	}
 	j++;
 	k = j - 1;
 	size = 0;
@@ -114,28 +145,52 @@ void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 	{
 		aux = ft_pass_quotes(pcs->redir, j, size);
 		pcs->in = aux;
-		pcs->fd = open(pcs->in, flags, 0644);	
+		if ((pcs->fd = open(pcs->in, O_RDONLY)) < 0)
+		{
+			ft_putstr_fd(pcs->in, 1);
+			pcs->in = NULL;
+			ft_putstr_fd(" : No existe el archivo o directorio\n", 1);
+		}
+		//dup2(pcs->fd, 0);
+		ft_putendl_fd(dupout, 1);
+		free(dupout);	
 	}
 	else
 	{
 		aux = ft_pass_quotes(pcs->redir, j, size);
 		pcs->out = aux;
 		pcs->fd = open(pcs->out, flags, 0644);
+		if (!ft_strcmp(pcs->cmp[0], "echo"))
+		{
+			dup2(pcs->fd, STDOUT_FILENO);//Pone el standar output en modo escritura
+			ft_putendl_fd(dupout, 1);//Y por eso no printa en pantalla y lo escribe en el archivo
+			free(dupout);
+		}
 	}
 	close(pcs->fd);
+	dup2(std_out, 1);//Devuelve el standar output a su modo original
 	free(aux);
 }
 
 int ft_check_redir(t_shell *pcs, int j)
 {
 	int i;
+	int quotes;
 
 	i = -1;
+	quotes = 0;
 	pcs->redir = pcs->pipesplit[j];
 	while (pcs->redir[++i])
 	{
-		if (pcs->redir[i] == '>')
+		if ((pcs->redir[i] == '\"' || pcs->redir[i] == '\"') &&
+			pcs->redir[i - 1] != '\\' && quotes == 0)
+			quotes = 1;
+		else if ((pcs->redir[i] == '\"' || pcs->redir[i] == '\"') &&
+			pcs->redir[i - 1] != '\\' && quotes == 1)
+			quotes = 0;
+		else if (pcs->redir[i] == '>' && quotes == 0)
 		{
+			pcs->bool_redir = 1;
 			i++;
 			if (pcs->redir[i] == '>')
 			{
@@ -146,8 +201,9 @@ int ft_check_redir(t_shell *pcs, int j)
 				ft_redir_fd(pcs, O_TRUNC | O_RDWR | O_CREAT, ">", &i);
 			i += ft_strlen(pcs->redir) - i;
 		}
-		else if (pcs->redir[i] == '<')
+		else if (pcs->redir[i] == '<' && quotes == 0)
 		{
+			pcs->bool_redir = 1;
 			i++;
 			ft_redir_fd(pcs, O_RDONLY, "<", &i);
 			i += ft_strlen(pcs->redir) - i;
@@ -172,8 +228,12 @@ static void ft_loop_pipes(char **aux)
 		pcs->pipesplit[j] = tmp;
 		pcs->cmp = ft_split(pcs->pipesplit[j], ' ');//cuidado con echo fuciona con ft_split
 		pcs->args = ft_len_tab(pcs->cmp);
+		pcs->bool_redir = 0;
 		pcs->fd = ft_check_redir(pcs, j);
-		ft_execute(pcs, j);
+		if (pcs->bool_redir == 0)
+			ft_execute(pcs, j);
+		else if (pcs->bool_redir == 1)
+			ft_free_tab(pcs->cmp);
 	}
 	ft_free_tab(aux);
 	free(pcs);
