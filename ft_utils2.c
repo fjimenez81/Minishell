@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/28 21:33:51 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/22 20:52:48 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/24 19:51:21 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,4 +115,95 @@ char *ft_cut_end(char *s)
     }
     dest[j] = '\0';
     return (dest);
+}
+
+char *ft_join_char(char *s, int c)
+{
+    int i;
+    char *res;
+
+    if (!(res = malloc(sizeof(char) * (ft_strlen(s) + 2))))
+        return (NULL);
+    i = -1;
+    while (s[++i])
+        res[i] = s[i];
+    res[i] = c;
+    i++;
+    res[i] = '\0';
+    return (res);
+}
+
+char *ft_realloc_str(char *str, int i, int cut)
+{
+    int quotes;
+    int bool;
+	char *tmp;
+	char *res;
+    char *dollar;
+    char *aux;
+    char *var;
+	
+    if (str == NULL)
+        return (NULL);
+	res = "\0";
+    bool = 0;
+    quotes = 0;
+	while (str[++i])
+    {
+        if ((str[i] == '\"' || str[i] == '\'') &&
+				str[i - 1] != '\\' && quotes == 0)
+                {
+                    i++;
+				    quotes = 1;
+                }
+		else if ((str[i] == '\"' || str[i] == '\'') &&
+				str[i - 1] != '\\' && quotes == 1)
+                {
+                    i++;
+				    quotes = 0;
+                }
+        else if ((str[i] == '\\' && (str[i + 1] == '\'' ||
+				str[i + 1] == '\"')) && quotes == 1)
+                    i++;
+        else if (str[i] == '\\' && str[i + 1] == ' ' && quotes == 0)
+            i++;
+        else if (str[i] == ' ' && str[i - 1] != '\\' && str[i + 1] == ' ' && quotes == 0)
+        {  
+            while (ft_isspace(str[i]))
+                i += 1;
+            i--;
+        }
+        //else if (str[i] == ' ' && (str[i + 1] == '<' || str[i + 1] == '>') && quotes == 0)
+            //i++;
+        if ((str[i] == '<' || str[i] == '>') && quotes == 0 && cut == 1)//echar un vistazo
+            break ;
+        if (str[i] == '$' && bool == 0 && quotes == 0)
+        {  
+            bool = 1;
+            tmp = ft_join_char(res, '\0');
+        }
+        else
+            tmp = ft_join_char(res, str[i]);
+		res = tmp;
+		if (str[i] == '$' && bool == 1 && quotes == 0)
+		{
+            bool = 0;
+            dollar = ft_cut_end(str + i);
+            ft_putendl_fd(dollar, 1);
+			aux = ft_strjoin(ft_strrchr(dollar, '$') + 1, "=");
+			var = ft_print_var(aux);
+			free(tmp);
+			tmp = ft_strjoin(res, var);
+			res = tmp;
+			i += ft_strlen(dollar) - 1;
+            if (!ft_strcmp(var, "") && str[i + 1] == ' ')
+                i++;
+            free(dollar);
+            free(aux);
+		}
+        
+		free(tmp);
+    }
+    ft_putendl_fd(res, 1);
+	return (res);
 }

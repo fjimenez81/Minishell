@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/19 19:58:08 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/23 17:51:54 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,17 @@ static void ft_change_var(char *vars)
 	char	**split;
 	char	*copy;
 	char	*tmp;
+	//char	*aux;
 
+	/*if (ft_strchr(vars, '=') && (tmp = ft_strrchr(vars, '=') + 1) &&
+		ft_strchr(tmp, '$'))
+	{
+		//tmp = ft_strrchr(vars, '$');
+		aux = ft_cut_end(vars);
+		free(vars);
+		vars = ft_strjoin(tmp, "=");
+		free(tmp);
+	}*/
 	if (!ft_strchr(vars, '='))
 	{
 		tmp = vars;

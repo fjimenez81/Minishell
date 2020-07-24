@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/22 20:16:34 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/24 19:34:18 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ int		ft_isalpha(int c);
 int     ft_first_chr(char **s, char c);
 char    *ft_cutstr(char *src, char *cut, size_t len);
 char    *ft_cut_end(char *s);
+char    *ft_realloc_str(char *str, int i, int cut);
+char    *ft_join_char(char *s, int c);
 
 
 
