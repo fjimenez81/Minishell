@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/24 19:34:37 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/25 17:09:09 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 	int		std_out;
 	char	*aux;
 	char    *dupout;
-	//char	*dollar;
+	char	*dollar;
 	//char    *join;
 	//char	*var;
 	//char	*tmp;
@@ -83,7 +83,7 @@ void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 	std_out = dup(1);
 	if (j > 0 && !ft_strcmp(pcs->cmp[0], "echo"))
 	{
-		aux = ft_cutstr(pcs->redir, "echo", ft_strlen(pcs->redir));
+		dollar = ft_cutstr(pcs->redir, "echo", ft_strlen(pcs->redir));
 		/*cont = -1;
 		quotes = 0;
 		k = 0;
@@ -120,7 +120,8 @@ void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 				break ;
 		}*/
 		//dupout = ft_pass_quotes(tmp, 0, cont - k);
-		dupout = ft_realloc_str(aux, -1, 1);
+		dupout = ft_realloc_str(dollar, -1, 1);
+		//dupout = tmp;
 	}
 	j++;
 	k = j - 1;
@@ -184,8 +185,7 @@ void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 			ft_putstr_fd(" : No existe el archivo o directorio\n", 1);
 		}
 		//dup2(pcs->fd, 0);
-		ft_putendl_fd(dupout, 1);
-		free(dupout);	
+		ft_putendl_fd(dupout, 1);	
 	}
 	else
 	{
@@ -196,6 +196,7 @@ void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 		{
 			dup2(pcs->fd, STDOUT_FILENO);//Pone el standar output en modo escritura
 			ft_putendl_fd(dupout, 1);//Y por eso no printa en pantalla y lo escribe en el archivo
+			//free(tmp);
 			//free(dupout);
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/23 17:51:54 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/25 17:39:37 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,15 +52,15 @@ static void ft_sort_export(void)
 	ft_free_tab(export);
 }
 
-static void ft_change_var(char *vars)
+/*static void ft_change_var(char *vars)
 {
-	int		i;
-	char	**split;
-	char	*copy;
-	char	*tmp;
+	//int		i;
+	//char	**split;
+	//char	*copy;
+	//char	*tmp;
 	//char	*aux;
 
-	/*if (ft_strchr(vars, '=') && (tmp = ft_strrchr(vars, '=') + 1) &&
+	if (ft_strchr(vars, '=') && (tmp = ft_strrchr(vars, '=') + 1) &&
 		ft_strchr(tmp, '$'))
 	{
 		//tmp = ft_strrchr(vars, '$');
@@ -68,14 +68,14 @@ static void ft_change_var(char *vars)
 		free(vars);
 		vars = ft_strjoin(tmp, "=");
 		free(tmp);
-	}*/
+	}
 	if (!ft_strchr(vars, '='))
 	{
 		tmp = vars;
 		free(vars);
 		vars = ft_strjoin(tmp, "=");
 	}
-	else
+	else//#########DA PROBLEMAS
 	{
 		split = ft_split(vars, '=');
 		i = -1;
@@ -86,8 +86,9 @@ static void ft_change_var(char *vars)
 				ft_memmove(g_envp[i], "", ft_strlen(g_envp[i]));
 		}
 		ft_free_tab(split);
+		ft_putendl_fd(vars, 1);
 	}
-}
+}*/
 
 static char	**ft_join_env(char *vars)
 {
@@ -96,10 +97,11 @@ static char	**ft_join_env(char *vars)
 	char	*aux;
 	char	**res;
 	
+	ft_putendl_fd(vars, 1);
 	len1 = ft_len_tab(g_envp);
 	if (!(res = (char **)malloc(sizeof(char*) * (len1 + 2))))
 		return (NULL);
-	ft_change_var(vars);
+	//ft_change_var(vars);
 	aux = ft_pass_quotes(vars, 0, ft_strlen(vars));
 	i = -1;
 	while (g_envp[++i])
@@ -238,8 +240,11 @@ int		ft_arg_export(t_shell *pcs, char *str)
 {
 	int i;
 	char *aux;
+	char *tmp;
 
-	aux = ft_pass_space(pcs, str);
+	tmp = ft_realloc_str(str, -1, 0);
+	ft_putendl_fd(tmp, 1);
+	aux = ft_pass_space(pcs, tmp);
 	ft_free_tab(pcs->cmp);
 	pcs->cmp = ft_split_cmd(aux, ' ');
 	if (ft_len_tab(pcs->cmp) == 1)
@@ -253,7 +258,7 @@ int		ft_arg_export(t_shell *pcs, char *str)
 		}
 		i = 0;
 		while (pcs->cmp[++i])
-			g_envp = ft_join_env(pcs->cmp[i]);
+			g_envp = ft_join_env(pcs->cmp[i]);	
 	}
 	free(aux);
 	return (1);

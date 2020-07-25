@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 18:07:07 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/07/22 20:54:23 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/25 16:36:39 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,7 @@ char *ft_print_var(char *aux)
 int ft_arg_echo_two(char *cmd, char **vars, int args)
 {
 	int i;
-    int fspace;
-    int write;
-	int quotes;
     char *aux;
-	char *dollar;
 
 	i = 0;
     if (args)
@@ -73,7 +69,9 @@ int ft_arg_echo_two(char *cmd, char **vars, int args)
         else if (vars[1])
         {
             cmd = ft_cutstr(cmd, "echo", ft_strlen(cmd));
-			i = -1;
+			aux = ft_realloc_str(cmd, -1, 0);
+			ft_putstr_fd(aux, 1);
+			/*i = -1;
 			quotes = 0;
 			fspace = 1;
 			write = 0;
@@ -134,10 +132,12 @@ int ft_arg_echo_two(char *cmd, char **vars, int args)
 					ft_putchar_fd(*cmd, 1);
 					cmd++;
 				}
-			}
+			}*/
         	if (ft_strcmp(vars[1], "-n"))
 				ft_putchar_fd('\n', 1);
+			//free(aux);
         }
+		
         return (1);
     }
     else
