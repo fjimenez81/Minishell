@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 18:07:07 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/07/25 16:36:39 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/26 19:29:14 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ int ft_arg_echo_two(char *cmd, char **vars, int args)
         else if (vars[1])
         {
             cmd = ft_cutstr(cmd, "echo", ft_strlen(cmd));
+			if (!ft_strcmp(vars[1], "-n"))
+				cmd = ft_cutstr(cmd, "-n", ft_strlen(cmd));
 			aux = ft_realloc_str(cmd, -1, 0);
 			ft_putstr_fd(aux, 1);
 			/*i = -1;

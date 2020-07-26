@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/28 21:33:51 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/25 17:14:39 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/26 20:29:52 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,14 +172,12 @@ char *ft_realloc_str(char *str, int i, int cut)
                 i += 1;
             i--;
         }
-		else if (str[i] == '-' && str[i + 1] == 'n' && str[i + 2] == ' ' &&
-			quotes == 0 && cut == 0)
-			i += 3;
+		else if (str[i] == ' ' && str[i - 1] != '\\' &&
+			quotes == 0 && cut == 2)
+			break ;
         else if ((str[i] == '<' || str[i] == '>' || (str[i] == ' ' &&
              str[i + 1] == '>')) && quotes == 0 && cut == 1)
-            {
                 break ;
-            }
         if (str[i] == '$' && bool == 0 && quotes == 0)
         {  
             bool = 1;
@@ -212,4 +210,32 @@ char *ft_realloc_str(char *str, int i, int cut)
 		res = tmp;
 	}
 	return (res);
+}
+
+int ft_len_char(char *str)
+{
+    int i;
+    int quotes;
+
+    i = -1;
+    quotes = 0;
+    while(str[++i])
+    {
+        if ((str[i] == '\"' || str[i] == '\'') &&
+				str[i - 1] != '\\' && quotes == 0)
+				quotes = 1;
+		else if ((str[i] == '\"' || str[i] == '\'') &&
+				str[i - 1] != '\\' && quotes == 1)
+				quotes = 0;
+        else if ((str[i] == '<' || str[i] == '>') && quotes == 0)
+        {
+            i++;
+            if (str[i] == '>')
+                i++;
+            while (ft_isspace(str[i]))
+                i += 1;
+            break ;
+        }
+    }
+    return (i - 1);
 }
