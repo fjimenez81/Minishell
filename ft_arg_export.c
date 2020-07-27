@@ -6,13 +6,13 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/26 21:31:10 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/27 17:12:04 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char **ft_sort_export_aux(int len)
+char **ft_sort_export_aux(char **export, int len)
 {
 	int i;
 	int j;
@@ -23,44 +23,47 @@ char **ft_sort_export_aux(int len)
         j = i + 1;
         while(j < len - 1)
 		{
-            if(ft_strcmp(g_export[i], g_export[j]) > 0)
-                ft_swap(&g_export[i], &g_export[j]);
+            if(ft_strcmp(export[i], export[j]) > 0)
+                ft_swap(&export[i], &export[j]);
 			j++;
 		}
     }
-	return (g_export);
+	return (export);
 }
 
-static void ft_sort_export(char **str, int bool)
+void ft_print_export(char **export, int i)
+{
+	char *tmp;
+
+	if (ft_strcmp(export[i], "") != 0 && ft_strchr(export[i], '='))
+		ft_putendl_fd(export[i], 1);
+	else if (!ft_strchr(export[i], '=') && ft_strcmp(export[i], "") != 0)
+	{
+		tmp = export[i];
+		free(export[i]);
+		export[i] = ft_strjoin(tmp, "=''");
+		ft_putendl_fd(export[i], 1);
+	}
+}
+
+static void ft_sort_export()
 {
 	int i;
 	int len;
-	//char **export;
+	char **export;
 
 	len = ft_len_tab(g_envp);
-	if(!(g_export = (char**)malloc(sizeof(char*) * len + 1)))
+	if(!(export = (char**)malloc(sizeof(char*) * len + 1)))
 		return ;
 	i = -1;
 	while (g_envp[++i])
-		g_export[i] = ft_strdup(g_envp[i]);
-	g_export[i] = NULL;
-	g_export = ft_sort_export_aux(len);
-	if (bool == 1)
-	{
-		i = -1;
-		while (g_export[++i])
-			if (ft_strcmp(g_export[i], "") != 0)
-				ft_putendl_fd(g_export[i], 1);
-		ft_free_tab(g_export);
-	}
-	if (bool == 0 && ft_len_tab(str) > 0)
-	{
-		i = -1;
-		while (str[++i])
-			if (ft_strcmp(str[i], "") != 0)
-				ft_putendl_fd(str[i], 1);
-	}
-	//ft_free_tab(g_export);
+		export[i] = ft_strdup(g_envp[i]);
+	export[i] = NULL;
+	export = ft_sort_export_aux(export, len);
+	i = -1;
+	while (export[++i])
+		ft_print_export(export, i);
+	ft_free_tab(export);
 }
 
 static void ft_change_var(char *vars)
@@ -68,44 +71,16 @@ static void ft_change_var(char *vars)
 	int		i;
 	char	*split;
 	char	*copy;
-	char	*tmp;
-	char	**exp;
 	
-	if (!ft_strchr(vars, '='))//Si var no tiene '=' en env no aparece pero si en export var='' 
-							//y si haces unset desaparece de las dos listas
+	split = ft_cut_end(vars);
+	i = -1;
+	while (g_envp[++i])
 	{
-		tmp = ft_strjoin(vars, "=''");
-		exp = NULL;
-		ft_sort_export(exp, 0);
-		if (!(exp = (char**)malloc(sizeof(char*) * (ft_len_tab(g_envp) + 2))))
-			return ;
-		i = -1;
-		while (g_export[++i])
-			exp[i] = ft_strdup(g_export[i]);
-		exp[i] = ft_strdup(tmp);
-		i++;
-		exp[i] = NULL;
-		g_export = exp;
-		ft_sort_export(exp, 0);
-		//i = -1;
-		//while (g_export[++i])
-			//ft_putendl_fd(g_export[i], 1);
-		free(tmp);
-		ft_len_tab(g_export);
-		ft_len_tab(exp);
+		copy = ft_strstr(g_envp[i], split + 1);
+		if (copy != NULL)
+			ft_memmove(g_envp[i], "", ft_strlen(g_envp[i]));
 	}
-	else
-	{
-		split = ft_cut_end(vars);
-		i = -1;
-		while (g_envp[++i])
-		{
-			copy = ft_strstr(g_envp[i], split + 1);
-			if (copy != NULL)
-				ft_memmove(g_envp[i], "", ft_strlen(g_envp[i]));
-		}
-		free(split);
-	}
+	free(split);
 }
 
 static char	**ft_join_env(char *vars)
@@ -116,10 +91,16 @@ static char	**ft_join_env(char *vars)
 	char	**res;
 	
 	len1 = ft_len_tab(g_envp);
+	ft_change_var(vars);
+	aux = ft_strdup(ft_realloc_str(vars, -1, 0));
+	if (aux[0] == '=')
+	{
+		ft_putendl_fd("[Minishell] ~> not found", 1);
+		free(aux);
+		return (g_envp);
+	}
 	if (!(res = (char **)malloc(sizeof(char*) * (len1 + 2))))
 		return (NULL);
-	ft_change_var(vars);
-	aux = ft_pass_quotes(vars, 0, ft_strlen(vars));
 	i = -1;
 	while (g_envp[++i])
 		res[i] = ft_strdup(g_envp[i]);
@@ -140,7 +121,7 @@ static int ft_check_var(char *vars)
 	{
 		if (*vars == '=')
 			break ;
-		if (!ft_isalnum(*vars) && !ft_isdigit(*vars) && *vars != '_')
+		if (!ft_isalpha(*vars) && !ft_isalnum(*vars) && !ft_isdigit(*vars) && *vars != '_')
 			return (0);
 		vars++;
 	}
@@ -160,11 +141,13 @@ static int ft_check_var_loop(char **vars)
 			j = 0;
 			while (vars[++j])
 			{
-				if (!ft_strchr(vars[j], '=') || ft_isalnum(*vars[j]))
+				if (!ft_isalnum(*vars[j]))
+				{
+					ft_putstr_fd("\033[1;31m export : no matches found : ", 1);
+					ft_putendl_fd(vars[j], 1);
 					break ;
+				}
 			}
-			ft_putstr_fd("\033[1;31m export : no matches found : ", 1);
-			ft_putendl_fd(vars[j], 1);
 			return (0) ;
 		}
 	}
@@ -237,7 +220,6 @@ char *ft_pass_space_three(t_shell *pcs, char *str, char *aux)
 		aux[j] = str[i];
 		j++;	
 	}
-	//aux[j] = '\0';
 	return (aux);
 }
 
@@ -257,14 +239,12 @@ int		ft_arg_export(t_shell *pcs, char *str)
 {
 	int i;
 	char *aux;
-	char *tmp;
 
-	tmp = ft_join_char(ft_realloc_str(str, -1, 0), '\0');
-	aux = ft_pass_space(pcs, tmp);
+	aux = ft_pass_space(pcs, str);
 	ft_free_tab(pcs->cmp);
 	pcs->cmp = ft_split_cmd(aux, ' ');
 	if (ft_len_tab(pcs->cmp) == 1)
-		ft_sort_export(pcs->cmp, 1);
+		ft_sort_export();
 	else if (ft_len_tab(pcs->cmp) > 1)
 	{
 		if (!ft_check_var_loop(pcs->cmp))
@@ -277,6 +257,5 @@ int		ft_arg_export(t_shell *pcs, char *str)
 			g_envp = ft_join_env(pcs->cmp[i]);	
 	}
 	free(aux);
-	free(tmp);
 	return (1);
 }

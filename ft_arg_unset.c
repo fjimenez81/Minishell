@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 20:14:59 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/20 16:52:15 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/27 15:24:38 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,24 @@ static void ft_unset_aux(char **aux, int i, int j)
 	char *tmp;
 	char **split;
 	
-	tmp = ft_strjoin(aux[j], "=");
-	split = ft_split(g_envp[i], '=');
-	unset = ft_strstr(g_envp[i], tmp);
+	if (ft_strchr(aux[j], '='))
+	{
+		tmp = ft_strjoin(aux[j], "=");
+		split = ft_split(g_envp[i], '=');
+		unset = ft_strstr(g_envp[i], tmp);
+	}
+	else
+	{
+		split = ft_split(g_envp[i], '=');
+		unset = ft_strstr(g_envp[i], aux[j]);
+	}
 	if (unset != NULL)
 	{
 		if (!ft_strcmp(split[0], aux[j]))
 			ft_memmove(g_envp[i], "", ft_strlen(g_envp[i]));
 	}
-	free(tmp);
+	if (ft_strchr(aux[j], '='))
+		free(tmp);
 	ft_free_tab(split);
 }
 
