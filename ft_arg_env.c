@@ -6,11 +6,39 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/25 13:11:06 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/27 15:00:33 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/28 15:45:22 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int ft_len_char(char *str)
+{
+    int i;
+    int quotes;
+
+    i = -1;
+    quotes = 0;
+    while(str[++i])
+    {
+        if ((str[i] == '\"' || str[i] == '\'') &&
+				str[i - 1] != '\\' && quotes == 0)
+				quotes = 1;
+		else if ((str[i] == '\"' || str[i] == '\'') &&
+				str[i - 1] != '\\' && quotes == 1)
+				quotes = 0;
+        else if ((str[i] == '<' || str[i] == '>') && quotes == 0)
+        {
+            i++;
+            if (str[i] == '>')
+                i++;
+            while (ft_isspace(str[i]))
+                i += 1;
+            break ;
+        }
+    }
+    return (i - 1);
+}
 
 int             ft_arg_env(t_shell *pcs)
 {

@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 17:14:03 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/07/27 21:30:42 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/28 15:45:05 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,23 +73,19 @@ char *ft_realloc_var(char *str, char *res, int *i)
 	return (res);
 }
 
-char *ft_realloc_aux_one(char *str, int i, int cut)
+char *ft_realloc_aux_one(char *str, int i, int cut, int quotes)
 {
-	int quotes;
 	char *res;
 	char *tmp;
 
 	res = "\0";
-    quotes = 0;
 	while (str[++i] != '\0')
     {
         ft_realloc_aux_two(str, &i, &quotes);
-		if (str[i] == ' ' && str[i - 1] != '\\' &&
-			quotes == 0 && cut == 2)
-			break ;
-        else if ((str[i] == '<' || str[i] == '>' || (str[i] == ' ' &&
-             str[i + 1] == '>')) && quotes == 0 && cut == 1)
-                break ;
+		if ((str[i] == ' ' && str[i - 1] != '\\' &&
+			quotes == 0 && cut == 2) || ((str[i] == '<' || str[i] == '>' ||
+			(str[i] == ' ' && str[i + 1] == '>')) && quotes == 0 && cut == 1))
+				break ;
 		tmp = (str[i] == '$' && quotes == 0) ? ft_strdup(res) :
 			ft_join_char(res, str[i]);
 		res = tmp;
@@ -107,69 +103,10 @@ char *ft_realloc_aux_one(char *str, int i, int cut)
 
 char *ft_realloc_str(char *str, int i, int cut)
 {
-	char *tmp;
 	char *res;
+	int quotes;
 	
-	res = ft_strdup(ft_realloc_aux_one(str, i, cut));
-	//if (cut != 2)
-	//{
-    	tmp = res;
-		free(res);
-		res = tmp;
-	//}
+	quotes = 0;
+	res = ft_realloc_aux_one(str, i, cut, quotes);
 	return (res);
-}
-
-int ft_len_char(char *str)
-{
-    int i;
-    int quotes;
-
-    i = -1;
-    quotes = 0;
-    while(str[++i])
-    {
-        if ((str[i] == '\"' || str[i] == '\'') &&
-				str[i - 1] != '\\' && quotes == 0)
-				quotes = 1;
-		else if ((str[i] == '\"' || str[i] == '\'') &&
-				str[i - 1] != '\\' && quotes == 1)
-				quotes = 0;
-        else if ((str[i] == '<' || str[i] == '>') && quotes == 0)
-        {
-            i++;
-            if (str[i] == '>')
-                i++;
-            while (ft_isspace(str[i]))
-                i += 1;
-            break ;
-        }
-    }
-    return (i - 1);
-}
-
-char		*ft_strjoin_free(char *s1, char const *s2)
-{
-	int		i;
-	int		j;
-	char	*str;
-
-	i = 0;
-	j = 0;
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!str)
-		return (NULL);
-	while (s1[i])
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	while (s2[j])
-	{
-		str[i + j] = s2[j];
-		j++;
-	}
-	str[i + j] = 0;
-	free(s1);
-	return (str);
 }

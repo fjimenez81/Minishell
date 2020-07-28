@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/27 21:15:46 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/28 15:29:05 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,7 @@ typedef struct s_shell
 }               t_shell;
 
 char     **g_envp;
-char        **g_export;
-int     g_bool;
+
 
 int	    ft_strcmp(const char *s1, const char *s2);
 char	*ft_strnew(size_t size);
@@ -75,7 +74,8 @@ char    *ft_cut_end(char *s);
 char    *ft_realloc_str(char *str, int i, int cut);
 char    *ft_join_char(char *s, int c);
 int     ft_len_char(char *str);
-char	*ft_strjoin_free(char *s1, char const *s2);
+char    *ft_pass_space(t_shell *pcs, char *str);
+void    ft_sort_export();
 
 
 
@@ -86,14 +86,16 @@ int     ft_arg_cd(t_shell *pcs);
 int     ft_arg_env(t_shell *pcs);
 int		ft_arg_export(t_shell *pcs, char *str);
 int		ft_arg_unset(char *vars);
+int     ft_arg_echo(char *cmd, char **vars, int args);
 
 
-int     ft_arg_echo_two(char *cmd, char **vars, int args);
+
 char    *ft_print_var(char *aux);
 
 void	init_env(char **env);
 
 char    *ft_echo_var(char *tmp);
+int     ft_check_redir(t_shell *pcs, int j);
 
 void	ft_loop_echo(char **vars, char *command);
 int 	ft_not_quote(char *vars, char *command);
@@ -103,7 +105,5 @@ int		ft_quote_snd(char *cmd, int *i);
 
 
 char	**ft_split_cmd(char const *s, char c);
-
-char    *ft_pass_quotes(char *s, int n, int size);
 
 #endif

@@ -6,65 +6,11 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/27 17:12:04 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/28 15:28:32 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char **ft_sort_export_aux(char **export, int len)
-{
-	int i;
-	int j;
-
-	i = -1;
-    while (++i < (len - 1))
-	{
-        j = i + 1;
-        while(j < len - 1)
-		{
-            if(ft_strcmp(export[i], export[j]) > 0)
-                ft_swap(&export[i], &export[j]);
-			j++;
-		}
-    }
-	return (export);
-}
-
-void ft_print_export(char **export, int i)
-{
-	char *tmp;
-
-	if (ft_strcmp(export[i], "") != 0 && ft_strchr(export[i], '='))
-		ft_putendl_fd(export[i], 1);
-	else if (!ft_strchr(export[i], '=') && ft_strcmp(export[i], "") != 0)
-	{
-		tmp = export[i];
-		free(export[i]);
-		export[i] = ft_strjoin(tmp, "=''");
-		ft_putendl_fd(export[i], 1);
-	}
-}
-
-static void ft_sort_export()
-{
-	int i;
-	int len;
-	char **export;
-
-	len = ft_len_tab(g_envp);
-	if(!(export = (char**)malloc(sizeof(char*) * len + 1)))
-		return ;
-	i = -1;
-	while (g_envp[++i])
-		export[i] = ft_strdup(g_envp[i]);
-	export[i] = NULL;
-	export = ft_sort_export_aux(export, len);
-	i = -1;
-	while (export[++i])
-		ft_print_export(export, i);
-	ft_free_tab(export);
-}
 
 static void ft_change_var(char *vars)
 {
@@ -86,7 +32,7 @@ static void ft_change_var(char *vars)
 static char	**ft_join_env(char *vars)
 {
 	int		i;
-	size_t	len1;
+	int	len1;
 	char	*aux;
 	char	**res;
 	
@@ -152,87 +98,6 @@ static int ft_check_var_loop(char **vars)
 		}
 	}
 	return (1);
-}
-
-void ft_pass_space_two(char *str, int *i, int *size)
-{
-	int equal;
-	int quotes;
-
-	equal = 0;
-	quotes = 0;
-	while (str[++*i])
-	{
-		if (str[*i] == '=' && equal == 0)
-			equal = 1;
-		if ((str[*i] == '\"' || str[*i] == '\'') && str[*i - 1] != '\\' && equal == 1 && quotes == 0)
-			quotes = 1;
-		else if ((str[*i] == '\"' || str[*i] == '\'') && str[*i - 1] != '\\' && equal == 1 && quotes == 1)
-			quotes = 0;
-		if (str[*i] != ' ' && str[*i + 1] == ' ' && str[*i] != '\\' && equal == 1 && quotes == 0)
-			equal = 0;
-		else if (str[*i] == '\\' && str[*i + 1] == ' ' && quotes == 0 && equal == 1)
-		{
-			*i += 1;
-			*size += 1;
-		}
-	}
-}
-
-void ft_pass_space_four(t_shell *pcs, char *str, int i)
-{
-	if (str[i] == '=' && pcs->equal == 0)
-		pcs->equal = 1;
-	if ((str[i] == '\"' || str[i] == '\'') && str[i - 1] != '\\' &&
-		pcs->equal == 1 && pcs->quotes == 0)
-		pcs->quotes = 1;
-	else if ((str[i] == '\"' || str[i] == '\'') && str[i - 1] != '\\' &&
-		pcs->equal == 1 && pcs->quotes == 1)
-		pcs->quotes = 0;
-	if (str[i] != ' ' && str[i + 1] == ' ' && str[i] != '\\' &&
-		pcs->equal == 1 && pcs->quotes == 0)
-		pcs->equal = 0;
-}
-
-char *ft_pass_space_three(t_shell *pcs, char *str, char *aux)
-{
-	int i;
-	int j;
-
-	i = -1;
-	j = 0;
-	pcs->equal = 0;
-	pcs->quotes = 0;
-	while (str[++i])
-	{
-		ft_pass_space_four(pcs, str, i);
-		if (str[i] == '\\' && str[i + 1] == ' ' &&
-			pcs->quotes == 0 && pcs->equal == 1)
-		{
-			aux[j] = '\"';
-			j++;
-			aux[j] = ' ';
-			j++;
-			aux[j] = '\"';
-			i += 2;
-			j++;
-		}
-		aux[j] = str[i];
-		j++;	
-	}
-	return (aux);
-}
-
-char *ft_pass_space(t_shell *pcs, char *str)
-{
-	int i;
-	int size;
-	char *pass;
-
-	i = -1;
-	ft_pass_space_two(str, &i, &size);
-	pass = ft_strnew(size + i);
-	return (ft_pass_space_three(pcs, str, pass));
 }
 
 int		ft_arg_export(t_shell *pcs, char *str)
