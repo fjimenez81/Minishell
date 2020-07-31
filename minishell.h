@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/28 15:29:05 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/31 20:59:17 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,7 @@ typedef struct s_shell
     char        *out;
     char        *in;
     char        *redir;
-    char        *rderror;
-    char        *export;
+    char        *paths[3];
     int         args;
     int         fd;
     int         quotes;
@@ -51,7 +50,14 @@ typedef struct s_shell
     int         check_fd;
     int         bool_redir;
     char        **cmp;
-    char        *lnarg;
+    int         enter;
+    int         ret;
+    int         std_out;
+    int         std_in;
+    int         status;
+    int         pipes[2];
+    pid_t       pid;
+    int         previus;
 }               t_shell;
 
 char     **g_envp;
@@ -86,7 +92,7 @@ int     ft_arg_cd(t_shell *pcs);
 int     ft_arg_env(t_shell *pcs);
 int		ft_arg_export(t_shell *pcs, char *str);
 int		ft_arg_unset(char *vars);
-int     ft_arg_echo(char *cmd, char **vars, int args);
+int     ft_arg_echo(t_shell *pcs, int i);//char *cmd, char **vars, int args);
 
 
 

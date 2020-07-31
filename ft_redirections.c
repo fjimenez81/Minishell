@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/07/28 15:16:03 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/31 15:10:40 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 static void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 {
-	int		std_out;
+	//int		std_out;
 	char    *dupout;
 	char	*dollar;
 
 	while (ft_isspace(pcs->redir[*i]))
 		*i += 1;
-	std_out = dup(1);
+	//pcs->std_out = dup(1);
 	if (!ft_strcmp(dir, "<"))
 	{
 		pcs->in = ft_realloc_str(pcs->redir, ft_len_char(pcs->redir), 2);
@@ -32,7 +32,8 @@ static void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 		}
 		dollar = ft_cutstr(pcs->redir, "echo", ft_strlen(pcs->redir));
 		dupout = ft_realloc_str(dollar, -1, 1);
-		ft_putendl_fd(dupout, 1);	
+		ft_putendl_fd(dupout, 1);
+		dup2(pcs->std_in, 1);
 	}
 	else
 	{
@@ -44,10 +45,10 @@ static void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 			dupout = ft_realloc_str(dollar, -1, 1);
 			dup2(pcs->fd, STDOUT_FILENO);//Pone el standar output en modo escritura
 			ft_putendl_fd(dupout, 1);//Y por eso no printa en pantalla y lo escribe en el archivo
+			dup2(pcs->std_out, 1);//Devuelve el standar output a su modo original
 		}
 	}
 	close(pcs->fd);
-	dup2(std_out, 1);//Devuelve el standar output a su modo original
 }
 
 static void ft_check_redir_aux(t_shell *pcs, int *i, int quotes)

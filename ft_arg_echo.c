@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 18:07:07 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/07/28 15:18:09 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/07/31 17:25:55 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,24 +56,24 @@ char *ft_print_var(char *aux)
 	return (var);
 }
 
-int ft_arg_echo(char *cmd, char **vars, int args)
+int ft_arg_echo(t_shell *pcs, int i)
 {
-	int i;
+	char *cmd;
     char *aux;
 
-	i = 0;
-    if (args)
+	pcs->enter = 0;
+    if (pcs->args)
     {
-        if (vars[1] == NULL)
+        if (pcs->cmp[1] == NULL)
             return (1);
-        else if (vars[1])
+        else if (pcs->cmp[1])
         {
-            cmd = ft_cutstr(cmd, "echo", ft_strlen(cmd));
-			if (!ft_strcmp(vars[1], "-n"))
+            cmd = ft_cutstr(pcs->pipesplit[i], "echo", ft_strlen(pcs->pipesplit[i]));
+			if (!ft_strcmp(pcs->cmp[1], "-n"))
 				cmd = ft_cutstr(cmd, "-n", ft_strlen(cmd));
 			aux = ft_realloc_str(cmd, -1, 0);
 			ft_putstr_fd(aux, 1);
-        	if (ft_strcmp(vars[1], "-n"))
+        	if (ft_strcmp(pcs->cmp[1], "-n"))
 				ft_putchar_fd('\n', 1);
         }
         return (1);
