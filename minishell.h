@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/31 20:59:17 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/08/01 19:18:17 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,11 @@
 # include "libft/libft.h"
 
 # define BUFFER_SIZE 2
-# define Q_DOUBLE '\"'
-# define Q_SIMPLE '\''
 # define TOK_LIMITS " \t"
+# define SIDEIN 1
+# define SIDEOUT 0
+# define STDOUT 1
+# define STDIN 0
 
 
 typedef struct s_shell
@@ -57,7 +59,8 @@ typedef struct s_shell
     int         status;
     int         pipes[2];
     pid_t       pid;
-    int         previus;
+    int         b_pipe;
+    struct s_shell        *previus;
 }               t_shell;
 
 char     **g_envp;

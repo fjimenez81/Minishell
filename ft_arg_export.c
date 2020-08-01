@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/28 15:28:32 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/08/01 19:08:58 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int		ft_arg_export(t_shell *pcs, char *str)
 {
 	int i;
 	char *aux;
-
+	
 	aux = ft_pass_space(pcs, str);
 	ft_free_tab(pcs->cmp);
 	pcs->cmp = ft_split_cmd(aux, ' ');
@@ -119,7 +119,13 @@ int		ft_arg_export(t_shell *pcs, char *str)
 		}
 		i = 0;
 		while (pcs->cmp[++i])
-			g_envp = ft_join_env(pcs->cmp[i]);	
+			g_envp = ft_join_env(pcs->cmp[i]);
+		/*if (!(pcs->env = (char**)malloc(sizeof(char*) * (ft_len_tab(g_envp) + 1))))
+			return (-1);
+		i = -1;
+		while (g_envp[++i])
+			pcs->env[i] = g_envp[i];
+		pcs->env[i] = NULL;*/
 	}
 	free(aux);
 	return (1);

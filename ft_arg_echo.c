@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 18:07:07 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/07/31 17:25:55 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/08/01 19:39:25 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,7 @@ int ft_arg_echo(t_shell *pcs, int i)
 {
 	char *cmd;
     char *aux;
-
-	pcs->enter = 0;
+	ft_putendl_fd("dentro", 1);
     if (pcs->args)
     {
         if (pcs->cmp[1] == NULL)

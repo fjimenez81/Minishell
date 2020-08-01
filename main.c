@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/31 20:59:03 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/08/01 19:38:30 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,10 @@ static int	ft_execute(t_shell *pcs, int i)
 	char pwd[PATH_MAX];
 	int ret;
 	int exe;
+	int j;
 	
-	pcs->fd = ft_check_redir(pcs, i);
+	j = 0;
+	//j = ft_check_redir(pcs, i);
 	ret = 0;
 	exe = 0;
 	if ((!ft_strcmp(pcs->cmp[0], "pwd") || !ft_strcmp(pcs->cmp[0], "PWD")) && pcs->enter == 1 && (exe = 1))
@@ -56,13 +58,13 @@ static int	ft_execute(t_shell *pcs, int i)
 		ft_putendl_fd(getcwd(pwd, -1), 1);
 		ret = 1;
 	}
-	else if(!ft_strcmp(pcs->cmp[0], "export") && pcs->enter == 1 && (exe = 1))
-		ret = ft_arg_export(pcs, pcs->pipesplit[i]);
-	else if(!ft_strcmp(pcs->cmp[0], "unset") && pcs->enter == 1 && (exe = 1))
+	//else if(!ft_strcmp(pcs->cmp[0], "export") && (exe = 1))
+		//ret = ft_arg_export(pcs, pcs->pipesplit[i]);
+	else if(!ft_strcmp(pcs->cmp[0], "unset") && (exe = 1))
 		ret = ft_arg_unset(pcs->pipesplit[i]);
-	else if (!ft_strcmp(pcs->cmp[0], "env") && pcs->enter == 1 && (exe = 1))
+	else if (!ft_strcmp(pcs->cmp[0], "env") && (exe = 1))
 		ret = ft_arg_env(pcs);
-	else if (!ft_strcmp(pcs->cmp[0], "echo") && pcs->bool_redir == 0 && pcs->enter == 1 && (exe = 1))
+	else if (!ft_strcmp(pcs->cmp[0], "echo") && j == 0 && (exe = 1))
 		ret = ft_arg_echo(pcs, i);
 	else if (exe == 0)
 		ret = ft_arg_exe(pcs, i);
@@ -86,49 +88,55 @@ static void ft_loop_pipes(char **aux)
 		pcs->pipesplit[j] = tmp;
 		pcs->cmp = ft_split_cmd(pcs->pipesplit[j], ' ');
 		pcs->args = ft_len_tab(pcs->cmp);
-		pcs->enter = 1;
 		if(!ft_strcmp(pcs->cmp[0], "exit"))//no funciona con pipes al cerrar deja abierto los procesos
 		{
-			pcs->enter = 0;
 			system("leaks minishell");
 			exit(0);
 		}
 		else if (!ft_strcmp(pcs->cmp[0], "cd") || !ft_strcmp(pcs->cmp[0], "~"))//no fuciona en pipes por eso lo pongo por delante
-		{
-			pcs->enter = 0;
 			pcs->ret = ft_arg_cd(pcs);
-		}
+		else if(!ft_strcmp(pcs->cmp[0], "export"))//Parece que algunas funciones tienen que ir antes de pipes 
+			pcs->ret = ft_arg_export(pcs, pcs->pipesplit[j]);
+		ft_check_redir(pcs, j);
 		pcs->bool_redir = 0;
 		pcs->std_in = dup(0);
 		pcs->std_out = dup(1);
+		pcs->previus = pcs;
+		pcs->env = g_envp;
 		if (ft_len_tab(pcs->pipesplit) > 1)
-			pipe(pcs->pipes);
+			pipe(pcs->previus[j].pipes);
 		pcs->pid = fork();
 		if (pcs->pid == 0)
 		{
-			dup2(pcs->pipes[1], 1);
+			dup2(pcs->previus[j].pipes[SIDEIN], STDOUT);
 			if (j > 0)
-				dup2(pcs->pipes[0], 0);
+				dup2(pcs->previus[j - 1].pipes[SIDEOUT], STDIN);
 			if (j == ft_len_tab(pcs->pipesplit) - 1)
-				dup2(pcs->std_out, 1);
+				dup2(pcs->std_out, STDOUT);
 			pcs->ret = ft_execute(pcs, j);
-			exit(pcs->ret);
+			exit(pcs->ret);//No funciona export
 		}
 		else
 		{
 			waitpid(pcs->pid, &pcs->status, 0);
 			if (ft_len_tab(pcs->pipesplit) > 1)
 			{
-				close(pcs->pipes[1]);
+				close(pcs->previus[j].pipes[SIDEIN]);
 				if (j == ft_len_tab(pcs->pipesplit))
-					close(pcs->pipes[0]);
-				if (j > 0)//&& j == ft_len_tab(pcs->pipesplit) - 1)	
-					close(pcs->pipes[0]);
+					close(pcs->previus[j].pipes[SIDEOUT]);
+				if (j > 0)
+					close(pcs->previus[j - 1].pipes[SIDEOUT]);
 				if (WIFEXITED(pcs->status))
 					pcs->ret = WEXITSTATUS(pcs->status);
 			}
 		}
 		ft_free_tab(pcs->cmp);
+		/*else
+		{
+			ft_execute(pcs, j);
+			//ft_free_tab(pcs->cmp);
+		}*/
+		//ft_free_tab(pcs->cmp);
 	}
 	ft_free_tab(aux);
 	free(pcs);
