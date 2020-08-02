@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/08/01 19:18:17 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/08/02 21:23:08 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_shell
     char        **setfd;
     char        **env;
     char        *cmd;
+    char        *dollar;
     char        *out;
     char        *in;
     char        *redir;
@@ -104,7 +105,7 @@ char    *ft_print_var(char *aux);
 void	init_env(char **env);
 
 char    *ft_echo_var(char *tmp);
-int     ft_check_redir(t_shell *pcs, int j);
+void     ft_check_redir(t_shell *pcs, int j);
 
 void	ft_loop_echo(char **vars, char *command);
 int 	ft_not_quote(char *vars, char *command);
@@ -114,5 +115,7 @@ int		ft_quote_snd(char *cmd, int *i);
 
 
 char	**ft_split_cmd(char const *s, char c);
+
+char		*ft_itoa_two(int nbr);
 
 #endif

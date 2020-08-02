@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/08/01 19:12:27 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/08/02 19:09:36 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 	close(pcs->fd);
 }
 
-static void ft_check_redir_aux(t_shell *pcs, int *i, int quotes, int *bool)
+static void ft_check_redir_aux(t_shell *pcs, int *i, int quotes)
 {
 	if ((pcs->redir[*i] == '\"' || pcs->redir[*i] == '\"') &&
 		pcs->redir[*i - 1] != '\\' && quotes == 0)
@@ -61,7 +61,7 @@ static void ft_check_redir_aux(t_shell *pcs, int *i, int quotes, int *bool)
 		quotes = 0;
 	else if (pcs->redir[*i] == '>' && quotes == 0)
 	{
-		*bool = 1;
+		pcs->bool_redir = 1;
 		*i += 1;
 		if (pcs->redir[*i] == '>')
 		{
@@ -74,24 +74,23 @@ static void ft_check_redir_aux(t_shell *pcs, int *i, int quotes, int *bool)
 	}
 	else if (pcs->redir[*i] == '<' && quotes == 0)
 	{
-		*bool = 1;
+		pcs->bool_redir = 1;
 		*i += 1;
 		ft_redir_fd(pcs, O_RDONLY, "<", &*i);
 		*i += ft_strlen(pcs->redir) - *i;
 	}
 }
 
-int ft_check_redir(t_shell *pcs, int j)
+void ft_check_redir(t_shell *pcs, int j)
 {
 	int i;
-	int k;
 	int quotes;
 	
 	i = -1;
-	k = 0;
 	quotes = 0;
 	pcs->redir = pcs->pipesplit[j];
 	while (pcs->redir[++i])
-		ft_check_redir_aux(pcs, &i, quotes, &k);
-	return (k);
+		ft_check_redir_aux(pcs, &i, quotes);
+	if (pcs->bool_redir == 1)
+		exit(127);
 }

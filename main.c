@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/08/01 19:38:30 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/08/02 21:23:20 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,13 @@ int ft_arg_exe(t_shell *pcs, int i)
 		j++;
 		free(join);
 		exe = execve(join, pcs->cmp, NULL);
-		if (j == 3 && exe == -1)
+		if (j == 3 && exe == -1 && ft_strcmp(pcs->cmp[0], "export") != 0 &&
+			ft_strcmp(pcs->cmp[0], "unset") != 0)// && ft_strcmp(pcs->cmp[0], "$?") != 0)
 		{
 			ft_putstr_fd("\033[1;31m[Minishell] : ", 1);
 			ft_putstr_fd("command not found : ", 1);
 			ft_putendl_fd(pcs->cmp[0], 1);
+			pcs->status = 127;
 		}
 		if (j == 3 && exe == -1)
 			exit(127);
@@ -47,28 +49,19 @@ static int	ft_execute(t_shell *pcs, int i)
 	char pwd[PATH_MAX];
 	int ret;
 	int exe;
-	int j;
 	
-	j = 0;
-	//j = ft_check_redir(pcs, i);
 	ret = 0;
-	exe = 0;
-	if ((!ft_strcmp(pcs->cmp[0], "pwd") || !ft_strcmp(pcs->cmp[0], "PWD")) && pcs->enter == 1 && (exe = 1))
-	{
+	exe = -1;
+	ft_check_redir(pcs, i);
+	if (!ft_strcmp(pcs->cmp[0], "pwd") && (exe = 1) && (ret = 1))
 		ft_putendl_fd(getcwd(pwd, -1), 1);
-		ret = 1;
-	}
-	//else if(!ft_strcmp(pcs->cmp[0], "export") && (exe = 1))
-		//ret = ft_arg_export(pcs, pcs->pipesplit[i]);
-	else if(!ft_strcmp(pcs->cmp[0], "unset") && (exe = 1))
-		ret = ft_arg_unset(pcs->pipesplit[i]);
 	else if (!ft_strcmp(pcs->cmp[0], "env") && (exe = 1))
 		ret = ft_arg_env(pcs);
-	else if (!ft_strcmp(pcs->cmp[0], "echo") && j == 0 && (exe = 1))
+	else if (!ft_strcmp(pcs->cmp[0], "echo") && pcs->bool_redir == 0 && (exe = 1))
 		ret = ft_arg_echo(pcs, i);
-	else if (exe == 0)
+	else if (exe == -1)
 		ret = ft_arg_exe(pcs, i);
-	return (ret);
+	return (exe);
 }
 
 static void ft_loop_pipes(char **aux)
@@ -88,6 +81,8 @@ static void ft_loop_pipes(char **aux)
 		pcs->pipesplit[j] = tmp;
 		pcs->cmp = ft_split_cmd(pcs->pipesplit[j], ' ');
 		pcs->args = ft_len_tab(pcs->cmp);
+		pcs->previus = pcs;
+		ft_putnbr_fd(pcs->status, 1);
 		if(!ft_strcmp(pcs->cmp[0], "exit"))//no funciona con pipes al cerrar deja abierto los procesos
 		{
 			system("leaks minishell");
@@ -95,14 +90,19 @@ static void ft_loop_pipes(char **aux)
 		}
 		else if (!ft_strcmp(pcs->cmp[0], "cd") || !ft_strcmp(pcs->cmp[0], "~"))//no fuciona en pipes por eso lo pongo por delante
 			pcs->ret = ft_arg_cd(pcs);
-		else if(!ft_strcmp(pcs->cmp[0], "export"))//Parece que algunas funciones tienen que ir antes de pipes 
+		else if(!ft_strcmp(pcs->cmp[0], "export"))//Parece que algunas funciones tienen que ir antes de pipes
 			pcs->ret = ft_arg_export(pcs, pcs->pipesplit[j]);
-		ft_check_redir(pcs, j);
-		pcs->bool_redir = 0;
+		else if(!ft_strcmp(pcs->cmp[0], "unset"))
+			pcs->ret = ft_arg_unset(pcs->pipesplit[j]);
+		if (!ft_strcmp(pcs->cmp[0], "$?"))
+		{
+			//ft_putendl_fd(ft_itoa(WEXITSTATUS(pcs->status)), 1);
+			free(pcs->cmp[0]);
+			pcs->cmp[0] = ft_itoa_two(WEXITSTATUS(pcs->status));
+		}
 		pcs->std_in = dup(0);
 		pcs->std_out = dup(1);
-		pcs->previus = pcs;
-		pcs->env = g_envp;
+		pcs->bool_redir = 0;
 		if (ft_len_tab(pcs->pipesplit) > 1)
 			pipe(pcs->previus[j].pipes);
 		pcs->pid = fork();
@@ -114,7 +114,7 @@ static void ft_loop_pipes(char **aux)
 			if (j == ft_len_tab(pcs->pipesplit) - 1)
 				dup2(pcs->std_out, STDOUT);
 			pcs->ret = ft_execute(pcs, j);
-			exit(pcs->ret);//No funciona export
+			exit(pcs->ret);
 		}
 		else
 		{
@@ -130,13 +130,8 @@ static void ft_loop_pipes(char **aux)
 					pcs->ret = WEXITSTATUS(pcs->status);
 			}
 		}
+		//free(pcs->dollar);
 		ft_free_tab(pcs->cmp);
-		/*else
-		{
-			ft_execute(pcs, j);
-			//ft_free_tab(pcs->cmp);
-		}*/
-		//ft_free_tab(pcs->cmp);
 	}
 	ft_free_tab(aux);
 	free(pcs);
