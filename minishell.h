@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/08/02 21:23:08 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/08/03 21:41:29 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,12 @@
 # define STDOUT 1
 # define STDIN 0
 
+
+typedef struct s_test
+{
+    int status;
+    int tonto;
+}   t_test;
 
 typedef struct s_shell
 {
@@ -82,12 +88,13 @@ int     ft_first_chr(char **s, char c);
 char    *ft_cutstr(char *src, char *cut, size_t len);
 char    *ft_cut_end(char *s);
 char    *ft_realloc_str(char *str, int i, int cut);
+void    ft_realloc_aux_two(char *str, int *i, int *quotes);
 char    *ft_join_char(char *s, int c);
 int     ft_len_char(char *str);
 char    *ft_pass_space(t_shell *pcs, char *str);
 void    ft_sort_export();
 
-
+int     ft_check_dollar(char *str);
 
 char	**ft_str_tok(char *s, char *sep);
 char    *ft_strstr(char *str, char *to_find);
@@ -116,6 +123,5 @@ int		ft_quote_snd(char *cmd, int *i);
 
 char	**ft_split_cmd(char const *s, char c);
 
-char		*ft_itoa_two(int nbr);
 
 #endif

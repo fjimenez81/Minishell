@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/08/02 19:09:36 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/08/03 15:24:43 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 		dollar = ft_cutstr(pcs->redir, "echo", ft_strlen(pcs->redir));
 		dupout = ft_realloc_str(dollar, -1, 1);
 		ft_putendl_fd(dupout, 1);
-		dup2(pcs->std_in, 1);
+		dup2(pcs->std_in, 0);
 	}
 	else
 	{
@@ -91,6 +91,4 @@ void ft_check_redir(t_shell *pcs, int j)
 	pcs->redir = pcs->pipesplit[j];
 	while (pcs->redir[++i])
 		ft_check_redir_aux(pcs, &i, quotes);
-	if (pcs->bool_redir == 1)
-		exit(127);
 }

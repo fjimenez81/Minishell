@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 17:14:03 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/07/28 15:45:05 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/08/03 21:41:17 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ char *ft_realloc_aux_one(char *str, int i, int cut, int quotes)
 			ft_join_char(res, str[i]);
 		res = tmp;
 		if (str[i] == '$' && quotes == 0)
-		{
+		{	
 			res = ft_realloc_var(str, res, &i);			
 			free(tmp);
 			tmp = res;
@@ -109,4 +109,20 @@ char *ft_realloc_str(char *str, int i, int cut)
 	quotes = 0;
 	res = ft_realloc_aux_one(str, i, cut, quotes);
 	return (res);
+}
+
+int ft_check_dollar(char *str)
+{
+	int i;
+	int quotes;
+
+	i = -1;
+	quotes = 0;
+	while (str[++i])
+	{
+		ft_realloc_aux_two(str, &i, &quotes);
+		if (str[i] == '$' && str[i + 1] == '?' && quotes == 0)
+			return (1);
+	}
+	return (0);
 }

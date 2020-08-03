@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/23 16:53:06 by fernando          #+#    #+#             */
-/*   Updated: 2020/08/02 21:23:01 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/08/03 15:26:40 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,31 +60,4 @@ void ft_free_tab(char **str)
 	while (str[i])
 		free(str[i++]);
 	(str) ? free(str) : 0;
-}
-
-char		*ft_itoa_two(int nbr)
-{
-	long	n;
-	size_t	len;
-	char	*str;
-
-	n = nbr;
-	len = (n > 0) ? 0 : 1;
-	n = (n > 0) ? n : -n;
-	while (nbr)
-		nbr = len++ ? nbr / 10 : nbr / 10;
-	str = (char *)malloc(sizeof(char) * len + 1);
-	if (!str)
-		return (NULL);
-	*(str + len--) = '\0';
-	while (n > 0)
-	{
-		*(str + len--) = n % 10 + '0';
-		n /= 10;
-	}
-	if (len == 0 && str[1] == '\0')
-		*(str + len) = '0';
-	if (len == 0 && str[1] != '\0')
-		*(str + len) = '-';
-	return (str);
 }
