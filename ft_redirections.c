@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/08/03 15:24:43 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/08/04 20:14:37 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,11 @@
 
 static void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 {
-	//int		std_out;
 	char    *dupout;
 	char	*dollar;
 
 	while (ft_isspace(pcs->redir[*i]))
 		*i += 1;
-	//pcs->std_out = dup(1);
 	if (!ft_strcmp(dir, "<"))
 	{
 		pcs->in = ft_realloc_str(pcs->redir, ft_len_char(pcs->redir), 2);
@@ -30,7 +28,7 @@ static void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 			pcs->in = NULL;
 			ft_putstr_fd(" : No existe el archivo o directorio\n", 1);
 		}
-		dollar = ft_cutstr(pcs->redir, "echo", ft_strlen(pcs->redir));
+		dollar = ft_cutstr(pcs->redir, "echo");
 		dupout = ft_realloc_str(dollar, -1, 1);
 		ft_putendl_fd(dupout, 1);
 		dup2(pcs->std_in, 0);
@@ -41,7 +39,7 @@ static void ft_redir_fd(t_shell *pcs, int flags, char *dir, int *i)
 		pcs->fd = open(pcs->out, flags, 0644);
 		if (!ft_strcmp(pcs->cmp[0], "echo"))
 		{
-			dollar = ft_cutstr(pcs->redir, "echo", ft_strlen(pcs->redir));
+			dollar = ft_cutstr(pcs->redir, "echo");
 			dupout = ft_realloc_str(dollar, -1, 1);
 			dup2(pcs->fd, STDOUT_FILENO);//Pone el standar output en modo escritura
 			ft_putendl_fd(dupout, 1);//Y por eso no printa en pantalla y lo escribe en el archivo

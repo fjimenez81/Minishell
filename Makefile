@@ -6,7 +6,7 @@
 #    By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/18 21:02:40 by fernando          #+#    #+#              #
-#    Updated: 2020/07/28 15:43:03 by fjimenez         ###   ########.fr        #
+#    Updated: 2020/08/04 19:41:26 by fjimenez         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ SRC =	main \
 		ft_redirections \
 		ft_exp_pass_spc \
 		ft_exp_print \
+		ft_check_dollar \
 
 CFILES = $(addsuffix .c, $(SRC))
 

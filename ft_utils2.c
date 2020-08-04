@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/28 21:33:51 by fernando          #+#    #+#             */
-/*   Updated: 2020/07/31 18:10:23 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/08/04 15:55:42 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,16 @@ int		ft_isalpha(int c)
 	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '$');
 }
 
-char *ft_cutstr(char *src, char *cut, size_t len)
+char *ft_cutstr(char *src, char *cut)
 {
     size_t i;
     size_t j;
-    (void)len;
 
 	if (!ft_strcmp(cut, ""))
         return (src);
     i = -1;
     j = 0;
-    while (src[++i])// && i < len)
+    while (src[++i])
     {
         if (src[i] == cut[j])
             j++;

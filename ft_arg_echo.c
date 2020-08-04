@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 18:07:07 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/08/03 17:22:47 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/08/04 15:58:40 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,9 @@ int ft_arg_echo(t_shell *pcs, int i)
             return (1);
         else if (pcs->cmp[1])
         {
-            cmd = ft_cutstr(pcs->pipesplit[i], "echo", ft_strlen(pcs->pipesplit[i]));
+            cmd = ft_cutstr(pcs->pipesplit[i], "echo");
 			if (!ft_strcmp(pcs->cmp[1], "-n"))
-				cmd = ft_cutstr(cmd, "-n", ft_strlen(cmd));
+				cmd = ft_cutstr(cmd, "-n");
 			aux = ft_realloc_str(cmd, -1, 0);
 			ft_putstr_fd(aux, 1);
         	if (ft_strcmp(pcs->cmp[1], "-n"))
