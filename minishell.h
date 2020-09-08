@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/08/04 20:23:30 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/08 19:09:26 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,10 @@
 typedef struct  s_test
 {
     int status;
+    int cut;
+    int d_qu;
+    int s_qu;
+    int i;
 }               t_test;
 
 typedef struct s_shell
@@ -45,6 +49,7 @@ typedef struct s_shell
     char        **pipesplit;
     char        **setfd;
     char        **env;
+    char        **aux_exp;
     char        *cmd;
     char        *dollar;
     char        *out;
@@ -79,11 +84,11 @@ void    ft_free_tab(char **str);
 int 	ft_isspace(int c);
 void	ignore_space(char **line);
 void    ft_swap(char **a, char **b);
-int		ft_isalpha(int c);
+int		ft_isalpha_cm(int c);
 char    *ft_cutstr(char *src, char *cut);
 char    *ft_cut_end(char *s);
 char    *ft_realloc_str(char *str, int i, int cut);
-void    ft_realloc_aux_two(char *str, int *i, int *quotes);
+void    ft_realloc_aux_two(char *str, t_test *test);
 char    *ft_realloc_var(char *str, char *res, int *i);
 char    *ft_join_char(char *s, int c);
 int     ft_len_char(char *str);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exp_pass_scp.c                                  :+:      :+:    :+:   */
+/*   ft_exp_pass_spc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:24:25 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/07/28 15:27:01 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/08 20:13:51 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static char *ft_pass_space_three(t_shell *pcs, char *str, char *aux)
 	{
 		ft_pass_space_four(pcs, str, i);
 		if (str[i] == '\\' && str[i + 1] == ' ' &&
-			pcs->quotes == 0 && pcs->equal == 1)
+			pcs->quotes == 0)// && pcs->equal == 1)
 		{
 			aux[j] = '\"';
 			j++;

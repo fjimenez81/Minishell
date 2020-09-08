@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/28 21:33:51 by fernando          #+#    #+#             */
-/*   Updated: 2020/08/04 15:55:42 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/08 19:09:22 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,10 @@ void ft_swap(char **a, char **b)
     *b = c;
 }
 
-int		ft_isalpha(int c)
+int		ft_isalpha_cm(int c)
 {
-	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '$');
+	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '$' ||
+        c == '\"' || c == '\'' || c == '\\');
 }
 
 char *ft_cutstr(char *src, char *cut)

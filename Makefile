@@ -6,7 +6,7 @@
 #    By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/18 21:02:40 by fernando          #+#    #+#              #
-#    Updated: 2020/08/04 19:41:26 by fjimenez         ###   ########.fr        #
+#    Updated: 2020/09/08 13:39:11 by fjimenez         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,7 @@ YELLOW = \033[0;33m
 
 all: $(NAME)
 
-$(NAME):
+$(NAME): $(OFILES)
 	@make -C libft/
 	@$(CC) $(LIBFT) ${SRCGNL} $(CFILES) -o $(NAME)
 	@echo "$(RED)(MINISHELL)$(BLUE)====CREATED====$(RESET)"

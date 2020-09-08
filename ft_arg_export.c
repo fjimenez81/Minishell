@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/08/01 19:08:58 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/08 20:45:38 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ static char	**ft_join_env(char *vars)
 	char	**res;
 	
 	len1 = ft_len_tab(g_envp);
-	ft_change_var(vars);
 	aux = ft_strdup(ft_realloc_str(vars, -1, 0));
+	ft_change_var(aux);
 	if (aux[0] == '=')
 	{
 		ft_putendl_fd("[Minishell] ~> not found", 1);
@@ -60,41 +60,60 @@ static char	**ft_join_env(char *vars)
 
 static int ft_check_var(char *vars)
 {
-	if (!ft_isalpha(vars[0]) && vars[0] != '_')
+	if ((!ft_isalpha_cm(vars[0]) && vars[0] != '_') ||
+		(vars[0] == '\\' && vars[1] == '\\'))
 		return (0);
 	vars++;
 	while (*vars)
 	{
+		if (((*vars == '\"'|| *vars == '\'') && *(vars - 1) != '\\') ||
+			(*vars == '\\' && *(vars + 1) != '\\'))
+			vars++;
 		if (*vars == '=')
 			break ;
-		if (!ft_isalpha(*vars) && !ft_isalnum(*vars) && !ft_isdigit(*vars) && *vars != '_')
+		if (!ft_isalpha(*vars) && !ft_isalnum(*vars) && !ft_isdigit(*vars) &&
+			*vars != '_')
 			return (0);
 		vars++;
 	}
 	return (1);
 }
 
+void ft_valid_args(char **vars)
+{
+	int j;
+	int k;
+
+	j = 0;
+	while (vars[++j])
+	{
+		k = -1;
+		while (vars[j][++k])
+		{
+			if ((!ft_isalpha(vars[j][k]) && k == 0) ||
+				(vars[j][k] == '\\' && vars[j][k + 1] == '\\') ||
+				vars[j][k] == ' ')
+			{
+				ft_putstr_fd("\033[1;31m", 1);
+				ft_putstr_fd("export : not an identifier: ", 1);
+				ft_putendl_fd(ft_realloc_str(vars[j], -1, 3), 1);
+				break ;
+			}
+		}
+	}	
+}
+
 static int ft_check_var_loop(char **vars)
 {
 	int i;
-	int j;
 
 	i = 0;
 	while (vars[++i])
 	{
 		if (!ft_check_var(vars[i]))
 		{
-			j = 0;
-			while (vars[++j])
-			{
-				if (!ft_isalnum(*vars[j]))
-				{
-					ft_putstr_fd("\033[1;31m export : no matches found : ", 1);
-					ft_putendl_fd(vars[j], 1);
-					break ;
-				}
-			}
-			return (0) ;
+			ft_valid_args(vars);
+			ft_memmove(vars[i], "", ft_strlen(vars[i]));
 		}
 	}
 	return (1);
@@ -119,13 +138,11 @@ int		ft_arg_export(t_shell *pcs, char *str)
 		}
 		i = 0;
 		while (pcs->cmp[++i])
+		{
+			if (!ft_strcmp(pcs->cmp[i], "") && i < ft_len_tab(pcs->cmp) - 1)
+				i++;
 			g_envp = ft_join_env(pcs->cmp[i]);
-		/*if (!(pcs->env = (char**)malloc(sizeof(char*) * (ft_len_tab(g_envp) + 1))))
-			return (-1);
-		i = -1;
-		while (g_envp[++i])
-			pcs->env[i] = g_envp[i];
-		pcs->env[i] = NULL;*/
+		}
 	}
 	free(aux);
 	return (1);
