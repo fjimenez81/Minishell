@@ -6,33 +6,65 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/08 20:45:38 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/09 18:10:20 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void ft_var_notequal(char *vars)
+{
+	int		i;
+	char	*split;
+	char	*copy;
+	char 	*aux;
+	
+	aux = ft_cut_end(vars);
+	split = ft_strjoin(aux, "=");
+	free(aux);
+	i = -1;
+	while (g_envp[++i])
+	{
+		if ((copy = ft_strstr(g_envp[i], split)))
+		{
+			free(vars);
+			vars = ft_strdup("");
+		}
+	}
+	free(split);
+}
 
 static void ft_change_var(char *vars)
 {
 	int		i;
 	char	*split;
 	char	*copy;
+	char 	*aux;
 	
-	split = ft_cut_end(vars);
-	i = -1;
-	while (g_envp[++i])
+	if (ft_strchr(vars, '='))
 	{
-		copy = ft_strstr(g_envp[i], split + 1);
-		if (copy != NULL)
-			ft_memmove(g_envp[i], "", ft_strlen(g_envp[i]));
+		aux = ft_cut_end(vars);
+		split = ft_strjoin(aux, "=");
+		free(aux);
+		i = -1;
+		while (g_envp[++i])
+		{
+			if ((copy = ft_strstr(g_envp[i], split)))
+				ft_memmove(g_envp[i], "", ft_strlen(g_envp[i]));
+			else if ((copy = ft_strstr(g_envp[i], aux)) &&
+				!ft_strchr(g_envp[i], '='))
+				ft_memmove(g_envp[i], "", ft_strlen(g_envp[i]));
+		}
+		free(split);
 	}
-	free(split);
+	else
+		ft_var_notequal(vars);
 }
 
 static char	**ft_join_env(char *vars)
 {
 	int		i;
-	int	len1;
+	int		len1;
 	char	*aux;
 	char	**res;
 	
@@ -58,14 +90,20 @@ static char	**ft_join_env(char *vars)
 	return (res);
 }
 
-static int ft_check_var(char *vars)
+static int ft_loop_caracter(char *vars)
 {
-	if ((!ft_isalpha_cm(vars[0]) && vars[0] != '_') ||
-		(vars[0] == '\\' && vars[1] == '\\'))
-		return (0);
-	vars++;
+	int bool;
+
+	bool = 0;
 	while (*vars)
 	{
+		if (*vars == '{' &&  *(vars - 1) == '$')
+		{
+			bool = 1;
+			vars++;
+		}
+		if (*vars == '}' && bool == 1)
+			vars++;
 		if (((*vars == '\"'|| *vars == '\'') && *(vars - 1) != '\\') ||
 			(*vars == '\\' && *(vars + 1) != '\\'))
 			vars++;
@@ -79,7 +117,17 @@ static int ft_check_var(char *vars)
 	return (1);
 }
 
-void ft_valid_args(char **vars)
+static int ft_check_var(char *vars)
+{
+	if ((!ft_isalpha_cm(vars[0]) && vars[0] != '_') ||
+		(vars[0] == '\\' && vars[1] == '\\'))
+		return (0);
+	if (!ft_loop_caracter(vars + 1))
+		return (0);
+	return (1);
+}
+
+void ft_valid_args(char **vars, int *bool)
 {
 	int j;
 	int k;
@@ -90,33 +138,35 @@ void ft_valid_args(char **vars)
 		k = -1;
 		while (vars[j][++k])
 		{
-			if ((!ft_isalpha(vars[j][k]) && k == 0) ||
+			if (((!ft_isalpha(vars[j][k]) && k == 0) ||
 				(vars[j][k] == '\\' && vars[j][k + 1] == '\\') ||
-				vars[j][k] == ' ')
+				vars[j][k] == ' ') && *bool == 0)
 			{
 				ft_putstr_fd("\033[1;31m", 1);
 				ft_putstr_fd("export : not an identifier: ", 1);
 				ft_putendl_fd(ft_realloc_str(vars[j], -1, 3), 1);
+				*bool = 1;
 				break ;
 			}
 		}
 	}	
 }
 
-static int ft_check_var_loop(char **vars)
+static void ft_check_var_loop(char **vars)
 {
 	int i;
+	int bool;
 
 	i = 0;
+	bool = 0;
 	while (vars[++i])
 	{
 		if (!ft_check_var(vars[i]))
 		{
-			ft_valid_args(vars);
+			ft_valid_args(vars, &bool);
 			ft_memmove(vars[i], "", ft_strlen(vars[i]));
 		}
 	}
-	return (1);
 }
 
 int		ft_arg_export(t_shell *pcs, char *str)
@@ -131,11 +181,7 @@ int		ft_arg_export(t_shell *pcs, char *str)
 		ft_sort_export();
 	else if (ft_len_tab(pcs->cmp) > 1)
 	{
-		if (!ft_check_var_loop(pcs->cmp))
-		{
-			free(aux);
-			return (1);
-		}
+		ft_check_var_loop(pcs->cmp);
 		i = 0;
 		while (pcs->cmp[++i])
 		{

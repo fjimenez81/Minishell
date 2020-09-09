@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/08/04 20:17:15 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/09 19:41:38 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,7 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 	
 	exe = -1;
 	pcs->bool_redir = 0;
-	ft_check_redir(pcs, i);
-	if (pcs->bool_redir == 1)
+	if (!ft_check_redir(pcs, i))
 		return (0);
 	if (!ft_strcmp(pcs->cmp[0], "pwd") && (exe = 1))
 		ft_putendl_fd(getcwd(pwd, -1), 1);
@@ -99,33 +98,36 @@ static void ft_loop_pipes(char **aux, t_test *tst)
 			ft_arg_export(pcs, pcs->pipesplit[j]);
 		else if(!ft_strcmp(pcs->cmp[0], "unset"))
 			ft_arg_unset(pcs->pipesplit[j]);
-		pcs->std_in = dup(0);
-		pcs->std_out = dup(1);
-		if (ft_len_tab(pcs->pipesplit) > 1)
-			pipe(pcs->previus[j].pipes);
-		pcs->pid = fork();
-		if (pcs->pid == 0)
-		{
-			dup2(pcs->previus[j].pipes[SIDEIN], STDOUT);
-			if (j > 0)
-				dup2(pcs->previus[j - 1].pipes[SIDEOUT], STDIN);
-			if (j == ft_len_tab(pcs->pipesplit) - 1)
-				dup2(pcs->std_out, STDOUT);
-			pcs->ret = ft_execute(pcs, j, tst);
-			exit(pcs->ret);
-		}
 		else
 		{
-			waitpid(pcs->pid, &tst->status, 0);
+			pcs->std_in = dup(0);
+			pcs->std_out = dup(1);
 			if (ft_len_tab(pcs->pipesplit) > 1)
+				pipe(pcs->previus[j].pipes);
+			pcs->pid = fork();
+			if (pcs->pid == 0)
 			{
-				close(pcs->previus[j].pipes[SIDEIN]);
-				if (j == ft_len_tab(pcs->pipesplit))
-					close(pcs->previus[j].pipes[SIDEOUT]);
+				dup2(pcs->previus[j].pipes[SIDEIN], STDOUT);
 				if (j > 0)
-					close(pcs->previus[j - 1].pipes[SIDEOUT]);
-				if (WIFEXITED(tst->status))
-					pcs->ret = WEXITSTATUS(tst->status);
+					dup2(pcs->previus[j - 1].pipes[SIDEOUT], STDIN);
+				if (j == ft_len_tab(pcs->pipesplit) - 1)
+					dup2(pcs->std_out, STDOUT);
+				pcs->ret = ft_execute(pcs, j, tst);
+				exit(pcs->ret);
+			}
+			else
+			{
+				waitpid(pcs->pid, &tst->status, 0);
+				if (ft_len_tab(pcs->pipesplit) > 1)
+				{
+					close(pcs->previus[j].pipes[SIDEIN]);
+					if (j == ft_len_tab(pcs->pipesplit))
+						close(pcs->previus[j].pipes[SIDEOUT]);
+					if (j > 0)
+						close(pcs->previus[j - 1].pipes[SIDEOUT]);
+					if (WIFEXITED(tst->status))
+						pcs->ret = WEXITSTATUS(tst->status);
+				}
 			}
 		}
 		ft_free_tab(pcs->cmp);

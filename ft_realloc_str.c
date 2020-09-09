@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 17:14:03 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/08 19:43:53 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/09 16:08:55 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,20 +77,60 @@ void ft_realloc_aux_two(char *str, t_test *tmp)
     }
 }
 
-char *ft_realloc_var(char *str, char *res, int *i)
+static void ft_keys_loop(t_test *tmp, int i)
 {
-	char *dollar;
 	char *aux;
-	char *var;
 
-    dollar = ft_cut_end(str + *i);
-	aux = ft_strjoin(ft_strrchr(dollar, '$') + 1, "=");
-	var = ft_print_var(aux);
+	i = -1;
+	while (tmp->dollar[++i] != '}')
+	{
+		if (tmp->dollar[i] == '{')
+			i++;
+		aux = ft_join_char(tmp->c_keys, tmp->dollar[i]);
+		tmp->c_keys = aux;
+		free(aux);
+	}
+}
+
+char *ft_check_keys(t_test *tmp, int *check)
+{
+	int i;
+	int bool;
+
+	i = -1;
+	bool = 0;
+	while (tmp->dollar[++i])
+	{
+		if (tmp->dollar[i] == '{' && bool == 0 && i == 1)
+			bool = 1;
+		if (tmp->dollar[i] == '}' && bool == 1)
+			*check = 1;
+		if (*check > 0)
+			*check += 1;
+	}
+	if (*check > 0)
+		ft_keys_loop(tmp, i);
+	return (tmp->c_keys);
+}
+
+char *ft_realloc_var(char *str, char *res, t_test *tmp)
+{
+	char *var;
+	int check;
+
+	check = 0;
+	tmp->c_keys = "\0";
+    tmp->dollar = ft_cut_end(str + tmp->i);
+	tmp->c_keys = ft_check_keys(tmp, &check);
+	tmp->c_keys = check > 0 ? ft_strjoin(ft_strrchr(tmp->c_keys, '$') + 1, "=") :
+		ft_strjoin(ft_strrchr(tmp->dollar, '$') + 1, "=");
+	var = ft_print_var(tmp->c_keys);
 	res = ft_strjoin(res, var);
-	*i += (!ft_strcmp(var, "") && str[*i + 1] == ' ') ?
-		1 : ft_strlen(dollar) - 1;
-    free(dollar);
-    free(aux);
+	tmp->i += (!ft_strcmp(var, "") && str[tmp->i + 1] == ' ') ?
+		1 : ft_strlen(tmp->dollar) - 1;
+	tmp->i -= check > 0 ? check - 2 : 0;
+    free(tmp->dollar);
+    free(tmp->c_keys);
 	return (res);
 }
 
@@ -101,7 +141,7 @@ int ft_aux_loop_two(char *str, t_test *tmp)
 		((str[tmp->i] == '<' || str[tmp->i] == '>' ||
 		(str[tmp->i] == ' ' && str[tmp->i + 1] == '>')) &&
 		(tmp->d_qu == 0 && tmp->s_qu == 0) && tmp->cut == 1) ||
-		(str[tmp->i] == '=' && tmp->cut == 3))
+		(str[tmp->i] == '=' && tmp->cut == 3) || tmp->key == 2)
 			return (0);
 	return (1);
 }
@@ -133,7 +173,7 @@ char *ft_realloc_aux_one(char *str, t_test *tmp)
 		res = aux;
 		if (str[tmp->i] == '$' && tmp->s_qu == 0)
 		{
-			res = ft_realloc_var(str, res, &tmp->i);			
+			res = ft_realloc_var(str, res, tmp);			
 			free(aux);
 			aux = res;
 			res = aux;
@@ -147,11 +187,25 @@ char *ft_realloc_str(char *str, int i, int cut)
 {
 	char *res;
 	t_test tmp;
+	int j;
 	
 	tmp.d_qu = 0;
 	tmp.s_qu = 0;
 	tmp.cut = cut;
 	tmp.i = i;
+	tmp.key = 0;
+	j = i;
+	while (str[++j])
+	{
+		if (str[j] == '{' && str[j - 1] != '\\')
+			tmp.key = 1;
+		if (str[j] == '}' && str[j - 1] != '\\'&&
+			(str[j + 1] == ' ' || str[j + 1] == '\0') && tmp.key == 0)
+		{
+			tmp.key = 2;
+			ft_putstr_fd("minishell : parse error near \'}\'", 1);
+		}
+	}
 	res = ft_realloc_aux_one(str, &tmp);
 	return (res);
 }

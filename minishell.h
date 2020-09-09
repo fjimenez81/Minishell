@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/08 19:09:26 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/09 19:39:28 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,9 @@ typedef struct  s_test
     int d_qu;
     int s_qu;
     int i;
+    int key;
+    char *dollar;
+    char *c_keys;
 }               t_test;
 
 typedef struct s_shell
@@ -89,7 +92,7 @@ char    *ft_cutstr(char *src, char *cut);
 char    *ft_cut_end(char *s);
 char    *ft_realloc_str(char *str, int i, int cut);
 void    ft_realloc_aux_two(char *str, t_test *test);
-char    *ft_realloc_var(char *str, char *res, int *i);
+char    *ft_realloc_var(char *str, char *res, t_test *tmp);
 char    *ft_join_char(char *s, int c);
 int     ft_len_char(char *str);
 char    *ft_pass_space(t_shell *pcs, char *str);
@@ -104,7 +107,7 @@ int		ft_arg_unset(char *vars);
 int     ft_arg_echo(t_shell *pcs, int i);
 char    *ft_print_var(char *aux);
 void	init_env(char **env);
-void     ft_check_redir(t_shell *pcs, int j);
+int     ft_check_redir(t_shell *pcs, int j);
 char	**ft_split_cmd(char const *s, char c);
 
 #endif

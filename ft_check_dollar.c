@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 19:40:05 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/08/04 20:11:18 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/09 16:14:38 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,17 @@ static void ft_check_aux(char *str, int *i, int *quotes)
         *i += 1;
 }
 
-static char *ft_dollar_aux_two(char *str, char *res, int *i)
+static char *ft_dollar_aux_two(char *str, char *res, t_test *tst)
 {
-	int j;
 	char  *aux;
 
-	j = *i;
-	aux = ft_realloc_var(str, res, &j);
+	aux = ft_realloc_var(str, res, tst);
 	free(aux);
 	res = aux;
-	*i = j;
 	return (res);
 }
 
-static char *ft_dollar_aux_one(t_test *tst, char *tmp, char *res, int *i)
+static char *ft_dollar_aux_one(t_test *tst, char *tmp, char *res)
 {
 	char *aux;
 
@@ -54,32 +51,31 @@ static char *ft_dollar_aux_one(t_test *tst, char *tmp, char *res, int *i)
 	free(tmp);
 	tmp = ft_strjoin(res, aux);
 	free(aux);
-	*i += 1;
+	tst->i += 1;
 	return(tmp);
 }
 
 char *ft_check_dollar(t_test *tst, char *str)
 {
-	int i;
 	int quotes;
 	char *tmp;
 	char *res;
 
 	res = "\0";
-	i = -1;
+	tst->i = -1;
 	quotes = 0;
-	while (str[++i])
+	while (str[++tst->i])
 	{
-		ft_check_aux(str, &i, &quotes);
-		if ((str[i] == ' ' && str[i - 1] != '\\') && quotes == 0)
+		ft_check_aux(str, &tst->i, &quotes);
+		if ((str[tst->i] == ' ' && str[tst->i - 1] != '\\') && quotes == 0)
 			break ;
-		tmp = (str[i] == '$' && quotes == 0) ? ft_strdup(res):
-		ft_join_char(res, str[i]);
+		tmp = (str[tst->i] == '$' && quotes == 0) ? ft_strdup(res):
+		ft_join_char(res, str[tst->i]);
 		res = tmp;
-		if (str[i] == '$' && str[i + 1] != '?' && quotes == 0)
-			res = ft_dollar_aux_two(str, res, &i);
-		else if (str[i] == '$' && str[i + 1] == '?' && quotes == 0)
-			res = ft_dollar_aux_one(tst, tmp, res, &i);
+		if (str[tst->i] == '$' && str[tst->i + 1] != '?' && quotes == 0)
+			res = ft_dollar_aux_two(str, res, tst);
+		else if (str[tst->i] == '$' && str[tst->i + 1] == '?' && quotes == 0)
+			res = ft_dollar_aux_one(tst, tmp, res);
 		free(tmp);
 	}
 	return (ft_strdup(res));
