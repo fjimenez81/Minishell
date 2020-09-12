@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/09 19:39:28 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/12 17:27:53 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct  s_test
     int key;
     char *dollar;
     char *c_keys;
+    int bool_echo;
 }               t_test;
 
 typedef struct s_shell
@@ -90,24 +91,26 @@ void    ft_swap(char **a, char **b);
 int		ft_isalpha_cm(int c);
 char    *ft_cutstr(char *src, char *cut);
 char    *ft_cut_end(char *s);
-char    *ft_realloc_str(char *str, int i, int cut);
+char    *ft_realloc_str(t_test *tmp, char *str, int i, int cut);
 void    ft_realloc_aux_two(char *str, t_test *test);
 char    *ft_realloc_var(char *str, char *res, t_test *tmp);
 char    *ft_join_char(char *s, int c);
 int     ft_len_char(char *str);
 char    *ft_pass_space(t_shell *pcs, char *str);
 void    ft_sort_export();
-char    *ft_check_dollar(t_test *tst, char *str);
+char    *ft_check_dollar(t_test *tst, t_shell *pcs, int j, int bool);
 char	**ft_str_tok(char *s, char *sep);
 char    *ft_strstr(char *str, char *to_find);
 int     ft_arg_cd(t_shell *pcs);
 int     ft_arg_env(t_shell *pcs);
-int		ft_arg_export(t_shell *pcs, char *str);
+int		ft_arg_export(t_test *tst, t_shell *pcs, char *str);
 int		ft_arg_unset(char *vars);
-int     ft_arg_echo(t_shell *pcs, int i);
+int     ft_arg_echo(t_shell *pcs, t_test *tst, int i);
 char    *ft_print_var(char *aux);
 void	init_env(char **env);
-int     ft_check_redir(t_shell *pcs, int j);
+int     ft_check_redir(t_test *tst, t_shell *pcs, int j);
 char	**ft_split_cmd(char const *s, char c);
+
+char    *ft_dollar_aux_one(t_test *tst, char *tmp, char *res);
 
 #endif

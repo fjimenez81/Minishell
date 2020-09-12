@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/09 18:10:20 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/12 17:26:17 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static void ft_change_var(char *vars)
 		ft_var_notequal(vars);
 }
 
-static char	**ft_join_env(char *vars)
+static char	**ft_join_env(t_test *tst, char *vars)
 {
 	int		i;
 	int		len1;
@@ -69,7 +69,7 @@ static char	**ft_join_env(char *vars)
 	char	**res;
 	
 	len1 = ft_len_tab(g_envp);
-	aux = ft_strdup(ft_realloc_str(vars, -1, 0));
+	aux = ft_strdup(ft_realloc_str(tst, vars, -1, 0));
 	ft_change_var(aux);
 	if (aux[0] == '=')
 	{
@@ -127,7 +127,7 @@ static int ft_check_var(char *vars)
 	return (1);
 }
 
-void ft_valid_args(char **vars, int *bool)
+void ft_valid_args(t_test *tst, char **vars, int *bool)
 {
 	int j;
 	int k;
@@ -144,7 +144,7 @@ void ft_valid_args(char **vars, int *bool)
 			{
 				ft_putstr_fd("\033[1;31m", 1);
 				ft_putstr_fd("export : not an identifier: ", 1);
-				ft_putendl_fd(ft_realloc_str(vars[j], -1, 3), 1);
+				ft_putendl_fd(ft_realloc_str(tst, vars[j], -1, 3), 1);
 				*bool = 1;
 				break ;
 			}
@@ -152,7 +152,7 @@ void ft_valid_args(char **vars, int *bool)
 	}	
 }
 
-static void ft_check_var_loop(char **vars)
+static void ft_check_var_loop(t_test *tst, char **vars)
 {
 	int i;
 	int bool;
@@ -163,13 +163,13 @@ static void ft_check_var_loop(char **vars)
 	{
 		if (!ft_check_var(vars[i]))
 		{
-			ft_valid_args(vars, &bool);
+			ft_valid_args(tst, vars, &bool);
 			ft_memmove(vars[i], "", ft_strlen(vars[i]));
 		}
 	}
 }
 
-int		ft_arg_export(t_shell *pcs, char *str)
+int		ft_arg_export(t_test *tst, t_shell *pcs, char *str)
 {
 	int i;
 	char *aux;
@@ -181,13 +181,13 @@ int		ft_arg_export(t_shell *pcs, char *str)
 		ft_sort_export();
 	else if (ft_len_tab(pcs->cmp) > 1)
 	{
-		ft_check_var_loop(pcs->cmp);
+		ft_check_var_loop(tst, pcs->cmp);
 		i = 0;
 		while (pcs->cmp[++i])
 		{
 			if (!ft_strcmp(pcs->cmp[i], "") && i < ft_len_tab(pcs->cmp) - 1)
 				i++;
-			g_envp = ft_join_env(pcs->cmp[i]);
+			g_envp = ft_join_env(tst, pcs->cmp[i]);
 		}
 	}
 	free(aux);

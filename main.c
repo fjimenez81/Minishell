@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/09 19:41:38 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/12 17:27:58 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int ft_arg_exe(t_shell *pcs, t_test *tst)
 	exe = -1;
 	j = 0;
 	free(pcs->cmp[0]);
-	pcs->cmp[0] = ft_strdup(ft_realloc_str(pcs->dollar, -1, 0));
+	pcs->cmp[0] = ft_strdup(ft_realloc_str(tst, pcs->dollar, -1, 0));
 	while (exe == -1 && j < 3)
 	{
 		join = ft_strjoin(pcs->paths[j], pcs->cmp[0]);
@@ -34,10 +34,10 @@ int ft_arg_exe(t_shell *pcs, t_test *tst)
 		if (j == 3 && exe == -1 && ft_strcmp(pcs->cmp[0], "export") != 0 &&
 			ft_strcmp(pcs->cmp[0], "unset") != 0)
 		{
-			ft_putstr_fd("\033[1;31m[Minishell] : ", 1);
-			ft_putstr_fd("command not found : ", 1);
-			ft_putendl_fd(pcs->dollar, 1);
-			tst->status = 127;
+				ft_putstr_fd("\033[1;31m[Minishell] : ", 1);
+				ft_putstr_fd("command not found : ", 1);
+				ft_putendl_fd(pcs->dollar, 1);
+				tst->status = 127;
 		}
 		if (j == 3 && exe == -1)
 			exit(127);
@@ -52,14 +52,14 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 	
 	exe = -1;
 	pcs->bool_redir = 0;
-	if (!ft_check_redir(pcs, i))
+	if (!ft_check_redir(tst, pcs, i))
 		return (0);
 	if (!ft_strcmp(pcs->cmp[0], "pwd") && (exe = 1))
 		ft_putendl_fd(getcwd(pwd, -1), 1);
 	else if (!ft_strcmp(pcs->cmp[0], "env") && (exe = 1))
 		ft_arg_env(pcs);
 	else if (!ft_strcmp(pcs->cmp[0], "echo") && (exe = 1))
-		ft_arg_echo(pcs, i);
+		ft_arg_echo(pcs, tst, i);
 	else if (exe == -1)
 		ft_arg_exe(pcs, tst);
 	return (0);
@@ -82,9 +82,9 @@ static void ft_loop_pipes(char **aux, t_test *tst)
 		tmp = ft_strtrim(pcs->pipesplit[j], " \t");
 		free(pcs->pipesplit[j]);
 		pcs->pipesplit[j] = tmp;
-		tmp2 = ft_check_dollar(tst, pcs->pipesplit[j]);
-		pcs->dollar = tmp2;
 		pcs->cmp = ft_split_cmd(pcs->pipesplit[j], ' ');
+		tmp2 = ft_check_dollar(tst, pcs, j, 0);
+		pcs->dollar = tmp2;
 		pcs->args = ft_len_tab(pcs->cmp);
 		pcs->previus = pcs;
 		if(!ft_strcmp(pcs->cmp[0], "exit"))//no funciona con pipes al cerrar deja abierto los procesos
@@ -95,7 +95,7 @@ static void ft_loop_pipes(char **aux, t_test *tst)
 		else if (!ft_strcmp(pcs->cmp[0], "cd") || !ft_strcmp(pcs->cmp[0], "~"))//no fuciona en pipes por eso lo pongo por delante
 			ft_arg_cd(pcs);
 		else if(!ft_strcmp(pcs->cmp[0], "export"))//Parece que algunas funciones tienen que ir antes de pipes
-			ft_arg_export(pcs, pcs->pipesplit[j]);
+			ft_arg_export(tst, pcs, pcs->pipesplit[j]);
 		else if(!ft_strcmp(pcs->cmp[0], "unset"))
 			ft_arg_unset(pcs->pipesplit[j]);
 		else

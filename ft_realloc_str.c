@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 17:14:03 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/09 16:08:55 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/12 17:38:58 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,11 +167,13 @@ char *ft_realloc_aux_one(char *str, t_test *tmp)
         ft_realloc_aux_two(str, tmp);
 		if (!ft_aux_loop_two(str, tmp))
 			break ;
-		aux = (str[tmp->i] == '$' && tmp->s_qu == 0) ? ft_strdup(res) :
+		aux = (str[tmp->i] == '$' && str[tmp->i - 1] != '\\' && tmp->s_qu == 0) ? ft_strdup(res) :
 			ft_join_char(res, str[tmp->i]);
 		aux = ft_only_dollar(str, aux, res, tmp);
 		res = aux;
-		if (str[tmp->i] == '$' && tmp->s_qu == 0)
+		if (str[tmp->i] == '$' && str[tmp->i + 1] == '?' && tmp->s_qu == 0)
+			res = ft_dollar_aux_one(tmp, aux, res);
+		if (str[tmp->i] == '$' && str[tmp->i - 1] != '\\' && tmp->s_qu == 0)
 		{
 			res = ft_realloc_var(str, res, tmp);			
 			free(aux);
@@ -183,29 +185,28 @@ char *ft_realloc_aux_one(char *str, t_test *tmp)
 	return (res);
 }
 
-char *ft_realloc_str(char *str, int i, int cut)
+char *ft_realloc_str(t_test *tmp, char *str, int i, int cut)
 {
 	char *res;
-	t_test tmp;
 	int j;
 	
-	tmp.d_qu = 0;
-	tmp.s_qu = 0;
-	tmp.cut = cut;
-	tmp.i = i;
-	tmp.key = 0;
+	tmp->d_qu = 0;
+	tmp->s_qu = 0;
+	tmp->cut = cut;
+	tmp->i = i;
+	tmp->key = 0;
 	j = i;
 	while (str[++j])
 	{
 		if (str[j] == '{' && str[j - 1] != '\\')
-			tmp.key = 1;
+			tmp->key = 1;
 		if (str[j] == '}' && str[j - 1] != '\\'&&
-			(str[j + 1] == ' ' || str[j + 1] == '\0') && tmp.key == 0)
+			(str[j + 1] == ' ' || str[j + 1] == '\0') && tmp->key == 0)
 		{
-			tmp.key = 2;
+			tmp->key = 2;
 			ft_putstr_fd("minishell : parse error near \'}\'", 1);
 		}
 	}
-	res = ft_realloc_aux_one(str, &tmp);
+	res = ft_realloc_aux_one(str, tmp);
 	return (res);
 }

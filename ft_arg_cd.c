@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 21:08:07 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/09 18:54:31 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/12 17:22:55 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,14 @@ static char *ft_get_var(char *str)
 
 static void ft_cd_two_arg(t_shell *pcs, char *oldpath)
 {
+	t_test tmp;
+
 	if (pcs->args == 1 || !ft_strcmp(pcs->cmp[0], "~"))
 	{
         if (chdir(ft_get_var("HOME")) == 0)
 			ft_get_up_var(oldpath);
 	}
-	else if (pcs->args == 2 && chdir(ft_realloc_str(pcs->cmp[1], -1, 0)) == 0)
+	else if (pcs->args == 2 && chdir(ft_realloc_str(&tmp, pcs->cmp[1], -1, 0)) == 0)
 		ft_get_up_var(oldpath);
 }
 
