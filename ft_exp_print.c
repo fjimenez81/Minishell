@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:28:04 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/09 17:23:34 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/14 11:10:55 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ static void ft_print_export(char **export, int i)
 {
 	char *tmp;
 
-	if (ft_strchr(export[i], '=') && export[i][ft_strlen(export[i]) - 1] == '=')
+	if (ft_strchr(export[i], '=') &&
+		export[i][ft_strlen(export[i]) - 1] == '=')
 	{
 		tmp = export[i];
 		free(export[i]);

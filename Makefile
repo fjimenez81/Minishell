@@ -6,7 +6,7 @@
 #    By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/18 21:02:40 by fernando          #+#    #+#              #
-#    Updated: 2020/09/08 13:39:11 by fjimenez         ###   ########.fr        #
+#    Updated: 2020/09/14 13:32:58 by fjimenez         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,10 +26,14 @@ SRC =	main \
 		ft_init_env \
 		ft_split_cmd \
 		ft_realloc_str \
+		ft_realloc_str_aux \
 		ft_redirections \
 		ft_exp_pass_spc \
 		ft_exp_print \
-		ft_check_dollar \
+		ft_check_export \
+		ft_realloc_var \
+		ft_check_pipes \
+		ft_loop_pipes \
 
 CFILES = $(addsuffix .c, $(SRC))
 

@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/12 17:27:53 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/14 12:18:23 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,20 @@
 
 typedef struct  s_test
 {
-    int status;
-    int cut;
-    int d_qu;
-    int s_qu;
-    int i;
-    int key;
-    char *dollar;
-    char *c_keys;
-    int bool_echo;
+    int     status;
+    int     cut;
+    int     d_qu;
+    int     s_qu;
+    int     i;
+    int     key;
+    int     len_env;
+    char    *aux;
+    char    *dollar;
+    char    *c_keys;
+    char    *paths[3];
+    char    **cmd;
+    char    **var_exp;
+    int     ck_key;
 }               t_test;
 
 typedef struct s_shell
@@ -103,13 +108,17 @@ char	**ft_str_tok(char *s, char *sep);
 char    *ft_strstr(char *str, char *to_find);
 int     ft_arg_cd(t_shell *pcs);
 int     ft_arg_env(t_shell *pcs);
-int		ft_arg_export(t_test *tst, t_shell *pcs, char *str);
+int		ft_arg_export(t_test *tst, t_shell *pcs, int j);
+void    ft_check_var_loop(t_test *tst);
 int		ft_arg_unset(char *vars);
 int     ft_arg_echo(t_shell *pcs, t_test *tst, int i);
 char    *ft_print_var(char *aux);
 void	init_env(char **env);
 int     ft_check_redir(t_test *tst, t_shell *pcs, int j);
 char	**ft_split_cmd(char const *s, char c);
+void    ft_check_pipes(t_shell *pcs, t_test *tst, int j);
+void    ft_loop_pipes(char **aux, t_test *tst);
+int     ft_arg_exe(t_shell *pcs, t_test *tst);
 
 char    *ft_dollar_aux_one(t_test *tst, char *tmp, char *res);
 

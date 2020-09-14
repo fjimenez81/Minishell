@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/12 17:26:17 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/14 12:20:30 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,15 +61,13 @@ static void ft_change_var(char *vars)
 		ft_var_notequal(vars);
 }
 
-static char	**ft_join_env(t_test *tst, char *vars)
+static char	**ft_join_env(t_test *tst, int j)
 {
 	int		i;
-	int		len1;
 	char	*aux;
 	char	**res;
 	
-	len1 = ft_len_tab(g_envp);
-	aux = ft_strdup(ft_realloc_str(tst, vars, -1, 0));
+	aux = ft_strdup(ft_realloc_str(tst, tst->var_exp[j], -1, 0));
 	ft_change_var(aux);
 	if (aux[0] == '=')
 	{
@@ -77,7 +75,7 @@ static char	**ft_join_env(t_test *tst, char *vars)
 		free(aux);
 		return (g_envp);
 	}
-	if (!(res = (char **)malloc(sizeof(char*) * (len1 + 2))))
+	if (!(res = (char **)malloc(sizeof(char*) * (tst->len_env + 2))))
 		return (NULL);
 	i = -1;
 	while (g_envp[++i])
@@ -90,106 +88,27 @@ static char	**ft_join_env(t_test *tst, char *vars)
 	return (res);
 }
 
-static int ft_loop_caracter(char *vars)
-{
-	int bool;
-
-	bool = 0;
-	while (*vars)
-	{
-		if (*vars == '{' &&  *(vars - 1) == '$')
-		{
-			bool = 1;
-			vars++;
-		}
-		if (*vars == '}' && bool == 1)
-			vars++;
-		if (((*vars == '\"'|| *vars == '\'') && *(vars - 1) != '\\') ||
-			(*vars == '\\' && *(vars + 1) != '\\'))
-			vars++;
-		if (*vars == '=')
-			break ;
-		if (!ft_isalpha(*vars) && !ft_isalnum(*vars) && !ft_isdigit(*vars) &&
-			*vars != '_')
-			return (0);
-		vars++;
-	}
-	return (1);
-}
-
-static int ft_check_var(char *vars)
-{
-	if ((!ft_isalpha_cm(vars[0]) && vars[0] != '_') ||
-		(vars[0] == '\\' && vars[1] == '\\'))
-		return (0);
-	if (!ft_loop_caracter(vars + 1))
-		return (0);
-	return (1);
-}
-
-void ft_valid_args(t_test *tst, char **vars, int *bool)
-{
-	int j;
-	int k;
-
-	j = 0;
-	while (vars[++j])
-	{
-		k = -1;
-		while (vars[j][++k])
-		{
-			if (((!ft_isalpha(vars[j][k]) && k == 0) ||
-				(vars[j][k] == '\\' && vars[j][k + 1] == '\\') ||
-				vars[j][k] == ' ') && *bool == 0)
-			{
-				ft_putstr_fd("\033[1;31m", 1);
-				ft_putstr_fd("export : not an identifier: ", 1);
-				ft_putendl_fd(ft_realloc_str(tst, vars[j], -1, 3), 1);
-				*bool = 1;
-				break ;
-			}
-		}
-	}	
-}
-
-static void ft_check_var_loop(t_test *tst, char **vars)
+int		ft_arg_export(t_test *tst, t_shell *pcs, int j)
 {
 	int i;
-	int bool;
-
-	i = 0;
-	bool = 0;
-	while (vars[++i])
-	{
-		if (!ft_check_var(vars[i]))
-		{
-			ft_valid_args(tst, vars, &bool);
-			ft_memmove(vars[i], "", ft_strlen(vars[i]));
-		}
-	}
-}
-
-int		ft_arg_export(t_test *tst, t_shell *pcs, char *str)
-{
-	int i;
-	char *aux;
 	
-	aux = ft_pass_space(pcs, str);
-	ft_free_tab(pcs->cmp);
-	pcs->cmp = ft_split_cmd(aux, ' ');
-	if (ft_len_tab(pcs->cmp) == 1)
+	tst->aux = ft_pass_space(pcs, pcs->pipesplit[j]);
+	tst->var_exp = ft_split_cmd(tst->aux, ' ');
+	if (ft_len_tab(tst->var_exp) == 1)
 		ft_sort_export();
-	else if (ft_len_tab(pcs->cmp) > 1)
+	else if (ft_len_tab(tst->var_exp) > 1)
 	{
-		ft_check_var_loop(tst, pcs->cmp);
+		ft_check_var_loop(tst);
 		i = 0;
-		while (pcs->cmp[++i])
+		while (tst->var_exp[++i])
 		{
-			if (!ft_strcmp(pcs->cmp[i], "") && i < ft_len_tab(pcs->cmp) - 1)
+			if (!ft_strcmp(tst->var_exp[i], "") &&
+				i < ft_len_tab(tst->var_exp) - 1)
 				i++;
-			g_envp = ft_join_env(tst, pcs->cmp[i]);
+			g_envp = ft_join_env(tst, i);
 		}
 	}
-	free(aux);
+	free(tst->aux);
+	ft_free_tab(tst->var_exp);
 	return (1);
 }
