@@ -6,13 +6,13 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:27:24 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/14 12:39:29 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/17 19:05:16 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_arg_exe(t_shell *pcs, t_test *tst)
+int ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 {
 	char	*join;
 	int		exe;
@@ -20,24 +20,22 @@ int ft_arg_exe(t_shell *pcs, t_test *tst)
 
 	exe = -1;
 	j = 0;
+	ft_free_tab(pcs->cmp);
+	pcs->cmp = ft_split_cmd(ft_realloc_str
+		(tst, pcs->pipesplit[i], -1, 0), ' ');
 	while (exe == -1 && j < 3)
 	{
 		join = ft_strjoin(tst->paths[j], pcs->cmp[0]);
 		j++;
 		free(join);
 		exe = execve(join, pcs->cmp, g_envp);
-		if (j == 3 && exe == -1 && ft_strcmp(pcs->cmp[0], "export") != 0 &&
-			ft_strcmp(pcs->cmp[0], "unset") != 0)
-		{
-				ft_putstr_fd("Esto es antes : ", 1);
-				ft_putendl_fd(pcs->cmp[0], 1);
-				ft_putstr_fd("\033[1;31m[Minishell] : ", 1);
-				ft_putstr_fd("command not found : ", 1);
-				ft_putendl_fd(ft_realloc_str(tst, pcs->cmp[0], -1, 0), 1);
-				tst->status = 127;
-		}
 		if (j == 3 && exe == -1)
-			exit(127);
+		{
+				ft_putstr_fd(tst->error, 1);
+				ft_putendl_fd(pcs->cmp[0], 1);
+				tst->status = 127;
+				exit(127);
+		}
 	}
 	return (0);
 }
@@ -58,7 +56,7 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 	else if (!ft_strcmp(pcs->cmp[0], "echo") && (exe = 1))
 		ft_arg_echo(pcs, tst, i);
 	else if (exe == -1)
-		ft_arg_exe(pcs, tst);
+		ft_arg_exe(pcs, tst, i);
 	return (0);
 }
 

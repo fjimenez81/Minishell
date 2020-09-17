@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 21:08:07 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/12 17:22:55 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/17 19:48:58 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void ft_get_up_var(char *oldpath)
 	pos = 0;
 	while (g_envp[++i])
 	{
-		if (ft_strstr(g_envp[i], "OLD"))
+		if (ft_strstr(g_envp[i], "OLDPWD="))
 		{
 			pos = i;
 			i++;
@@ -64,6 +64,12 @@ static void ft_cd_two_arg(t_shell *pcs, char *oldpath)
 	}
 	else if (pcs->args == 2 && chdir(ft_realloc_str(&tmp, pcs->cmp[1], -1, 0)) == 0)
 		ft_get_up_var(oldpath);
+	else
+	{
+		ft_putstr_fd("cd: no such file or directory: ", 1);
+		ft_putendl_fd(pcs->cmp[1], 1);
+	}
+	
 }
 
 int ft_arg_cd(t_shell *pcs)
@@ -71,22 +77,21 @@ int ft_arg_cd(t_shell *pcs)
 	char oldpath[PATH_MAX];
 
 	getcwd(oldpath, -1);
-    if (pcs->args > 2)
-    {
-        ft_putstr_fd("cd: too many arguments\n", 1);
-        return (0);
-    }
-	else if (pcs->args == 2 && !ft_strcmp(pcs->cmp[1], ".."))
+	/*else if (pcs->args == 2 && !ft_strcmp(pcs->cmp[1], ".."))
     {
         chdir("..");
 		getcwd(oldpath, -1);
 		return (1);
-    }
-    else if (pcs->args <= 2)
+    }*/
+    if (pcs->args <= 2)
     {
 		ft_cd_two_arg(pcs, oldpath);
 		return (1);
     }
-    ft_putstr_fd("Error: No such file or directory\n", 1);
+	else if (pcs->args > 2)
+    {
+        ft_putstr_fd("cd: string not in pwd: ", 1);
+		ft_putendl_fd(pcs->cmp[1], 1);
+    }
     return(0);
 }

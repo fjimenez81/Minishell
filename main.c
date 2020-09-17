@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:13:26 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/14 12:18:48 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/17 18:59:16 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void ft_init_struct(t_test *tst, char *line)
 	tst->paths[1] = "/usr/bin/";
 	tst->paths[2] = "";
 	tst->cmd = ft_split_cmd(line, ';');
+	tst->error = "\033[1;31m[Minishell] : command not found : ";
 }
 
 int main(int ac, char **av, char **env)

@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/14 12:18:23 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/17 18:59:12 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct  s_test
     int     key;
     int     len_env;
     char    *aux;
+    char    *error;
     char    *dollar;
     char    *c_keys;
     char    *paths[3];
@@ -118,7 +119,7 @@ int     ft_check_redir(t_test *tst, t_shell *pcs, int j);
 char	**ft_split_cmd(char const *s, char c);
 void    ft_check_pipes(t_shell *pcs, t_test *tst, int j);
 void    ft_loop_pipes(char **aux, t_test *tst);
-int     ft_arg_exe(t_shell *pcs, t_test *tst);
+int     ft_arg_exe(t_shell *pcs, t_test *tst, int i);
 
 char    *ft_dollar_aux_one(t_test *tst, char *tmp, char *res);
 
