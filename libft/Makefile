@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fernando <fernando@student.42.fr>          +#+  +:+       +#+         #
+#    By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/18 08:07:14 by fjimenez          #+#    #+#              #
-#    Updated: 2020/03/24 20:33:39 by fernando         ###   ########.fr        #
+#    Updated: 2020/09/17 20:35:11 by fjimenez         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,19 +47,15 @@ YELLOW = \033[0;33m
 
 .PHONY: re clean fclean all
 
-all: $(NAME) libft bonus
+$(VERBOSE).SILENT:
 
-$(NAME): $(CFILES) 
+all: $(NAME) execute
 
-libft:
-	@$(CC) $(CFLAGS) $(INC) -c $(CFILES)
-	@ar rc $(NAME) $(OFILES)
-	@ranlib $(NAME)
-	@echo "$(RED)(LIBFT)\t$(GREEN)====CREATED====$(RESET)"
+$(NAME): $(OFILES) $(BONUSOBJ) $(HEADER)
 
-bonus:	
-	@$(CC) $(CFLAGS) $(INC) -c $(BONUSFILES)
-	@ar rc $(NAME) $(BONUSOBJ)
+execute :
+	@$(CC) $(CFLAGS) -c $(CFILES) $(BONUSSRC)
+	@ar -rcs $(NAME) $(OFILES) $(BONUSOBJ) $(HEADER)
 	@ranlib $(NAME)
 
 clean:

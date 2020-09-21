@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/25 13:11:06 by fernando          #+#    #+#             */
-/*   Updated: 2020/08/01 19:09:22 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/18 17:43:00 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,28 +40,21 @@ int ft_len_char(char *str)
     return (i - 1);
 }
 
-int             ft_arg_env(t_shell *pcs)
+int             ft_arg_env(t_shell *pcs, t_test *tst)
 {
 	int i;
+    (void)tst;
 
 	if (pcs->args == 1)
 	{
-        /*if (pcs->env)
-	    {ft_putendl_fd("dentro", 1);
-		    i = -1;
-		    while (pcs->env[++i])
-			    if (ft_strcmp(pcs->env[i], "") != 0 && ft_strchr(pcs->env[i], '='))
-				    ft_putendl_fd(pcs->env[i], 1);
-		    return (1);
-	    }*/
-       // else
-        //{
-            i = -1;
-		    while (g_envp[++i])
-			    if (ft_strcmp(g_envp[i], "") != 0 && ft_strchr(g_envp[i], '='))
-				    ft_putendl_fd(g_envp[i], 1);
-		    return (1);
-        //}
+        i = -1;
+		 while (g_envp[++i])
+			if (ft_strcmp(g_envp[i], "") != 0 && ft_strchr(g_envp[i], '='))
+				ft_putendl_fd(g_envp[i], 1);
+		return (1);
 	}
+    ft_putstr_fd("env: ", 1);
+    ft_putstr_fd(pcs->cmp[1], 1);
+    ft_putstr_fd(": No such file or directory\n", 1);
 	return (0);
 }

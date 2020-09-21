@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/17 18:59:12 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/21 16:53:57 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ typedef struct  s_test
     int     s_qu;
     int     i;
     int     key;
+    int     bool;
+    int     bool2;
     int     len_env;
     char    *aux;
     char    *error;
@@ -51,6 +53,7 @@ typedef struct  s_test
     char    *paths[3];
     char    **cmd;
     char    **var_exp;
+    char    **c_export;
     int     ck_key;
 }               t_test;
 
@@ -67,7 +70,6 @@ typedef struct s_shell
     char        *redir;
     char        *paths[3];
     int         args;
-    int         fd;
     int         quotes;
     int         equal;
     int         check_fd;
@@ -80,7 +82,11 @@ typedef struct s_shell
     int         status;
     int         pipes[2];
     pid_t       pid;
-    int         b_pipe;
+    int         n_pipe;
+    int			fd_in;
+	int			fd_out;
+	int			flag_in;
+	int			flag_out;
     struct s_shell        *previus;
 }               t_shell;
 
@@ -107,8 +113,8 @@ void    ft_sort_export();
 char    *ft_check_dollar(t_test *tst, t_shell *pcs, int j, int bool);
 char	**ft_str_tok(char *s, char *sep);
 char    *ft_strstr(char *str, char *to_find);
-int     ft_arg_cd(t_shell *pcs);
-int     ft_arg_env(t_shell *pcs);
+int     ft_arg_cd(t_shell *pcs, t_test *tst);
+int     ft_arg_env(t_shell *pcs, t_test *tst);
 int		ft_arg_export(t_test *tst, t_shell *pcs, int j);
 void    ft_check_var_loop(t_test *tst);
 int		ft_arg_unset(char *vars);

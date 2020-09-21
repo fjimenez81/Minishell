@@ -6,7 +6,7 @@
 #    By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/18 21:02:40 by fernando          #+#    #+#              #
-#    Updated: 2020/09/14 13:32:58 by fjimenez         ###   ########.fr        #
+#    Updated: 2020/09/17 20:39:47 by fjimenez         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,10 +42,13 @@ OFILES = $(addsuffix .o, $(SRC))
 SRCGNL = gnl/get_next_line.c gnl/get_next_line_utils.c
 
 LIBFT = libft/libft.a
+M_LIBFT = make -C libft/
 
 CC = gcc -Wall -Wextra -Werror
 
 RM = rm -rf
+
+#$(VERBOSE).SILENT:
 
 RED = \033[1;31m
 GREEN = \033[1;32m
@@ -54,12 +57,13 @@ RESET = \033[0m
 PURPLE = \033[0;35m
 YELLOW = \033[0;33m
 
-all: $(NAME)
+all: $(NAME) 
 
 $(NAME): $(OFILES)
-	@make -C libft/
+	@$(M_LIBFT)
 	@$(CC) $(LIBFT) ${SRCGNL} $(CFILES) -o $(NAME)
 	@echo "$(RED)(MINISHELL)$(BLUE)====CREATED====$(RESET)"
+	
 
 clean:
 	@$(RM) $(OFILES)

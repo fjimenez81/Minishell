@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/14 12:03:56 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/21 15:33:17 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,21 @@
 
 void ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
 {
-	pcs->previus = pcs;
-	if(!ft_strcmp(pcs->cmp[0], "exit"))//no funciona con pipes al cerrar deja abierto los procesos
+	tst->bool = 0;
+	if(!ft_strcmp(pcs->cmp[0], "exit") && j == pcs->n_pipe - 1)//no funciona con pipes al cerrar deja abierto los procesos
 	{
 		system("leaks minishell");
 		exit(0);
 	}
-	else if (!ft_strcmp(pcs->cmp[0], "cd") || !ft_strcmp(pcs->cmp[0], "~"))//no fuciona en pipes por eso lo pongo por delante
-		ft_arg_cd(pcs);
-	else if(!ft_strcmp(pcs->cmp[0], "export"))//Parece que algunas funciones tienen que ir antes de pipes
+	else if ((!ft_strcmp(pcs->cmp[0], "cd") ||
+		!ft_strcmp(pcs->cmp[0], "~")) && j == pcs->n_pipe - 1 
+		&& (tst->bool = 1))//no fuciona en pipes por eso lo pongo por delante
+		ft_arg_cd(pcs, tst);
+	else if(!ft_strcmp(pcs->cmp[0], "export") &&
+		j == pcs->n_pipe - 1 && (tst->bool = 1))//Parece que algunas funciones tienen que ir antes de pipes
 		ft_arg_export(tst, pcs, j);
-	else if(!ft_strcmp(pcs->cmp[0], "unset"))
+	else if(!ft_strcmp(pcs->cmp[0], "unset") &&
+		j == pcs->n_pipe - 1 && (tst->bool = 1))
 		ft_arg_unset(pcs->pipesplit[j]);
 	else
 		ft_check_pipes(pcs, tst, j);
@@ -41,7 +45,8 @@ void ft_loop_pipes(char **aux, t_test *tst)
 			return ;
 	j = -1;
 	pcs->ret = EXIT_SUCCESS;
-	while (++j < ft_len_tab(aux))
+	pcs->n_pipe = ft_len_tab(aux);
+	while (++j < pcs->n_pipe)
 	{
 		pcs->pipesplit = aux;
 		tmp = ft_strtrim(pcs->pipesplit[j], " \t");
