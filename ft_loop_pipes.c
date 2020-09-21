@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/21 15:33:17 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/21 18:43:11 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ void ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
 	else if(!ft_strcmp(pcs->cmp[0], "unset") &&
 		j == pcs->n_pipe - 1 && (tst->bool = 1))
 		ft_arg_unset(pcs->pipesplit[j]);
-	else
-		ft_check_pipes(pcs, tst, j);
-	ft_free_tab(pcs->cmp);
+	if (tst->bool == 1)
+		return ;
+	ft_check_pipes(pcs, tst, j);
 }
 
 void ft_loop_pipes(char **aux, t_test *tst)
@@ -55,6 +55,7 @@ void ft_loop_pipes(char **aux, t_test *tst)
 		pcs->cmp = ft_split_cmd(pcs->pipesplit[j], ' ');
 		pcs->args = ft_len_tab(pcs->cmp);
 		ft_loop_pipes_aux(pcs, tst, j);
+		ft_free_tab(pcs->cmp);
 	}
 	ft_free_tab(aux);
 	free(pcs);
