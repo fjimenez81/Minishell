@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:27:24 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/21 18:42:53 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/21 20:39:38 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 				ft_putstr_fd(tst->error, 1);
 				ft_putendl_fd(pcs->cmp[0], 1);
 				ft_putstr_fd("\033[0m", 1);
-				dup2(pcs->std_out, 0);
+				//dup2(pcs->std_out, 0);
 			}
 			tst->status = 127;
 			exit(127);
@@ -54,18 +54,19 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 	char pwd[PATH_MAX];
 	int exe;
 
-	
 	exe = -1;
-	pcs->bool_redir = 0;
-	pcs->flag_in = 0;
-	pcs->flag_out = 0;
-	ft_check_redir(tst, pcs, i);
+	ft_check_redir(tst, pcs, i, 1);
 	if (!ft_strcmp(pcs->cmp[0], "pwd") && (exe = 1))
 		ft_putendl_fd(getcwd(pwd, -1), 1);
-	else if (!ft_strcmp(pcs->cmp[0], "env") && (exe = 1))
+	else if (!ft_strcmp(pcs->cmp[0], "env") &&
+		pcs->bool_redir == 0 && (exe = 1))
 		ft_arg_env(pcs, tst);
 	else if (!ft_strcmp(pcs->cmp[0], "echo") && (exe = 1))
 		ft_arg_echo(pcs, tst, i);
+	else if((!ft_strcmp(pcs->cmp[0], "export") &&
+		(!ft_strcmp(pcs->cmp[1], ">") ||
+		!ft_strcmp(pcs->cmp[1], ">>"))) && (exe = 1))
+		ft_sort_export();
 	else if ((!ft_strcmp(pcs->cmp[0], "export") ||
 		!ft_strcmp(pcs->cmp[0], "unset")) && tst->bool == 0)
 		tst->bool = 1;

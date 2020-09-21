@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/21 16:53:57 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/21 19:30:38 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ int		ft_arg_unset(char *vars);
 int     ft_arg_echo(t_shell *pcs, t_test *tst, int i);
 char    *ft_print_var(char *aux);
 void	init_env(char **env);
-int     ft_check_redir(t_test *tst, t_shell *pcs, int j);
+int     ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass);
 char	**ft_split_cmd(char const *s, char c);
 void    ft_check_pipes(t_shell *pcs, t_test *tst, int j);
 void    ft_loop_pipes(char **aux, t_test *tst);

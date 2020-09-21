@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/21 18:43:11 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/21 20:38:56 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ void ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
 		exit(0);
 	}
 	else if ((!ft_strcmp(pcs->cmp[0], "cd") ||
-		!ft_strcmp(pcs->cmp[0], "~")) && j == pcs->n_pipe - 1 
-		&& (tst->bool = 1))//no fuciona en pipes por eso lo pongo por delante
+		!ft_strcmp(pcs->cmp[0], "~")) && j == pcs->n_pipe - 1 &&
+		pcs->bool_redir == 0 && (tst->bool = 1))//no fuciona en pipes por eso lo pongo por delante
 		ft_arg_cd(pcs, tst);
 	else if(!ft_strcmp(pcs->cmp[0], "export") &&
-		j == pcs->n_pipe - 1 && (tst->bool = 1))//Parece que algunas funciones tienen que ir antes de pipes
+		j == pcs->n_pipe - 1 && pcs->bool_redir == 0 && (tst->bool = 1))//Parece que algunas funciones tienen que ir antes de pipes
 		ft_arg_export(tst, pcs, j);
 	else if(!ft_strcmp(pcs->cmp[0], "unset") &&
-		j == pcs->n_pipe - 1 && (tst->bool = 1))
+		j == pcs->n_pipe - 1 && pcs->bool_redir == 0 && (tst->bool = 1))
 		ft_arg_unset(pcs->pipesplit[j]);
 	if (tst->bool == 1)
 		return ;
@@ -54,6 +54,7 @@ void ft_loop_pipes(char **aux, t_test *tst)
 		pcs->pipesplit[j] = tmp;
 		pcs->cmp = ft_split_cmd(pcs->pipesplit[j], ' ');
 		pcs->args = ft_len_tab(pcs->cmp);
+		ft_check_redir(tst, pcs, j, 0);
 		ft_loop_pipes_aux(pcs, tst, j);
 		ft_free_tab(pcs->cmp);
 	}

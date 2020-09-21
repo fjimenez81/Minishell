@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/21 17:14:30 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/21 19:53:46 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static void ft_redir_fd(t_shell *pcs, int flags, char *dir, t_test *tst)
 	}
 }
 
-static void ft_check_redir_aux(t_test *tst, t_shell *pcs, int *quotes)
+static void ft_check_redir_aux(t_test *tst, t_shell *pcs, int *quotes, int pass)
 {
 	if ((pcs->redir[tst->i] == '\"' || pcs->redir[tst->i] == '\'') &&
 		pcs->redir[tst->i - 1] != '\\' && *quotes == 0)
@@ -52,32 +52,43 @@ static void ft_check_redir_aux(t_test *tst, t_shell *pcs, int *quotes)
 		*quotes = 0;
 	else if (pcs->redir[tst->i] == '>' && *quotes == 0)
 	{
-		tst->i += 1;
-		if (pcs->redir[tst->i] == '>')
+		if (pass == 1)
 		{
+			tst->i += 1;
+			if (pcs->redir[tst->i] == '>')
+			{
 				tst->i += 1;
 				ft_redir_fd(pcs, O_RDWR | O_CREAT | O_APPEND, ">>", tst);
+			}
+			else
+				ft_redir_fd(pcs, O_TRUNC | O_RDWR | O_CREAT, ">", tst);
+			tst->i += ft_strlen(pcs->redir) - tst->i;
 		}
-		else
-			ft_redir_fd(pcs, O_TRUNC | O_RDWR | O_CREAT, ">", tst);
-		tst->i += ft_strlen(pcs->redir) - tst->i;
+		pcs->bool_redir = 1;
 	}
 	else if (pcs->redir[tst->i] == '<' && *quotes == 0)
 	{
-		tst->i += 1;
-		ft_redir_fd(pcs, O_RDONLY, "<", tst);
-		tst->i += ft_strlen(pcs->redir) - tst->i;
+		if (pass == 1)
+		{
+			tst->i += 1;
+			ft_redir_fd(pcs, O_RDONLY, "<", tst);
+			tst->i += ft_strlen(pcs->redir) - tst->i;
+		}
+		pcs->bool_redir = 1;
 	}
 }
 
-int ft_check_redir(t_test *tst, t_shell *pcs, int j)
+int ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass)
 {
 	int quotes;
 	
 	tst->i = -1;
 	quotes = 0;
 	pcs->redir = pcs->pipesplit[j];
+	pcs->bool_redir = 0;
+	pcs->flag_in = 0;
+	pcs->flag_out = 0;
 	while (pcs->redir[++tst->i])
-		ft_check_redir_aux(tst, pcs, &quotes);
+		ft_check_redir_aux(tst, pcs, &quotes, pass);
 	return (1);
 }
