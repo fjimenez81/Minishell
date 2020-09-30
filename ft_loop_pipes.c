@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/21 20:38:56 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/30 20:32:42 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void ft_loop_pipes(char **aux, t_test *tst)
 		pcs->args = ft_len_tab(pcs->cmp);
 		ft_check_redir(tst, pcs, j, 0);
 		ft_loop_pipes_aux(pcs, tst, j);
+		free(pcs->fd_out);
+		free(tst->pid);
 		ft_free_tab(pcs->cmp);
 	}
 	ft_free_tab(aux);

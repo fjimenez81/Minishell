@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:27:24 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/21 20:39:38 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/30 20:37:22 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,34 @@ int ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 				ft_putstr_fd(tst->error, 1);
 				ft_putendl_fd(pcs->cmp[0], 1);
 				ft_putstr_fd("\033[0m", 1);
-				//dup2(pcs->std_out, 0);
 			}
 			tst->status = 127;
 			exit(127);
 		}
 	}
 	return (0);
+}
+
+void ft_multiple_redir(t_shell *pcs, t_test *tst)
+{
+	int k;
+
+	k = 0;
+	if (tst->check_fd > 0)
+	{
+		if (!(tst->pid = malloc (sizeof(int) * tst->check_fd)))
+			return ;
+		k = 0;
+		while (++k < tst->check_fd)
+		{
+			tst->pid[k] = fork();
+			if (tst->pid[k] == 0)
+			{
+				dup2(pcs->fd_out[k], STDOUT_FILENO);
+				break ;
+			}
+		}
+	}
 }
 
 static int	ft_execute(t_shell *pcs, int i, t_test *tst)
@@ -56,6 +77,7 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 
 	exe = -1;
 	ft_check_redir(tst, pcs, i, 1);
+	ft_multiple_redir(pcs, tst);
 	if (!ft_strcmp(pcs->cmp[0], "pwd") && (exe = 1))
 		ft_putendl_fd(getcwd(pwd, -1), 1);
 	else if (!ft_strcmp(pcs->cmp[0], "env") &&
@@ -117,7 +139,10 @@ void ft_check_pipes(t_shell *pcs, t_test *tst, int j)
 	else
 		ft_pipe_father(pcs, tst, j);
 	if (pcs->flag_out == 1)
+	{
+		close(pcs->fd_out[0]);
 		dup2(pcs->std_out, 1);
+	}
 	if (pcs->flag_in == 1)
 		dup2(pcs->std_out, 0);
 }

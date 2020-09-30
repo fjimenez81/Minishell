@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/21 19:30:38 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/09/30 19:42:01 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,12 @@ typedef struct  s_test
     char    **var_exp;
     char    **c_export;
     int     ck_key;
+    int     check_fd;
+    int     j;
+    int     pass;
+    int     fd;
+    int     fd_tst;
+    pid_t       *pid;
 }               t_test;
 
 typedef struct s_shell
@@ -84,9 +90,10 @@ typedef struct s_shell
     pid_t       pid;
     int         n_pipe;
     int			fd_in;
-	int			fd_out;
+	int			*fd_out;
 	int			flag_in;
 	int			flag_out;
+    char        *test;
     struct s_shell        *previus;
 }               t_shell;
 
