@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 18:07:07 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/21 16:23:47 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/01 15:31:00 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int ft_arg_echo(t_shell *pcs, t_test *tst, int i)
 {
 	char *cmd;
     char *aux;
-
+	
     if (pcs->args)
     {
         if (pcs->cmp[1] == NULL)

@@ -6,61 +6,75 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/30 20:31:23 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/01 17:48:19 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void ft_file_out(t_shell *pcs, t_test *tst, int flags)
+{
+	pcs->out = ft_realloc_str(tst, pcs->redir, tst->i - 1, 2);
+	if (tst->fdot_j == 0)
+		if (!(pcs->fd_out = (int*)malloc(sizeof(int) * tst->check_fdot)))
+			return ;
+	if ((pcs->fd_out[tst->fdot_j] = open(pcs->out, flags, 0600)) == -1)
+	{
+		ft_putstr_fd("minishell : no such file or directory: ", 1);
+		ft_putendl_fd(pcs->out, 1);
+		exit(1);
+	}
+	pcs->flag_out = 1;
+	tst->fdot_j++;
+	dup2(pcs->fd_out[0], STDOUT_FILENO);
+}
+
+void ft_read_fdin(t_shell *pcs, t_test *tst)
+{
+	int get;
+	char *line;
+
+	if (pcs->cmp[0][0] == '<')
+	{
+		while ((get = get_next_line(pcs->fd_in[tst->fdin_k], &line)) != 0)
+		{
+			ft_putendl_fd(line, 1);
+			free(line);
+		}
+		tst->fdin_k++;
+		close(pcs->fd_in[tst->fdin_k]);
+		if (tst->fdin_k == tst->check_fdin)
+			exit(0);
+	}
+	pcs->flag_in = 1;
+}
+
 static void ft_redir_fd(t_shell *pcs, int flags, char *dir, t_test *tst)
 {
-	int k;
-
-	k = 0;
 	while (ft_isspace(pcs->redir[tst->i]))
 		tst->i += 1;
 	if (!ft_strcmp(dir, "<"))
 	{
-		pcs->in = ft_realloc_str(tst, pcs->redir, ft_len_char(pcs->redir), 2);
-		if ((pcs->fd_in = open(pcs->in, O_RDONLY)) == -1)
+		if (tst->fdin_k == 0)
+			if (!(pcs->fd_in = (int*)malloc(sizeof(int) * tst->check_fdin)))
+				return ;
+		pcs->in = ft_realloc_str(tst, pcs->redir, tst->i - 1, 2);
+		if ((pcs->fd_in[tst->fdin_k] = open(pcs->in, flags)) == -1)
 		{
 			ft_putstr_fd("minishell : no such file or directory: ", 1);
 			ft_putendl_fd(pcs->in, 1);
-			pcs->in = NULL;
+			exit(1);
 		}
-		pcs->flag_in = 1;
-		dup2(pcs->fd_in, 0);
+		ft_read_fdin(pcs, tst);
+		//dup2(pcs->fd_in, 0);
 	}
 	else
-	{
-		pcs->out = ft_realloc_str(tst, pcs->redir, tst->i - 1, 2);
-		if (tst->pass)
-		{
-			if (tst->j == 0)
-				if (!(pcs->fd_out = (int*)malloc(sizeof(int) * tst->check_fd)))
-					return ;
-			if ((pcs->fd_out[tst->j] = open(pcs->out, flags, 0600)) == -1)
-			{
-				ft_putstr_fd("minishell : no such file or directory: ", 1);
-				ft_putendl_fd(pcs->out, 1);
-				pcs->out = NULL;
-			}
-			pcs->flag_out = 1;
-			tst->j++;
-			dup2(pcs->fd_out[0], STDOUT_FILENO);
-		}
-	}
+		ft_file_out(pcs, tst, flags);
 }
 
-static void ft_check_redir_aux(t_test *tst, t_shell *pcs, int *quotes, int pass)
+void ft_ck_redir_two(t_test *tst, t_shell *pcs, int pass)
 {
-	if ((pcs->redir[tst->i] == '\"' || pcs->redir[tst->i] == '\'') &&
-		pcs->redir[tst->i - 1] != '\\' && *quotes == 0)
-		*quotes = 1;
-	else if ((pcs->redir[tst->i] == '\"' || pcs->redir[tst->i] == '\'') &&
-		pcs->redir[tst->i - 1] != '\\' && *quotes == 1)
-		*quotes = 0;
-	else if (pcs->redir[tst->i] == '>' && *quotes == 0)
+	if (pass)
 	{
 		tst->i += 1;
 		if (pcs->redir[tst->i] == '>')
@@ -70,18 +84,32 @@ static void ft_check_redir_aux(t_test *tst, t_shell *pcs, int *quotes, int pass)
 		}
 		else
 			ft_redir_fd(pcs, O_TRUNC | O_RDWR | O_CREAT, ">", tst);
-		if (!pass)
-			tst->check_fd++;
-		pcs->bool_redir = 1;
 	}
+	if (!pass)
+		tst->check_fdot++;
+	pcs->bool_redir = 1;
+}
+
+static void ft_check_redir_aux(t_test *tst, t_shell *pcs,
+	int *quotes, int pass)
+{
+	if ((pcs->redir[tst->i] == '\"' || pcs->redir[tst->i] == '\'') &&
+		pcs->redir[tst->i - 1] != '\\' && *quotes == 0)
+		*quotes = 1;
+	else if ((pcs->redir[tst->i] == '\"' || pcs->redir[tst->i] == '\'') &&
+		pcs->redir[tst->i - 1] != '\\' && *quotes == 1)
+		*quotes = 0;
+	else if (pcs->redir[tst->i] == '>' && *quotes == 0)
+		ft_ck_redir_two(tst, pcs, pass);
 	else if (pcs->redir[tst->i] == '<' && *quotes == 0)
 	{
 		if (pass == 1)
 		{
 			tst->i += 1;
 			ft_redir_fd(pcs, O_RDONLY, "<", tst);
-			tst->i += ft_strlen(pcs->redir) - tst->i;
 		}
+		if (!pass)
+			tst->check_fdin++;
 		pcs->bool_redir = 1;
 	}
 }
@@ -96,10 +124,13 @@ int ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass)
 	pcs->bool_redir = 0;
 	pcs->flag_in = 0;
 	pcs->flag_out = 0;
-	tst->j = 0;
-	tst->pass = pass;
+	tst->fdot_j = 0;
+	tst->fdin_k = 0;
 	if (!pass)
-		tst->check_fd = 0;
+	{
+		tst->check_fdot = 0;
+		tst->check_fdin = 0;
+	}
 	while (pcs->redir[++tst->i])
 		ft_check_redir_aux(tst, pcs, &quotes, pass);
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:27:24 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/30 20:37:22 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/01 17:13:47 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,20 +50,19 @@ int ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 
 void ft_multiple_redir(t_shell *pcs, t_test *tst)
 {
-	int k;
+	int i;
 
-	k = 0;
-	if (tst->check_fd > 0)
+	i = 0;
+	if (tst->check_fdot > 0)
 	{
-		if (!(tst->pid = malloc (sizeof(int) * tst->check_fd)))
+		if (!(tst->pid = malloc (sizeof(pid_t) * tst->check_fdot)))
 			return ;
-		k = 0;
-		while (++k < tst->check_fd)
+		while (++i < tst->check_fdot)
 		{
-			tst->pid[k] = fork();
-			if (tst->pid[k] == 0)
+			tst->pid[i] = fork();
+			if (tst->pid[i] == 0)
 			{
-				dup2(pcs->fd_out[k], STDOUT_FILENO);
+				dup2(pcs->fd_out[i], STDOUT_FILENO);
 				break ;
 			}
 		}
@@ -92,7 +91,7 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 	else if ((!ft_strcmp(pcs->cmp[0], "export") ||
 		!ft_strcmp(pcs->cmp[0], "unset")) && tst->bool == 0)
 		tst->bool = 1;
-	else if (exe == -1 && tst->bool == 0)
+	else if (exe == -1 && !tst->bool)
 		ft_arg_exe(pcs, tst, i);
 	return (exe);
 }
