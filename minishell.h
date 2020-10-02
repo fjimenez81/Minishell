@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/10/01 17:09:31 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/02 13:00:36 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct  s_test
     int     pass;
     int     fd_tst;
     pid_t   *pid;
+    int     check_pid;
 }               t_test;
 
 typedef struct s_shell

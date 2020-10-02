@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 17:14:03 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/14 11:07:30 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/02 11:38:51 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 
 static int ft_aux_loop_two(char *str, t_test *tmp)
 {
-	if ((str[tmp->i] == ' ' && str[tmp->i - 1] != '\\' &&
-		(tmp->d_qu == 0 && tmp->s_qu == 0) && tmp->cut == 2) ||
-		((str[tmp->i] == '<' || str[tmp->i] == '>' ||
+	if (((str[tmp->i] == ' ' || str[tmp->i] == '<' || str[tmp->i] == '>') &&
+		str[tmp->i - 1] != '\\' && (tmp->d_qu == 0 && tmp->s_qu == 0) &&
+		tmp->cut == 2) || ((str[tmp->i] == '<' || str[tmp->i] == '>' ||
 		(str[tmp->i] == ' ' && str[tmp->i + 1] == '>')) &&
-		(tmp->d_qu == 0 && tmp->s_qu == 0) && tmp->cut == 1) ||
-		(str[tmp->i] == '=' && tmp->cut == 3) || tmp->key == 2)
+		str[tmp->i - 1] != '\\' && (tmp->d_qu == 0 && tmp->s_qu == 0) &&
+		tmp->cut == 1) || (str[tmp->i] == '=' && tmp->cut == 3) ||
+		tmp->key == 2)
 			return (0);
 	return (1);
 }
@@ -45,7 +46,8 @@ static char *ft_realloc_aux_one(char *str, t_test *tmp)
         ft_realloc_aux_two(str, tmp);
 		if (!ft_aux_loop_two(str, tmp))
 			break ;
-		aux = (str[tmp->i] == '$' && str[tmp->i - 1] != '\\' && tmp->s_qu == 0) ? ft_strdup(res) :
+		aux = (str[tmp->i] == '$' && str[tmp->i - 1] != '\\' &&
+			tmp->s_qu == 0) ? ft_strdup(res) :
 			ft_join_char(res, str[tmp->i]);
 		aux = ft_only_dollar(str, aux, res, tmp);
 		res = aux;

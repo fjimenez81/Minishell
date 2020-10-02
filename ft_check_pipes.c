@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:27:24 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/01 17:13:47 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/02 13:08:51 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@ int ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 	char	*join;
 	int		exe;
 	int		j;
+	int 	k;
 
 	exe = -1;
 	j = 0;
+	k = 0;
 	ft_free_tab(pcs->cmp);
 	pcs->cmp = ft_split_cmd(ft_realloc_str
 		(tst, pcs->pipesplit[i], -1, 1), ' ');
@@ -29,18 +31,13 @@ int ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 		j++;
 		free(join);
 		exe = execve(join, pcs->cmp, g_envp);
-		if (j == 3 && exe == -1)
+		if (j == 3 && exe == -1 && !tst->check_pid)
 		{
-				
-			if (pcs->flag_out == 1)
-				ft_putstr_fd("", 1);
-			else
-			{
-				dup2(pcs->std_out, 1);
-				ft_putstr_fd(tst->error, 1);
-				ft_putendl_fd(pcs->cmp[0], 1);
-				ft_putstr_fd("\033[0m", 1);
-			}
+			
+			dup2(pcs->std_out, 1);
+			ft_putstr_fd(tst->error, 1);
+			ft_putendl_fd(pcs->cmp[0], 1);
+			ft_putstr_fd("\033[0m", 1);
 			tst->status = 127;
 			exit(127);
 		}
@@ -57,14 +54,22 @@ void ft_multiple_redir(t_shell *pcs, t_test *tst)
 	{
 		if (!(tst->pid = malloc (sizeof(pid_t) * tst->check_fdot)))
 			return ;
+		tst->check_pid = 0;
 		while (++i < tst->check_fdot)
 		{
 			tst->pid[i] = fork();
 			if (tst->pid[i] == 0)
 			{
 				dup2(pcs->fd_out[i], STDOUT_FILENO);
+				tst->check_pid = 1;
 				break ;
 			}
+			/*else
+			{
+				waitpid(tst->pid[i], &tst->status, 0);
+				close(pcs->fd_out[i - 1]);
+			}*/
+			
 		}
 	}
 }
@@ -128,6 +133,9 @@ static void	ft_pipe_father(t_shell *pcs, t_test *tst, int j)
 
 void ft_check_pipes(t_shell *pcs, t_test *tst, int j)
 {
+	int k;
+
+	k = -1;
     pcs->std_in = dup(0);
 	pcs->std_out = dup(1);
 	if (pcs->n_pipe > 1)
@@ -139,9 +147,10 @@ void ft_check_pipes(t_shell *pcs, t_test *tst, int j)
 		ft_pipe_father(pcs, tst, j);
 	if (pcs->flag_out == 1)
 	{
-		close(pcs->fd_out[0]);
+		while (++k < tst->check_fdot)
+			close(pcs->fd_out[k]);
 		dup2(pcs->std_out, 1);
 	}
-	if (pcs->flag_in == 1)
-		dup2(pcs->std_out, 0);
+	//if (pcs->flag_in == 1)
+		//dup2(pcs->std_out, 0);
 }

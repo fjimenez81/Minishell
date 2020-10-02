@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/01 17:48:19 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/02 13:11:30 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ void ft_ck_redir_two(t_test *tst, t_shell *pcs, int pass)
 		}
 		else
 			ft_redir_fd(pcs, O_TRUNC | O_RDWR | O_CREAT, ">", tst);
+		if (pcs->redir[tst->i] == '>')
+			tst->i -= 1;
 	}
 	if (!pass)
 		tst->check_fdot++;
@@ -99,14 +101,18 @@ static void ft_check_redir_aux(t_test *tst, t_shell *pcs,
 	else if ((pcs->redir[tst->i] == '\"' || pcs->redir[tst->i] == '\'') &&
 		pcs->redir[tst->i - 1] != '\\' && *quotes == 1)
 		*quotes = 0;
-	else if (pcs->redir[tst->i] == '>' && *quotes == 0)
+	else if (pcs->redir[tst->i] == '>' && pcs->redir[tst->i - 1] != '\\' &&
+		*quotes == 0)
 		ft_ck_redir_two(tst, pcs, pass);
-	else if (pcs->redir[tst->i] == '<' && *quotes == 0)
+	else if (pcs->redir[tst->i] == '<' && pcs->redir[tst->i - 1] != '\\' &&
+		*quotes == 0)
 	{
 		if (pass == 1)
 		{
 			tst->i += 1;
 			ft_redir_fd(pcs, O_RDONLY, "<", tst);
+			if (pcs->redir[tst->i] == '<')
+				tst->i -= 1;
 		}
 		if (!pass)
 			tst->check_fdin++;
