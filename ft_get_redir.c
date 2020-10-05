@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 10:37:02 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/05 10:41:25 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/05 13:38:00 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void ft_multiple_redir(t_shell *pcs, t_test *tst)
 
 	i = 0;
 	k = -1;
-	if (tst->check_fdot > 0)
+	if (tst->check_fdot > 1)
 	{
 		if (!(tst->pid = malloc(sizeof(pid_t) * tst->check_fdot)))
 			return ;

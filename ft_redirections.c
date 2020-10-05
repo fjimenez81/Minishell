@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/05 10:43:30 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/05 13:46:20 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,19 +59,23 @@ void ft_ck_redir_two(t_test *tst, t_shell *pcs, int pass)
 {
 	if (pass)
 	{
-		tst->i += 1;
+		tst->i++;
 		if (pcs->redir[tst->i] == '>')
 		{
-			tst->i += 1;
+			tst->i++;
 			ft_redir_fd(pcs, O_RDWR | O_CREAT | O_APPEND, ">>", tst);
 		}
 		else
 			ft_redir_fd(pcs, O_TRUNC | O_RDWR | O_CREAT, ">", tst);
 		if (pcs->redir[tst->i] == '>')
-			tst->i -= 1;
+			tst->i--;
 	}
 	if (!pass)
+	{
 		tst->check_fdot++;
+		if (pcs->redir[tst->i] == '>')
+			tst->i++;
+	}
 	pcs->bool_redir = 1;
 }
 
