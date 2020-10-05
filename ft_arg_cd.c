@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 21:08:07 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/18 16:10:31 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/05 15:46:41 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int ft_arg_cd(t_shell *pcs, t_test *tst)
     {
         ft_putstr_fd("cd: string not in pwd: ", 1);
 		ft_putendl_fd(pcs->cmp[1], 1);
+		tst->status = 1;
     }
-    return(1);
+    return(0);
 }

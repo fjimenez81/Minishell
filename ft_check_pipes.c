@@ -6,53 +6,40 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:27:24 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/05 13:35:51 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/05 17:23:37 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_arg_exe(t_shell *pcs, t_test *tst, int i)
+void		ft_execute_aux(t_shell *pcs, t_test *tst , int i, int *exe)
 {
-	char	*join;
-	int		exe;
-	int		j;
+	char pwd[PATH_MAX];
 
-	exe = -1;
-	j = 0;
-	ft_free_tab(pcs->cmp);
-	pcs->cmp = ft_split_cmd(ft_realloc_str
-		(tst, pcs->pipesplit[i], -1, 1), ' ');
-	while (exe == -1 && j < 3)
+	if (tst->status == 1)
+		exit(1);
+	ft_check_redir(tst, pcs, i, 1);
+	ft_get_redir(pcs, tst);
+	ft_multiple_redir(pcs, tst);
+	if (!ft_strcmp(pcs->cmp[0], "pwd") && (*exe = 1))
 	{
-		join = ft_strjoin(tst->paths[j], pcs->cmp[0]);
-		j++;
-		free(join);
-		exe = execve(join, pcs->cmp, g_envp);
-		if (j == 3 && exe == -1 && !tst->check_pid)
+		if (pcs->cmp[1])
 		{
-			dup2(pcs->std_out, 1);
-			ft_putstr_fd(tst->error, 1);
-			ft_putendl_fd(pcs->cmp[0], 1);
-			ft_putstr_fd("\033[0m", 1);
-			tst->status = 127;
-			exit(127);
+			ft_putendl_fd("pwd: too many arguments", 1);
+			exit(1);
 		}
+		else
+			ft_putendl_fd(getcwd(pwd, -1), 1);
 	}
 }
 
 static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 {
-	char pwd[PATH_MAX];
 	int exe;
 
-	exe = -1;
-	ft_check_redir(tst, pcs, i, 1);
-	ft_get_redir(pcs, tst);
-	ft_multiple_redir(pcs, tst);
-	if (!ft_strcmp(pcs->cmp[0], "pwd") && (exe = 1))
-		ft_putendl_fd(getcwd(pwd, -1), 1);
-	else if (!ft_strcmp(pcs->cmp[0], "env") &&
+	exe = 0;
+	ft_execute_aux(pcs, tst , i, &exe);
+	if (!ft_strcmp(pcs->cmp[0], "env") &&
 		pcs->bool_redir == 0 && (exe = 1))
 		ft_arg_env(pcs, tst);
 	else if (!ft_strcmp(pcs->cmp[0], "echo") && (exe = 1))
@@ -64,9 +51,9 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 	else if ((!ft_strcmp(pcs->cmp[0], "export") ||
 		!ft_strcmp(pcs->cmp[0], "unset")) && tst->bool == 0)
 		tst->bool = 1;
-	else if (exe == -1 && !tst->bool)
+	else if (exe == 0 && !tst->bool)
 		ft_arg_exe(pcs, tst, i);
-	return (exe);
+	return (0);
 }
 
 static void	ft_pipe_son(t_shell *pcs, t_test *tst, int j)

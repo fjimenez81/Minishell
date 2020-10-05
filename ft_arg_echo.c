@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 18:07:07 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/02 11:36:12 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/05 17:34:12 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static char *ft_print_var_aux(char *var, char **tmp, int i)
 {
 	char *cut;
 
-	cut = ft_cut_end(var);
+	cut = ft_cut_end(var, 0);
 	if (!ft_strcmp(cut, tmp[0]))
 	{
 		var = ft_strrchr(g_envp[i], '=') + 1;

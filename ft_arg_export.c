@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/18 17:29:07 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/05 17:34:47 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void ft_var_notequal(char *vars)
 	char	*copy;
 	char 	*aux;
 	
-	aux = ft_cut_end(vars);
+	aux = ft_cut_end(vars, 1);
 	split = ft_strjoin(aux, "=");
 	free(aux);
 	i = -1;
@@ -43,7 +43,7 @@ static void ft_change_var(char *vars)
 	
 	if (ft_strchr(vars, '='))
 	{
-		aux = ft_cut_end(vars);
+		aux = ft_cut_end(vars, 1);
 		split = ft_strjoin(aux, "=");
 		free(aux);
 		i = -1;

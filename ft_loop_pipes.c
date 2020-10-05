@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/05 10:47:36 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/05 16:31:36 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ void ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
 		ft_arg_export(tst, pcs, j);
 	else if(!ft_strcmp(pcs->cmp[0], "unset") &&
 		j == pcs->n_pipe - 1 && pcs->bool_redir == 0 && (tst->bool = 1))
-		ft_arg_unset(pcs->pipesplit[j]);
-	if (tst->bool == 1)
-		return ;
+		ft_arg_unset(tst, pcs);
+	//if (tst->bool == 1)
+		//return ;
 	ft_check_pipes(pcs, tst, j);
 }
 

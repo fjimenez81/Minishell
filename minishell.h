@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/10/05 10:45:22 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/05 17:33:49 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void	ignore_space(char **line);
 void    ft_swap(char **a, char **b);
 int		ft_isalpha_cm(int c);
 char    *ft_cutstr(char *src, char *cut);
-char    *ft_cut_end(char *s);
+char    *ft_cut_end(char *s, int bool);
 char    *ft_realloc_str(t_test *tmp, char *str, int i, int cut);
 void    ft_realloc_aux_two(char *str, t_test *test);
 char    *ft_realloc_var(char *str, char *res, t_test *tmp);
@@ -128,7 +128,7 @@ int     ft_arg_cd(t_shell *pcs, t_test *tst);
 int     ft_arg_env(t_shell *pcs, t_test *tst);
 int		ft_arg_export(t_test *tst, t_shell *pcs, int j);
 void    ft_check_var_loop(t_test *tst);
-int		ft_arg_unset(char *vars);
+void    ft_arg_unset(t_test *tst, t_shell *pcs);
 int     ft_arg_echo(t_shell *pcs, t_test *tst, int i);
 char    *ft_print_var(char *aux);
 void	init_env(char **env);

@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 10:55:30 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/21 18:23:24 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/05 15:27:21 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ static void	ft_valid_args(t_test *tst, int *bool)
 				ft_putstr_fd("export : not an identifier: ", 1);
 				ft_putendl_fd(ft_realloc_str(tst, tst->var_exp[j], -1, 3), 1);
 				*bool = 1;
+				tst->status = 1;
 				break ;
 			}
 		}

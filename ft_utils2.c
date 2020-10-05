@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/28 21:33:51 by fernando          #+#    #+#             */
-/*   Updated: 2020/09/09 11:43:27 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/05 17:33:22 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char *ft_cutstr(char *src, char *cut)
     return (NULL);
 }
 
-char *ft_cut_end(char *s)
+char *ft_cut_end(char *s, int bool)
 {
     int i;
     int j;
@@ -75,7 +75,7 @@ char *ft_cut_end(char *s)
     while (s[++i])
     {
         if (s[i] == '\"' || s[i] == '\'' || s[i] == ' '||
-            s[i] == '\\' || s[i] == '\0' || s[i] == '=' ||
+            s[i] == '\\' || s[i] == '\0' || (s[i] == '=' && bool)||
             (s[i] == '$' && (s[i + 1] == '\0' || s[i + 1] != ' ') && i != 0))
                 break ;
     }

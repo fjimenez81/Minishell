@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 10:59:34 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/14 13:28:30 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/05 17:35:06 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ char *ft_realloc_var(char *str, char *res, t_test *tmp)
 
 	tmp->ck_key = 0;
 	tmp->c_keys = "\0";
-    tmp->dollar = ft_cut_end(str + tmp->i);
+    tmp->dollar = ft_cut_end(str + tmp->i, 0);
 	tmp->c_keys = ft_check_keys(tmp);
 	if (tmp->c_keys[1] == '?' || tmp->dollar[1] == '?')
 	{

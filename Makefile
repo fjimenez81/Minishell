@@ -6,7 +6,7 @@
 #    By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/18 21:02:40 by fernando          #+#    #+#              #
-#    Updated: 2020/10/05 10:38:57 by fjimenez         ###   ########.fr        #
+#    Updated: 2020/10/05 17:24:10 by fjimenez         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ SRC =	main \
 		ft_check_pipes \
 		ft_loop_pipes \
 		ft_get_redir \
+		ft_arg_exe \
 
 CFILES = $(addsuffix .c, $(SRC))
 
