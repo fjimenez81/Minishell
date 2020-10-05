@@ -6,22 +6,20 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:27:24 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/02 13:08:51 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/05 10:44:58 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_arg_exe(t_shell *pcs, t_test *tst, int i)
+void ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 {
 	char	*join;
 	int		exe;
 	int		j;
-	int 	k;
 
 	exe = -1;
 	j = 0;
-	k = 0;
 	ft_free_tab(pcs->cmp);
 	pcs->cmp = ft_split_cmd(ft_realloc_str
 		(tst, pcs->pipesplit[i], -1, 1), ' ');
@@ -33,43 +31,12 @@ int ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 		exe = execve(join, pcs->cmp, g_envp);
 		if (j == 3 && exe == -1 && !tst->check_pid)
 		{
-			
 			dup2(pcs->std_out, 1);
 			ft_putstr_fd(tst->error, 1);
 			ft_putendl_fd(pcs->cmp[0], 1);
 			ft_putstr_fd("\033[0m", 1);
 			tst->status = 127;
 			exit(127);
-		}
-	}
-	return (0);
-}
-
-void ft_multiple_redir(t_shell *pcs, t_test *tst)
-{
-	int i;
-
-	i = 0;
-	if (tst->check_fdot > 0)
-	{
-		if (!(tst->pid = malloc (sizeof(pid_t) * tst->check_fdot)))
-			return ;
-		tst->check_pid = 0;
-		while (++i < tst->check_fdot)
-		{
-			tst->pid[i] = fork();
-			if (tst->pid[i] == 0)
-			{
-				dup2(pcs->fd_out[i], STDOUT_FILENO);
-				tst->check_pid = 1;
-				break ;
-			}
-			/*else
-			{
-				waitpid(tst->pid[i], &tst->status, 0);
-				close(pcs->fd_out[i - 1]);
-			}*/
-			
 		}
 	}
 }
@@ -81,6 +48,7 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 
 	exe = -1;
 	ft_check_redir(tst, pcs, i, 1);
+	ft_get_redir(pcs, tst);
 	ft_multiple_redir(pcs, tst);
 	if (!ft_strcmp(pcs->cmp[0], "pwd") && (exe = 1))
 		ft_putendl_fd(getcwd(pwd, -1), 1);

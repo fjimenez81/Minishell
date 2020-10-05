@@ -6,7 +6,7 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/10/02 13:00:36 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/05 10:45:22 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ typedef struct  s_test
     int     fd_tst;
     pid_t   *pid;
     int     check_pid;
+    int     check_get;
+    char    *get_redir;
 }               t_test;
 
 typedef struct s_shell
@@ -134,7 +136,10 @@ int     ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass);
 char	**ft_split_cmd(char const *s, char c);
 void    ft_check_pipes(t_shell *pcs, t_test *tst, int j);
 void    ft_loop_pipes(char **aux, t_test *tst);
-int     ft_arg_exe(t_shell *pcs, t_test *tst, int i);
+void	ft_arg_exe(t_shell *pcs, t_test *tst, int i);
+void    ft_multiple_redir(t_shell *pcs, t_test *tst);
+void    ft_get_redir(t_shell *pcs, t_test *tst);
+void	ft_file_out(t_shell *pcs, t_test *tst, int flags);
 
 char    *ft_dollar_aux_one(t_test *tst, char *tmp, char *res);
 

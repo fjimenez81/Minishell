@@ -6,37 +6,20 @@
 /*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/02 13:11:30 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/05 10:43:30 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_file_out(t_shell *pcs, t_test *tst, int flags)
-{
-	pcs->out = ft_realloc_str(tst, pcs->redir, tst->i - 1, 2);
-	if (tst->fdot_j == 0)
-		if (!(pcs->fd_out = (int*)malloc(sizeof(int) * tst->check_fdot)))
-			return ;
-	if ((pcs->fd_out[tst->fdot_j] = open(pcs->out, flags, 0600)) == -1)
-	{
-		ft_putstr_fd("minishell : no such file or directory: ", 1);
-		ft_putendl_fd(pcs->out, 1);
-		exit(1);
-	}
-	pcs->flag_out = 1;
-	tst->fdot_j++;
-	dup2(pcs->fd_out[0], STDOUT_FILENO);
-}
-
 void ft_read_fdin(t_shell *pcs, t_test *tst)
 {
-	int get;
-	char *line;
+	int		read;
+	char	*line;
 
 	if (pcs->cmp[0][0] == '<')
 	{
-		while ((get = get_next_line(pcs->fd_in[tst->fdin_k], &line)) != 0)
+		while ((read = get_next_line(pcs->fd_in[tst->fdin_k], &line)) != 0)
 		{
 			ft_putendl_fd(line, 1);
 			free(line);
