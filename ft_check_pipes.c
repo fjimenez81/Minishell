@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_check_pipes.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:27:24 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/05 17:23:37 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/07 19:58:25 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_execute_aux(t_shell *pcs, t_test *tst , int i, int *exe)
+void		ft_execute_aux(t_shell *pcs, t_test *tst, int i, int *exe)
 {
 	char pwd[PATH_MAX];
 
@@ -38,13 +38,13 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 	int exe;
 
 	exe = 0;
-	ft_execute_aux(pcs, tst , i, &exe);
+	ft_execute_aux(pcs, tst, i, &exe);
 	if (!ft_strcmp(pcs->cmp[0], "env") &&
 		pcs->bool_redir == 0 && (exe = 1))
-		ft_arg_env(pcs, tst);
+		ft_arg_env(pcs);
 	else if (!ft_strcmp(pcs->cmp[0], "echo") && (exe = 1))
 		ft_arg_echo(pcs, tst, i);
-	else if((!ft_strcmp(pcs->cmp[0], "export") &&
+	else if ((!ft_strcmp(pcs->cmp[0], "export") &&
 		(!ft_strcmp(pcs->cmp[1], ">") ||
 		!ft_strcmp(pcs->cmp[1], ">>"))) && (exe = 1))
 		ft_sort_export();
@@ -86,12 +86,12 @@ static void	ft_pipe_father(t_shell *pcs, t_test *tst, int j)
 	}
 }
 
-void ft_check_pipes(t_shell *pcs, t_test *tst, int j)
+void		ft_check_pipes(t_shell *pcs, t_test *tst, int j)
 {
 	int k;
 
 	k = -1;
-    pcs->std_in = dup(0);
+	pcs->std_in = dup(0);
 	pcs->std_out = dup(1);
 	if (pcs->n_pipe > 1)
 		pipe(pcs[j].pipes);

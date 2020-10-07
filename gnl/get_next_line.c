@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/29 09:53:29 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/02 15:33:18 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/07 19:09:46 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include "../minishell.h"
 
-void	ft_strdel(char **str)
+void		ft_strdel(char **str)
 {
 	if (str != NULL && *str != NULL)
 	{

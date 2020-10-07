@@ -3,23 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ft_check_export.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 10:55:30 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/05 15:27:21 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/07 18:39:13 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ft_loop_caracter(char *vars)
+static int	ft_loop_caracter(char *vars, int bool)
 {
-	int bool;
-
-	bool = 0;
 	while (*vars)
 	{
-		if (*vars == '{' &&  *(vars - 1) == '$')
+		if (*vars == '{' && *(vars - 1) == '$')
 		{
 			bool = 1;
 			vars++;
@@ -28,7 +25,7 @@ static int	ft_loop_caracter(char *vars)
 			vars++;
 		if (*vars == '}' && bool == 1)
 			vars++;
-		if (((*vars == '\"'|| *vars == '\'') && *(vars - 1) != '\\') ||
+		if (((*vars == '\"' || *vars == '\'') && *(vars - 1) != '\\') ||
 			(*vars == '\\' && *(vars + 1) != '\\') || (*vars == '?' &&
 			*(vars - 1) == '$'))
 			vars++;
@@ -66,15 +63,18 @@ static void	ft_valid_args(t_test *tst, int *bool)
 				break ;
 			}
 		}
-	}	
+	}
 }
 
 static int	ft_check_var(char *vars)
 {
+	int bool;
+
+	bool = 0;
 	if ((!ft_isalpha_cm(vars[0]) && vars[0] != '_') ||
 		(vars[0] == '\\' && vars[1] == '\\'))
 		return (0);
-	if (!ft_loop_caracter(vars + 1))
+	if (!ft_loop_caracter(vars + 1, bool))
 		return (0);
 	return (1);
 }

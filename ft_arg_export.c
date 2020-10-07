@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   ft_arg_export.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/10/05 17:34:47 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/07 20:11:02 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void ft_var_notequal(char *vars)
+static void	ft_var_notequal(char *vars)
 {
 	int		i;
 	char	*split;
 	char	*copy;
-	char 	*aux;
-	
+	char	*aux;
+
 	aux = ft_cut_end(vars, 1);
 	split = ft_strjoin(aux, "=");
 	free(aux);
@@ -34,13 +34,13 @@ static void ft_var_notequal(char *vars)
 	free(split);
 }
 
-static void ft_change_var(char *vars)
+static void	ft_change_var(char *vars)
 {
 	int		i;
 	char	*split;
 	char	*copy;
-	char 	*aux;
-	
+	char	*aux;
+
 	if (ft_strchr(vars, '='))
 	{
 		aux = ft_cut_end(vars, 1);
@@ -66,7 +66,7 @@ static char	**ft_join_env(t_test *tst, int j)
 	int		i;
 	char	*aux;
 	char	**res;
-	
+
 	aux = ft_strdup(ft_realloc_str(tst, tst->var_exp[j], -1, 0));
 	ft_change_var(aux);
 	if (aux[0] == '=')
@@ -88,10 +88,10 @@ static char	**ft_join_env(t_test *tst, int j)
 	return (res);
 }
 
-int		ft_arg_export(t_test *tst, t_shell *pcs, int j)
+int			ft_arg_export(t_test *tst, t_shell *pcs, int j)
 {
 	int i;
-	
+
 	tst->aux = ft_pass_space(pcs, pcs->pipesplit[j]);
 	tst->var_exp = ft_split_cmd(tst->aux, ' ');
 	if (ft_len_tab(tst->var_exp) == 1)

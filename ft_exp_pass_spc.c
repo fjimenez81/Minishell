@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exp_pass_spc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:24:25 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/09/08 20:13:51 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/07 18:32:48 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void ft_pass_space_two(char *str, int *i, int *size)
+static void	ft_pass_space_two(char *str, int *i, int *size)
 {
 	int equal;
 	int quotes;
@@ -41,7 +41,7 @@ static void ft_pass_space_two(char *str, int *i, int *size)
 	}
 }
 
-static void ft_pass_space_four(t_shell *pcs, char *str, int i)
+static void	ft_pass_space_four(t_shell *pcs, char *str, int i)
 {
 	if (str[i] == '=' && pcs->equal == 0)
 		pcs->equal = 1;
@@ -56,7 +56,7 @@ static void ft_pass_space_four(t_shell *pcs, char *str, int i)
 		pcs->equal = 0;
 }
 
-static char *ft_pass_space_three(t_shell *pcs, char *str, char *aux)
+static char	*ft_pass_space_three(t_shell *pcs, char *str, char *aux)
 {
 	int i;
 	int j;
@@ -69,7 +69,7 @@ static char *ft_pass_space_three(t_shell *pcs, char *str, char *aux)
 	{
 		ft_pass_space_four(pcs, str, i);
 		if (str[i] == '\\' && str[i + 1] == ' ' &&
-			pcs->quotes == 0)// && pcs->equal == 1)
+			pcs->quotes == 0)
 		{
 			aux[j] = '\"';
 			j++;
@@ -80,16 +80,16 @@ static char *ft_pass_space_three(t_shell *pcs, char *str, char *aux)
 			j++;
 		}
 		aux[j] = str[i];
-		j++;	
+		j++;
 	}
 	return (aux);
 }
 
-char *ft_pass_space(t_shell *pcs, char *str)
+char		*ft_pass_space(t_shell *pcs, char *str)
 {
-	int i;
-	int size;
-	char *pass;
+	int		i;
+	int		size;
+	char	*pass;
 
 	i = -1;
 	ft_pass_space_two(str, &i, &size);

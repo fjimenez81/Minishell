@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 07:42:29 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/04/01 15:55:19 by fernando         ###   ########.fr       */
+/*   Updated: 2020/10/07 19:10:10 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef _GET_NEXT_LINE_H
 # define _GET_NEXT_LINE_H
-
 
 # include <stdlib.h>
 # include <unistd.h>

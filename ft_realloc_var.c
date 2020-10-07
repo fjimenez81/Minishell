@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_realloc_var.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 10:59:34 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/05 17:35:06 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/07 20:43:08 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void ft_keys_loop(t_test *tmp, int i)
+static void	ft_keys_loop(t_test *tmp, int i)
 {
 	char *aux;
 
@@ -27,7 +27,7 @@ static void ft_keys_loop(t_test *tmp, int i)
 	}
 }
 
-static char *ft_check_keys(t_test *tmp)
+static char	*ft_check_keys(t_test *tmp)
 {
 	int i;
 	int bool;
@@ -48,7 +48,7 @@ static char *ft_check_keys(t_test *tmp)
 	return (tmp->c_keys);
 }
 
-static char *ft_dollar_aux(t_test *tmp, char *res)
+static char	*ft_dollar_aux(t_test *tmp, char *res)
 {
 	char *var;
 
@@ -57,17 +57,17 @@ static char *ft_dollar_aux(t_test *tmp, char *res)
 		ft_strjoin(ft_strrchr(tmp->dollar, '$') + 1, "=");
 	var = ft_print_var(tmp->c_keys);
 	res = ft_strjoin(res, var);
-    free(tmp->c_keys);
+	free(tmp->c_keys);
 	return (res);
 }
 
-char *ft_realloc_var(char *str, char *res, t_test *tmp)
+char		*ft_realloc_var(char *str, char *res, t_test *tmp)
 {
 	char *var;
 
 	tmp->ck_key = 0;
 	tmp->c_keys = "\0";
-    tmp->dollar = ft_cut_end(str + tmp->i, 0);
+	tmp->dollar = ft_cut_end(str + tmp->i, 0);
 	tmp->c_keys = ft_check_keys(tmp);
 	if (tmp->c_keys[1] == '?' || tmp->dollar[1] == '?')
 	{
@@ -80,7 +80,6 @@ char *ft_realloc_var(char *str, char *res, t_test *tmp)
 	tmp->i += (!ft_strcmp(var, "") && str[tmp->i + 1] == ' ') ?
 		1 : ft_strlen(tmp->dollar) - 1;
 	tmp->i -= tmp->ck_key > 0 ? tmp->ck_key - 2 : 0;
-	//tmp->i += tmp->c_keys[1] == '?' || tmp->dollar[1] == '?' ? 1 : 0;
 	free(tmp->dollar);
 	return (res);
 }

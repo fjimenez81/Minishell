@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redirections.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/05 13:46:20 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/07 18:16:50 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_read_fdin(t_shell *pcs, t_test *tst)
+void		ft_read_fdin(t_shell *pcs, t_test *tst)
 {
 	int		read;
 	char	*line;
@@ -32,7 +32,7 @@ void ft_read_fdin(t_shell *pcs, t_test *tst)
 	pcs->flag_in = 1;
 }
 
-static void ft_redir_fd(t_shell *pcs, int flags, char *dir, t_test *tst)
+static void	ft_redir_fd(t_shell *pcs, int flags, char *dir, t_test *tst)
 {
 	while (ft_isspace(pcs->redir[tst->i]))
 		tst->i += 1;
@@ -55,7 +55,7 @@ static void ft_redir_fd(t_shell *pcs, int flags, char *dir, t_test *tst)
 		ft_file_out(pcs, tst, flags);
 }
 
-void ft_ck_redir_two(t_test *tst, t_shell *pcs, int pass)
+void		ft_ck_redir_two(t_test *tst, t_shell *pcs, int pass)
 {
 	if (pass)
 	{
@@ -79,7 +79,7 @@ void ft_ck_redir_two(t_test *tst, t_shell *pcs, int pass)
 	pcs->bool_redir = 1;
 }
 
-static void ft_check_redir_aux(t_test *tst, t_shell *pcs,
+static void	ft_check_redir_aux(t_test *tst, t_shell *pcs,
 	int *quotes, int pass)
 {
 	if ((pcs->redir[tst->i] == '\"' || pcs->redir[tst->i] == '\'') &&
@@ -107,10 +107,10 @@ static void ft_check_redir_aux(t_test *tst, t_shell *pcs,
 	}
 }
 
-int ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass)
+int			ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass)
 {
 	int quotes;
-	
+
 	tst->i = -1;
 	quotes = 0;
 	pcs->redir = pcs->pipesplit[j];

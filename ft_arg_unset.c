@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_arg_unset.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 20:14:59 by fernando          #+#    #+#             */
-/*   Updated: 2020/10/05 17:09:45 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/07 18:40:36 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ char		*ft_strstr(char *str, char *to_find)
 
 static void	ft_unset_aux(char **aux, int i, int j)
 {
-	char *unset;
-	char *tmp;
-	char **split;
-	
+	char	*unset;
+	char	*tmp;
+	char	**split;
+
 	if (ft_strchr(aux[j], '='))
 	{
 		tmp = ft_strjoin(aux[j], "=");
@@ -79,7 +79,7 @@ static void	ft_check_unset(t_test *tst, t_shell *pcs)
 				ft_putendl_fd(": invalid parameter name", 1);
 				tst->status = 1;
 				return ;
-			}	
+			}
 		}
 	}
 }

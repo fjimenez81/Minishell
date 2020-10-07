@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_arg_exe.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:23:10 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/05 17:23:44 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/07 18:44:34 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_arg_exe(t_shell *pcs, t_test *tst, int i)
+void	ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 {
 	char	*join;
 	int		exe;
@@ -21,8 +21,7 @@ void ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 	exe = -1;
 	j = 0;
 	ft_free_tab(pcs->cmp);
-	pcs->cmp = ft_split_cmd(ft_realloc_str
-		(tst, pcs->pipesplit[i], -1, 1), ' ');
+	pcs->cmp = ft_split_cmd(ft_realloc_str(tst, pcs->pipesplit[i], -1, 1), ' ');
 	while (exe == -1 && j < 3)
 	{
 		join = ft_strjoin(tst->paths[j], pcs->cmp[0]);

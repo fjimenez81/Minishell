@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_cmd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/16 16:48:04 by fernando          #+#    #+#             */
-/*   Updated: 2020/05/16 16:49:40 by fernando         ###   ########.fr       */
+/*   Updated: 2020/10/07 18:15:22 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static	int
-	getcount(char *s, int count, int c)
+static	int	getcount(char *s, int count, int c)
 {
 	while (*s)
 	{
@@ -40,7 +39,7 @@ static	int
 	return (count);
 }
 
-static int ft_wordcount(char *s, char c)
+static int	ft_wordcount(char *s, char c)
 {
 	int count;
 

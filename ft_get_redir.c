@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_get_redir.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 10:37:02 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/05 13:38:00 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/07 18:28:16 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_multiple_redir(t_shell *pcs, t_test *tst)
+void		ft_multiple_redir(t_shell *pcs, t_test *tst)
 {
 	int i;
 	int k;
@@ -85,5 +85,5 @@ void		ft_get_redir(t_shell *pcs, t_test *tst)
 	{
 		while (1)
 			ft_get_redir_aux(pcs, tst);
-	}	
+	}
 }

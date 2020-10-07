@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_realloc_str.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 17:14:03 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/05 12:55:22 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/07 20:04:58 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int ft_aux_loop_two(char *str, t_test *tmp)
+static int	ft_aux_loop_two(char *str, t_test *tmp)
 {
 	if (((str[tmp->i] == ' ' || str[tmp->i] == '<' || str[tmp->i] == '>') &&
 		str[tmp->i - 1] != '\\' && !tmp->d_qu && !tmp->s_qu &&
@@ -23,11 +23,11 @@ static int ft_aux_loop_two(char *str, t_test *tmp)
 		(str[tmp->i] == ' ' && str[tmp->i + 1] == '>')) &&
 		str[tmp->i - 1] != '\\' && !tmp->d_qu && !tmp->s_qu &&
 		tmp->cut == 1)
-			return (0);
+		return (0);
 	return (1);
 }
 
-static char *ft_only_dollar(char *str, char *aux, char *res, t_test *tmp)
+static char	*ft_only_dollar(char *str, char *aux, char *res, t_test *tmp)
 {
 	if (str[tmp->i] == '$' && str[tmp->i + 1] == ' ')
 		aux = ft_strjoin(res, "$ ");
@@ -37,15 +37,15 @@ static char *ft_only_dollar(char *str, char *aux, char *res, t_test *tmp)
 	return (aux);
 }
 
-static char *ft_realloc_aux_one(char *str, t_test *tmp)
+static char	*ft_realloc_aux_one(char *str, t_test *tmp)
 {
 	char	*res;
 	char	*aux;
 
 	res = "\0";
 	while (str[++tmp->i] != '\0')
-    {
-        ft_realloc_aux_two(str, tmp);
+	{
+		ft_realloc_aux_two(str, tmp);
 		if (!ft_aux_loop_two(str, tmp))
 			break ;
 		aux = (str[tmp->i] == '$' && str[tmp->i - 1] != '\\' &&
@@ -55,21 +55,21 @@ static char *ft_realloc_aux_one(char *str, t_test *tmp)
 		res = aux;
 		if (str[tmp->i] == '$' && str[tmp->i - 1] != '\\' && tmp->s_qu == 0)
 		{
-			res = ft_realloc_var(str, res, tmp);			
+			res = ft_realloc_var(str, res, tmp);
 			free(aux);
 			aux = res;
 			res = aux;
 		}
-		free(aux);	
-    }
+		free(aux);
+	}
 	return (res);
 }
 
-char *ft_realloc_str(t_test *tmp, char *str, int i, int cut)
+char		*ft_realloc_str(t_test *tmp, char *str, int i, int cut)
 {
-	char *res;
-	int j;
-	
+	char	*res;
+	int		j;
+
 	tmp->d_qu = 0;
 	tmp->s_qu = 0;
 	tmp->cut = cut;
@@ -80,7 +80,7 @@ char *ft_realloc_str(t_test *tmp, char *str, int i, int cut)
 	{
 		if (str[j] == '{' && str[j - 1] != '\\')
 			tmp->key = 1;
-		if (str[j] == '}' && str[j - 1] != '\\'&&
+		if (str[j] == '}' && str[j - 1] != '\\' &&
 			(str[j + 1] == ' ' || str[j + 1] == '\0') && tmp->key == 0)
 		{
 			tmp->key = 2;

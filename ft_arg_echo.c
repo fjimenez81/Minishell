@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_arg_echo.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 18:07:07 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/05 17:34:12 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/07 20:51:20 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *ft_print_var_aux(char *var, char **tmp, int i)
+static char	*ft_print_var_aux(char *var, char **tmp, int i)
 {
 	char *cut;
 
@@ -29,11 +29,11 @@ static char *ft_print_var_aux(char *var, char **tmp, int i)
 	return (var);
 }
 
-char *ft_print_var(char *aux)
+char		*ft_print_var(char *aux)
 {
-	int i;
-	char *var;
-	char **tmp;
+	int		i;
+	char	*var;
+	char	**tmp;
 
 	i = -1;
 	while (g_envp[++i])
@@ -56,26 +56,26 @@ char *ft_print_var(char *aux)
 	return (var);
 }
 
-int ft_arg_echo(t_shell *pcs, t_test *tst, int i)
+int			ft_arg_echo(t_shell *pcs, t_test *tst, int i)
 {
 	char *cmd;
-    char *aux;
-	
-    if (pcs->args)
-    {
-        if (pcs->cmp[1] == NULL)
-            return (1);
-        else if (pcs->cmp[1])
-        {
-            cmd = ft_cutstr(pcs->pipesplit[i], "echo");
+	char *aux;
+
+	if (pcs->args)
+	{
+		if (pcs->cmp[1] == NULL)
+			return (1);
+		else if (pcs->cmp[1])
+		{
+			cmd = ft_cutstr(pcs->pipesplit[i], "echo");
 			if (!ft_strcmp(pcs->cmp[1], "-n"))
 				cmd = ft_cutstr(cmd, "-n");
 			aux = ft_realloc_str(tst, cmd, -1, 1);
 			ft_putstr_fd(aux, 1);
-        	if (ft_strcmp(pcs->cmp[1], "-n"))
+			if (ft_strcmp(pcs->cmp[1], "-n"))
 				ft_putchar_fd('\n', 1);
-        }
-        return (1);
-    }
-    return (0);
+		}
+		return (1);
+	}
+	return (0);
 }
