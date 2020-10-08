@@ -6,13 +6,13 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:23:10 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/07 18:44:34 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/08 19:23:32 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_arg_exe(t_shell *pcs, t_test *tst, int i)
+int	ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 {
 	char	*join;
 	int		exe;
@@ -35,7 +35,8 @@ void	ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 			ft_putendl_fd(pcs->cmp[0], 1);
 			ft_putstr_fd("\033[0m", 1);
 			tst->status = 127;
-			exit(tst->status);
+			return (tst->status);
 		}
 	}
+	return (0);
 }

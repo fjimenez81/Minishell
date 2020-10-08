@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/10/07 20:11:02 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/08 17:17:55 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,12 +101,8 @@ int			ft_arg_export(t_test *tst, t_shell *pcs, int j)
 		ft_check_var_loop(tst);
 		i = 0;
 		while (tst->var_exp[++i])
-		{
-			if (!ft_strcmp(tst->var_exp[i], "") &&
-				i < ft_len_tab(tst->var_exp) - 1)
-				i++;
-			g_envp = ft_join_env(tst, i);
-		}
+			if (ft_strcmp(tst->var_exp[i], "") != 0)
+				g_envp = ft_join_env(tst, i);
 	}
 	free(tst->aux);
 	ft_free_tab(tst->var_exp);

@@ -6,22 +6,20 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:27:24 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/07 19:58:25 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/08 19:36:33 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_execute_aux(t_shell *pcs, t_test *tst, int i, int *exe)
+void		ft_execute_aux(t_shell *pcs, t_test *tst, int i)
 {
 	char pwd[PATH_MAX];
 
-	if (tst->status == 1)
-		exit(1);
 	ft_check_redir(tst, pcs, i, 1);
 	ft_get_redir(pcs, tst);
 	ft_multiple_redir(pcs, tst);
-	if (!ft_strcmp(pcs->cmp[0], "pwd") && (*exe = 1))
+	if (!ft_strcmp(pcs->cmp[0], "pwd"))
 	{
 		if (pcs->cmp[1])
 		{
@@ -33,26 +31,44 @@ void		ft_execute_aux(t_shell *pcs, t_test *tst, int i, int *exe)
 	}
 }
 
+int ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str)
+{
+	char	*aux;
+	int		len;
+	int		i;
+	int		check;
+
+	aux = ft_realloc_str(tst, pcs->cmp[0], -1, 1);
+	len = ft_strlen(str);
+	check = 0;
+	i = -1;
+	while (pcs->cmp[0][++i])
+	{
+		if (check == len && pcs->cmp[0][i] == '>')
+			return (0);
+		if (aux[i] == str[i])
+			check++;
+	}
+	return (1);
+}
+
 static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 {
-	int exe;
-
-	exe = 0;
-	ft_execute_aux(pcs, tst, i, &exe);
-	if (!ft_strcmp(pcs->cmp[0], "env") &&
-		pcs->bool_redir == 0 && (exe = 1))
-		ft_arg_env(pcs);
-	else if (!ft_strcmp(pcs->cmp[0], "echo") && (exe = 1))
-		ft_arg_echo(pcs, tst, i);
-	else if ((!ft_strcmp(pcs->cmp[0], "export") &&
-		(!ft_strcmp(pcs->cmp[1], ">") ||
-		!ft_strcmp(pcs->cmp[1], ">>"))) && (exe = 1))
-		ft_sort_export();
-	else if ((!ft_strcmp(pcs->cmp[0], "export") ||
-		!ft_strcmp(pcs->cmp[0], "unset")) && tst->bool == 0)
-		tst->bool = 1;
-	else if (exe == 0 && !tst->bool)
-		ft_arg_exe(pcs, tst, i);
+	ft_execute_aux(pcs, tst, i);
+	if (tst->status == 1)
+		return (1);
+	if (!ft_ck_rd_envp(pcs, tst, "export") ||
+		(!ft_strcmp(pcs->cmp[0], "export") && pcs->cmp[1][0] == '>') ||
+		(!ft_strcmp(pcs->cmp[0], "export") &&
+		(!ft_strcmp(pcs->cmp[1], ">") || !ft_strcmp(pcs->cmp[1], ">>"))))
+		return (ft_sort_export());
+	if (!ft_ck_rd_envp(pcs, tst, "env") || (!ft_strcmp(pcs->cmp[0], "env") &&
+		pcs->bool_redir == 0))
+		return (ft_arg_env(pcs));
+	else if (!ft_strcmp(pcs->cmp[0], "echo"))
+		return (ft_arg_echo(pcs, tst, i));
+	else if (!tst->bool)
+		return (ft_arg_exe(pcs, tst, i));
 	return (0);
 }
 

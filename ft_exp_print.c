@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:28:04 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/07 18:31:24 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/08 18:08:46 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static void	ft_print_export(char **export, int i)
 	}
 }
 
-void		ft_sort_export(void)
+int			ft_sort_export(void)
 {
 	int		i;
 	int		len;
@@ -62,7 +62,7 @@ void		ft_sort_export(void)
 
 	len = ft_len_tab(g_envp);
 	if (!(export = (char**)malloc(sizeof(char*) * len + 1)))
-		return ;
+		return (-1);
 	i = -1;
 	while (g_envp[++i])
 		export[i] = ft_strdup(g_envp[i]);
@@ -72,4 +72,5 @@ void		ft_sort_export(void)
 	while (export[++i])
 		ft_print_export(export, i);
 	ft_free_tab(export);
+	return (0);
 }

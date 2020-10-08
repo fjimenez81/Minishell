@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 17:14:03 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/07 20:04:58 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/08 16:27:37 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static char	*ft_only_dollar(char *str, char *aux, char *res, t_test *tmp)
 {
 	if (str[tmp->i] == '$' && str[tmp->i + 1] == ' ')
 		aux = ft_strjoin(res, "$ ");
+	else if (str[tmp->i] == '$' && str[tmp->i + 1] == '\0')
+		aux = ft_strjoin(res, "$");
 	else if (str[tmp->i] == '$' && (str[tmp->i + 1] == '\"' ||
 		(str[tmp->i + 1] == '\'' && tmp->d_qu == 1) || str[tmp->i + 1] == '\\'))
 		aux = ft_join_char(res, str[tmp->i]);

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/07 21:07:07 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/08 17:34:41 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
 		j == pcs->n_pipe - 1 && pcs->bool_redir == 0 && (tst->bool = 1))//Parece que algunas funciones tienen que ir antes de pipes
 		ft_arg_export(tst, pcs, j);
 	else if(!ft_strcmp(pcs->cmp[0], "unset") &&
-		j == pcs->n_pipe - 1 && pcs->bool_redir == 0 && (tst->bool = 1))
+		j == pcs->n_pipe - 1 && (tst->bool = 1))
 		ft_arg_unset(tst, pcs);
 	//if (tst->bool == 1)
 		//return ;

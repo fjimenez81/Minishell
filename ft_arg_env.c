@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/25 13:11:06 by fernando          #+#    #+#             */
-/*   Updated: 2020/10/07 20:59:37 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/08 19:42:28 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,16 @@ int	ft_arg_env(t_shell *pcs)
 {
 	int i;
 
-	if (pcs->args == 1)
+	if (pcs->args == 1 || pcs->cmp[0][ft_strlen(pcs->cmp[0]) - 1] == '>')
 	{
 		i = -1;
 		while (g_envp[++i])
 			if (ft_strcmp(g_envp[i], "") != 0 && ft_strchr(g_envp[i], '='))
 				ft_putendl_fd(g_envp[i], 1);
-		return (1);
+		return (0);
 	}
 	ft_putstr_fd("env: ", 1);
 	ft_putstr_fd(pcs->cmp[1], 1);
 	ft_putstr_fd(": No such file or directory\n", 1);
-	exit(127);
-	return (0);
+	return (127);
 }

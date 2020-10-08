@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/10/07 20:10:40 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/08 18:07:58 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ char			*ft_realloc_var(char *str, char *res, t_test *tmp);
 char			*ft_join_char(char *s, int c);
 int				ft_len_char(char *str);
 char			*ft_pass_space(t_shell *pcs, char *str);
-void			ft_sort_export();
+int				ft_sort_export();
 char			*ft_check_dollar(t_test *tst, t_shell *pcs, int j, int bool);
 char			**ft_str_tok(char *s, char *sep);
 char			*ft_strstr(char *str, char *to_find);
@@ -132,7 +132,7 @@ int				ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass);
 char			**ft_split_cmd(char const *s, char c);
 void			ft_check_pipes(t_shell *pcs, t_test *tst, int j);
 void			ft_loop_pipes(char **aux, t_test *tst);
-void			ft_arg_exe(t_shell *pcs, t_test *tst, int i);
+int				ft_arg_exe(t_shell *pcs, t_test *tst, int i);
 void			ft_multiple_redir(t_shell *pcs, t_test *tst);
 void			ft_get_redir(t_shell *pcs, t_test *tst);
 void			ft_file_out(t_shell *pcs, t_test *tst, int flags);
