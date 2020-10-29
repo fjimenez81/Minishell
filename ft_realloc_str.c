@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 17:14:03 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/08 16:27:37 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/29 19:27:53 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ static char	*ft_realloc_aux_one(char *str, t_test *tmp)
 {
 	char	*res;
 	char	*aux;
+	char	*var;
 
 	res = "\0";
 	while (str[++tmp->i] != '\0')
@@ -57,10 +58,9 @@ static char	*ft_realloc_aux_one(char *str, t_test *tmp)
 		res = aux;
 		if (str[tmp->i] == '$' && str[tmp->i - 1] != '\\' && tmp->s_qu == 0)
 		{
-			res = ft_realloc_var(str, res, tmp);
-			free(aux);
-			aux = res;
-			res = aux;
+			var = ft_realloc_var(str, res, tmp);
+			res = var;
+			free(var);
 		}
 		free(aux);
 	}

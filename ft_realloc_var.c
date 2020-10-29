@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 10:59:34 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/07 20:43:08 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/29 20:45:22 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ char		*ft_realloc_var(char *str, char *res, t_test *tmp)
 
 	tmp->ck_key = 0;
 	tmp->c_keys = "\0";
-	tmp->dollar = ft_cut_end(str + tmp->i, 0);
+	tmp->dollar = ft_cut_end(str + tmp->i, 2);
 	tmp->c_keys = ft_check_keys(tmp);
 	if (tmp->c_keys[1] == '?' || tmp->dollar[1] == '?')
 	{
@@ -80,6 +80,8 @@ char		*ft_realloc_var(char *str, char *res, t_test *tmp)
 	tmp->i += (!ft_strcmp(var, "") && str[tmp->i + 1] == ' ') ?
 		1 : ft_strlen(tmp->dollar) - 1;
 	tmp->i -= tmp->ck_key > 0 ? tmp->ck_key - 2 : 0;
+	if (tmp->dollar[ft_strlen(tmp->dollar) - 1] == '=')
+		tmp->i -= 1;
 	free(tmp->dollar);
 	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/28 18:03:57 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/19 11:54:53 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/29 20:44:23 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,23 +74,21 @@ char	*ft_cut_end(char *s, int bool)
 	i = -1;
 	while (s[++i])
 	{
-		if (bool && s[i] == '=')
-			break ;
-		else if ((s[i] == '?' && s[i - 1] == '$') || 
-			((s[i] == '{' || s[i] == '}') && s[i - 1] != '\\'))
+		if ((s[i] == '?' && s[i - 1] == '$') ||
+			(s[i] == '{' && s[i - 1] != '\\'))
 			i++;
-		else if ((!ft_isalnum(s[i]) && i > 0) || 
+		else if ((bool && s[i] == '=') || (!ft_isalnum(s[i]) && i > 0) ||
 			(s[i] == '$' && (s[i + 1] == '\0' || s[i + 1] != ' ') && i != 0))
 			break ;
 	}
+	if (s[i] == '}' || (bool == 2 && s[i] == '='))
+		i++;
 	if (!(dest = (char*)malloc(sizeof(char) * i + 1)))
 		return (NULL);
 	j = -1;
-	while (s[++j] && i > 0)
-	{
+	i += 1;
+	while (s[++j] && --i > 0)
 		dest[j] = s[j];
-		i--;
-	}
 	dest[j] = '\0';
 	return (dest);
 }
