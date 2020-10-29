@@ -6,29 +6,32 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:27:24 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/08 19:36:33 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/29 16:46:23 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_execute_aux(t_shell *pcs, t_test *tst, int i)
+int		ft_execute_aux(t_shell *pcs, t_test *tst, int i)
 {
 	char pwd[PATH_MAX];
 
 	ft_check_redir(tst, pcs, i, 1);
 	ft_get_redir(pcs, tst);
 	ft_multiple_redir(pcs, tst);
-	if (!ft_strcmp(pcs->cmp[0], "pwd"))
+	if (!ft_ck_rd_envp(pcs, tst, "pwd") ||
+		(!ft_strcmp(pcs->cmp[0], "pwd") && !pcs->cmp[1]))
 	{
-		if (pcs->cmp[1])
-		{
-			ft_putendl_fd("pwd: too many arguments", 1);
-			exit(1);
-		}
-		else
-			ft_putendl_fd(getcwd(pwd, -1), 1);
+		ft_putendl_fd(getcwd(pwd, -1), 1);
+		return (0);
 	}
+	if (!ft_strcmp(pcs->cmp[0], "pwd") && pcs->cmp[1][0] != '>' &&
+		pcs->cmp[1][0] != '<')
+	{
+		ft_putendl_fd("pwd: too many arguments", 1);
+		return (0);
+	}
+	return (1);
 }
 
 int ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str)
@@ -44,7 +47,8 @@ int ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str)
 	i = -1;
 	while (pcs->cmp[0][++i])
 	{
-		if (check == len && pcs->cmp[0][i] == '>')
+		if (check == len &&
+			(pcs->cmp[0][i] == '>' || pcs->cmp[0][i] == '<'))
 			return (0);
 		if (aux[i] == str[i])
 			check++;
@@ -54,15 +58,17 @@ int ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str)
 
 static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 {
-	ft_execute_aux(pcs, tst, i);
+	
 	if (tst->status == 1)
 		return (1);
-	if (!ft_ck_rd_envp(pcs, tst, "export") ||
+	if (!ft_execute_aux(pcs, tst, i))
+		return (1);
+	else if (!ft_ck_rd_envp(pcs, tst, "export") ||
 		(!ft_strcmp(pcs->cmp[0], "export") && pcs->cmp[1][0] == '>') ||
 		(!ft_strcmp(pcs->cmp[0], "export") &&
 		(!ft_strcmp(pcs->cmp[1], ">") || !ft_strcmp(pcs->cmp[1], ">>"))))
 		return (ft_sort_export());
-	if (!ft_ck_rd_envp(pcs, tst, "env") || (!ft_strcmp(pcs->cmp[0], "env") &&
+	else if (!ft_ck_rd_envp(pcs, tst, "env") || (!ft_strcmp(pcs->cmp[0], "env") &&
 		pcs->bool_redir == 0))
 		return (ft_arg_env(pcs));
 	else if (!ft_strcmp(pcs->cmp[0], "echo"))

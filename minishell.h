@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/10/08 18:07:58 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/10/29 13:08:04 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,5 +137,6 @@ void			ft_multiple_redir(t_shell *pcs, t_test *tst);
 void			ft_get_redir(t_shell *pcs, t_test *tst);
 void			ft_file_out(t_shell *pcs, t_test *tst, int flags);
 char			*ft_dollar_aux_one(t_test *tst, char *tmp, char *res);
+int				ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str);
 
 #endif
