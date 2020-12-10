@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 17:14:03 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/29 19:27:53 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/09 21:25:40 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,17 +78,17 @@ char		*ft_realloc_str(t_test *tmp, char *str, int i, int cut)
 	tmp->i = i;
 	tmp->key = 0;
 	j = i;
-	while (str[++j])
-	{
-		if (str[j] == '{' && str[j - 1] != '\\')
-			tmp->key = 1;
-		if (str[j] == '}' && str[j - 1] != '\\' &&
-			(str[j + 1] == ' ' || str[j + 1] == '\0') && tmp->key == 0)
-		{
-			tmp->key = 2;
-			ft_putstr_fd("minishell : parse error near \'}\'", 1);
-		}
-	}
+	// while (str[++j])
+	// {
+	// 	if (str[j] == '{' && str[j - 1] != '\\')
+	// 		tmp->key = 1;
+	// 	if (str[j] == '}' && str[j - 1] != '\\' &&
+	// 		(str[j + 1] == ' ' || str[j + 1] == '\0') && tmp->key == 0)
+	// 	{
+	// 		tmp->key = 2;
+	// 		ft_putstr_fd("minishell : parse error near \'}\'", 1);
+	// 	}
+	// }
 	res = ft_realloc_aux_one(str, tmp);
 	return (res);
 }

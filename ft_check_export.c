@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 10:55:30 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/07 18:39:13 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/08 18:25:34 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ static void	ft_valid_args(t_test *tst, int *bool)
 				tst->var_exp[j][k + 1] == '\\') ||
 				tst->var_exp[j][k] == ' ') && *bool == 0)
 			{
-				ft_putstr_fd("\033[1;31m", 1);
-				ft_putstr_fd("export : not an identifier: ", 1);
-				ft_putendl_fd(ft_realloc_str(tst, tst->var_exp[j], -1, 3), 1);
+				ft_putstr_fd("\033[1;31m[Minishell]: export: ", 1);
+				ft_putstr_fd(tst->var_exp[j], 1);
+				ft_putendl_fd(": not a valid identifier", 1);
 				*bool = 1;
 				tst->status = 1;
 				break ;

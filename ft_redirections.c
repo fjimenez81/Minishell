@@ -6,30 +6,29 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/07 18:16:50 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/10 19:35:08 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_read_fdin(t_shell *pcs, t_test *tst)
+void		ft_file_out(t_shell *pcs, t_test *tst, int flags)
 {
-	int		read;
-	char	*line;
-
-	if (pcs->cmp[0][0] == '<')
+	pcs->out = ft_realloc_str(tst, pcs->redir, tst->i - 1, 2);
+	if (tst->fdot_j == 0)
+		if (!(pcs->fd_out = (int*)malloc(sizeof(int) * tst->check_fdot)))
+			return ;
+	if ((pcs->fd_out[tst->fdot_j] = open(pcs->out, flags, 0600)) == -1)
 	{
-		while ((read = get_next_line(pcs->fd_in[tst->fdin_k], &line)) != 0)
-		{
-			ft_putendl_fd(line, 1);
-			free(line);
-		}
-		tst->fdin_k++;
-		close(pcs->fd_in[tst->fdin_k]);
-		if (tst->fdin_k == tst->check_fdin)
-			exit(0);
+		ft_putstr_fd("\033[1;31mminishell: ", 1);
+		ft_putstr_fd(pcs->out, 1);
+		ft_putendl_fd(": No such file or directory", 1);
+		exit(1);
 	}
-	pcs->flag_in = 1;
+	pcs->flag_out = 1;
+	if (tst->fdot_j == tst->check_fdot - 1)
+		dup2(pcs->fd_out[tst->fdot_j], STDOUT_FILENO);
+	tst->fdot_j++;
 }
 
 static void	ft_redir_fd(t_shell *pcs, int flags, char *dir, t_test *tst)
@@ -44,12 +43,13 @@ static void	ft_redir_fd(t_shell *pcs, int flags, char *dir, t_test *tst)
 		pcs->in = ft_realloc_str(tst, pcs->redir, tst->i - 1, 2);
 		if ((pcs->fd_in[tst->fdin_k] = open(pcs->in, flags)) == -1)
 		{
-			ft_putstr_fd("minishell : no such file or directory: ", 1);
-			ft_putendl_fd(pcs->in, 1);
+			ft_putstr_fd("\033[1;31mminishell: ", 1);
+			ft_putstr_fd(pcs->in, 1);
+			ft_putendl_fd(": No such file or directory", 1);
 			exit(1);
 		}
-		ft_read_fdin(pcs, tst);
-		//dup2(pcs->fd_in, 0);
+		dup2(pcs->fd_in[tst->fdin_k], 0);
+		pcs->flag_in = 1;
 	}
 	else
 		ft_file_out(pcs, tst, flags);
@@ -115,8 +115,6 @@ int			ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass)
 	quotes = 0;
 	pcs->redir = pcs->pipesplit[j];
 	pcs->bool_redir = 0;
-	pcs->flag_in = 0;
-	pcs->flag_out = 0;
 	tst->fdot_j = 0;
 	tst->fdin_k = 0;
 	if (!pass)

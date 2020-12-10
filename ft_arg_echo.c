@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 18:07:07 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/29 18:27:05 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/10 18:27:48 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,25 +56,38 @@ char		*ft_print_var(char *aux)
 	return (var);
 }
 
-int			ft_arg_echo(t_shell *pcs, t_test *tst, int i)
+static void	ft_echo_aux(t_shell *pcs, t_test *tst, int i)
 {
 	char *cmd;
 	char *aux;
 
-	if (pcs->args)
+	cmd = ft_cutstr(pcs->pipesplit[i], "echo");
+	if (!ft_strcmp(pcs->cmp[1], "-n"))
+		cmd = ft_cutstr(cmd, "-n");
+	if (g_minish->exit == 130)
+		aux = ft_realloc_str(tst, cmd, -1, 5);
+	else if (tst->cheat)
+		aux = ft_realloc_str(tst, cmd, -1, 9);
+	else
+		aux = ft_realloc_str(tst, cmd, -1, 1);
+	ft_putstr_fd(aux, 1);
+	if (ft_strcmp(pcs->cmp[1], "-n"))
+		ft_putchar_fd('\n', 1);
+}
+
+int			ft_arg_echo(t_shell *pcs, t_test *tst, int i)
+{
+	if (pcs->args > 1)
 	{
 		if (pcs->cmp[1] == NULL)
 			return (1);
 		else if (pcs->cmp[1])
-		{
-			cmd = ft_cutstr(pcs->pipesplit[i], "echo");
-			if (!ft_strcmp(pcs->cmp[1], "-n"))
-				cmd = ft_cutstr(cmd, "-n");
-			aux = ft_realloc_str(tst, cmd, -1, 1);
-			ft_putstr_fd(aux, 1);
-			if (ft_strcmp(pcs->cmp[1], "-n"))
-				ft_putchar_fd('\n', 1);
-		}
+			ft_echo_aux(pcs, tst, i);
+		return (0);
+	}
+	else
+	{
+		ft_putchar_fd('\n', 1);
 		return (0);
 	}
 	return (1);

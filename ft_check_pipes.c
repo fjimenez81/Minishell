@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:27:24 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/29 17:28:56 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/10 21:00:20 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,10 @@ int		ft_execute_aux(t_shell *pcs, t_test *tst, int i)
 	char pwd[PATH_MAX];
 
 	ft_check_redir(tst, pcs, i, 1);
-	ft_get_redir(pcs, tst);
-	ft_multiple_redir(pcs, tst);
 	if (!ft_ck_rd_envp(pcs, tst, "pwd") ||
-		(!ft_strcmp(pcs->cmp[0], "pwd") && !pcs->cmp[1]))
+		!ft_strcmp(pcs->cmp[0], "pwd"))
 	{
 		ft_putendl_fd(getcwd(pwd, -1), 1);
-		return (0);
-	}
-	if (!ft_strcmp(pcs->cmp[0], "pwd") && pcs->cmp[1][0] != '>' &&
-		pcs->cmp[1][0] != '<')
-	{
-		ft_putendl_fd("pwd: too many arguments", 1);
 		return (0);
 	}
 	return (1);
@@ -58,7 +50,6 @@ int ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str)
 
 static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 {
-	
 	if (tst->status == 1)
 		return (1);
 	if (!ft_execute_aux(pcs, tst, i))
@@ -83,8 +74,9 @@ static void	ft_pipe_son(t_shell *pcs, t_test *tst, int j)
 	if (dup2(pcs[j].pipes[SIDEIN], STDOUT) < 0)
 	{
 		ft_putendl_fd("fatal error", 1);
-		return ;
+		exit(131);
 	}
+	//dup2(pcs[j].pipes[SIDEIN], STDOUT);
 	if (j > 0)
 		dup2(pcs[j - 1].pipes[SIDEOUT], STDIN);
 	if (j == pcs->n_pipe - 1)
@@ -110,24 +102,15 @@ static void	ft_pipe_father(t_shell *pcs, t_test *tst, int j)
 
 void		ft_check_pipes(t_shell *pcs, t_test *tst, int j)
 {
-	int k;
-
-	k = -1;
 	pcs->std_in = dup(0);
 	pcs->std_out = dup(1);
 	if (pcs->n_pipe > 1)
 		pipe(pcs[j].pipes);
+	ft_cut_pcs(tst);
 	pcs->pid = fork();
 	if (pcs->pid == 0)
 		ft_pipe_son(pcs, tst, j);
 	else
 		ft_pipe_father(pcs, tst, j);
-	if (pcs->flag_out == 1)
-	{
-		while (++k < tst->check_fdot)
-			close(pcs->fd_out[k]);
-		dup2(pcs->std_out, 1);
-	}
-	//if (pcs->flag_in == 1)
-		//dup2(pcs->std_out, 0);
+	ft_close_fd(pcs, tst);
 }

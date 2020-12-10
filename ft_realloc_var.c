@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 10:59:34 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/29 20:45:22 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/10 18:09:45 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,17 +61,27 @@ static char	*ft_dollar_aux(t_test *tmp, char *res)
 	return (res);
 }
 
-char		*ft_realloc_var(char *str, char *res, t_test *tmp)
+static void	ft_aux_var(char *str, t_test *tmp)
 {
-	char *var;
-
 	tmp->ck_key = 0;
 	tmp->c_keys = "\0";
 	tmp->dollar = ft_cut_end(str + tmp->i, 2);
 	tmp->c_keys = ft_check_keys(tmp);
+}
+
+char		*ft_realloc_var(char *str, char *res, t_test *tmp)
+{
+	char *var;
+
+	ft_aux_var(str, tmp);
 	if (tmp->c_keys[1] == '?' || tmp->dollar[1] == '?')
 	{
-		var = ft_itoa(WEXITSTATUS(tmp->status));
+		if (tmp->cut == 9)
+			var = ft_itoa(1);
+		else if (tmp->cut == 5)
+			var = ft_itoa(130);
+		else
+			var = ft_itoa(WEXITSTATUS(tmp->status));
 		res = ft_strjoin(res, var);
 		free(var);
 	}

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:28:04 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/08 18:08:46 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/10 20:37:40 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	**ft_sort_export_aux(char **export, int len)
 	while (++i < (len - 1))
 	{
 		j = i + 1;
-		while (j < len - 1)
+		while (j < len)
 		{
 			if (ft_strcmp(export[i], export[j]) > 0)
 				ft_swap(&export[i], &export[j]);
@@ -31,7 +31,7 @@ static char	**ft_sort_export_aux(char **export, int len)
 	return (export);
 }
 
-static void	ft_print_export(char **export, int i)
+static char	*ft_print_export(char **export, int i)
 {
 	char *tmp;
 
@@ -41,17 +41,13 @@ static void	ft_print_export(char **export, int i)
 		tmp = export[i];
 		free(export[i]);
 		export[i] = ft_strjoin(tmp, "\'\'");
-		ft_putendl_fd(export[i], 1);
+		return (export[i]);
 	}
 	else if (ft_strcmp(export[i], "") != 0 && ft_strchr(export[i], '='))
-		ft_putendl_fd(export[i], 1);
+		return (export[i]);
 	else if (!ft_strchr(export[i], '=') && ft_strcmp(export[i], "") != 0)
-	{
-		tmp = export[i];
-		free(export[i]);
-		export[i] = ft_strjoin(tmp, "=''");
-		ft_putendl_fd(export[i], 1);
-	}
+		return (export[i]);
+	return (NULL);
 }
 
 int			ft_sort_export(void)
@@ -59,6 +55,7 @@ int			ft_sort_export(void)
 	int		i;
 	int		len;
 	char	**export;
+	char	*aux;
 
 	len = ft_len_tab(g_envp);
 	if (!(export = (char**)malloc(sizeof(char*) * len + 1)))
@@ -70,7 +67,11 @@ int			ft_sort_export(void)
 	export = ft_sort_export_aux(export, len);
 	i = -1;
 	while (export[++i])
-		ft_print_export(export, i);
+	{
+		aux = ft_strjoin("declare -x ", ft_print_export(export, i));
+		ft_putendl_fd(aux, 1);
+		free(aux);
+	}
 	ft_free_tab(export);
 	return (0);
 }

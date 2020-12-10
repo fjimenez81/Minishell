@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 20:14:59 by fernando          #+#    #+#             */
-/*   Updated: 2020/10/08 17:41:33 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/10 20:07:10 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static void	ft_unset_aux(char **aux, int i, int j)
 	ft_free_tab(split);
 }
 
-static void	ft_check_unset(t_test *tst, t_shell *pcs)
+void		ft_arg_unset(t_shell *pcs, t_test *tst)
 {
 	int i;
 	int j;
@@ -74,23 +74,12 @@ static void	ft_check_unset(t_test *tst, t_shell *pcs)
 				ft_unset_aux(pcs->cmp, i, j);
 			else
 			{
-				ft_putstr_fd("unset: ", 1);
+				ft_putstr_fd("\033[1;31m[Minishell]: unset: ", 1);
 				ft_putstr_fd(pcs->cmp[j], 1);
-				ft_putendl_fd(": invalid parameter name", 1);
+				ft_putendl_fd(": not a valid identifier", 1);
 				tst->status = 1;
 				return ;
 			}
 		}
 	}
-}
-
-void		ft_arg_unset(t_test *tst, t_shell *pcs)
-{
-	if (pcs->args == 1 || !ft_strcmp(pcs->cmp[1], ">"))
-	{
-		ft_putendl_fd("unset: not enough arguments", 1);
-		tst->status = 1;
-	}
-	else if (pcs->args > 1)
-		ft_check_unset(tst, pcs);
 }

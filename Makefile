@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fjimenez <fjimenez@student.42madrid.com    +#+  +:+       +#+         #
+#    By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/18 21:02:40 by fernando          #+#    #+#              #
-#    Updated: 2020/10/05 17:24:10 by fjimenez         ###   ########.fr        #
+#    Updated: 2020/12/10 19:35:28 by fjimenez         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,6 @@ SRC =	main \
 		ft_arg_export \
 		ft_arg_unset \
 		ft_arg_echo \
-		ft_str_tok \
 		ft_init_env \
 		ft_split_cmd \
 		ft_realloc_str \
@@ -34,8 +33,9 @@ SRC =	main \
 		ft_realloc_var \
 		ft_check_pipes \
 		ft_loop_pipes \
-		ft_get_redir \
 		ft_arg_exe \
+		ft_arg_exit \
+		ft_pipes_utils \
 
 CFILES = $(addsuffix .c, $(SRC))
 
