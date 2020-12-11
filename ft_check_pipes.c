@@ -6,13 +6,13 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:27:24 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/10 21:00:20 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/11 17:11:38 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		ft_execute_aux(t_shell *pcs, t_test *tst, int i)
+static int	ft_execute_aux(t_shell *pcs, t_test *tst, int i)
 {
 	char pwd[PATH_MAX];
 
@@ -22,28 +22,6 @@ int		ft_execute_aux(t_shell *pcs, t_test *tst, int i)
 	{
 		ft_putendl_fd(getcwd(pwd, -1), 1);
 		return (0);
-	}
-	return (1);
-}
-
-int ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str)
-{
-	char	*aux;
-	int		len;
-	int		i;
-	int		check;
-
-	aux = ft_realloc_str(tst, pcs->cmp[0], -1, 1);
-	len = ft_strlen(str);
-	check = 0;
-	i = -1;
-	while (pcs->cmp[0][++i])
-	{
-		if (check == len &&
-			(pcs->cmp[0][i] == '>' || pcs->cmp[0][i] == '<'))
-			return (0);
-		if (aux[i] == str[i])
-			check++;
 	}
 	return (1);
 }
@@ -59,7 +37,8 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 		(!ft_strcmp(pcs->cmp[0], "export") &&
 		(!ft_strcmp(pcs->cmp[1], ">") || !ft_strcmp(pcs->cmp[1], ">>"))))
 		return (ft_sort_export());
-	else if (!ft_ck_rd_envp(pcs, tst, "env") || (!ft_strcmp(pcs->cmp[0], "env") &&
+	else if (!ft_ck_rd_envp(pcs, tst, "env") ||
+		(!ft_strcmp(pcs->cmp[0], "env") &&
 		pcs->bool_redir == 0))
 		return (ft_arg_env(pcs));
 	else if (!ft_strcmp(pcs->cmp[0], "echo"))
@@ -71,12 +50,12 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 
 static void	ft_pipe_son(t_shell *pcs, t_test *tst, int j)
 {
-	if (dup2(pcs[j].pipes[SIDEIN], STDOUT) < 0)
-	{
-		ft_putendl_fd("fatal error", 1);
-		exit(131);
-	}
-	//dup2(pcs[j].pipes[SIDEIN], STDOUT);
+	// if (dup2(pcs[j].pipes[SIDEIN], STDOUT) < 0)
+	// {
+	// 	ft_putendl_fd("fatal error", 1);
+	// 	exit(131);
+	// }
+	dup2(pcs[j].pipes[SIDEIN], STDOUT);
 	if (j > 0)
 		dup2(pcs[j - 1].pipes[SIDEOUT], STDIN);
 	if (j == pcs->n_pipe - 1)

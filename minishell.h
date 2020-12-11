@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/12/10 20:04:36 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/11 12:37:29 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef struct	s_test
 	char		*paths[3];
 	char		**cmd;
 	char		**var_exp;
-	char		**c_export;
+	char		**c_envp;
 	int			ck_key;
 	int			check_fdot;
 	int			check_fdin;
@@ -139,17 +139,19 @@ int				ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass);
 char			**ft_split_cmd(char const *s, char c);
 void			ft_check_pipes(t_shell *pcs, t_test *tst, int j);
 void			ft_loop_pipes(char **aux, t_test *tst);
+void			ft_comands(t_test *tst);
 int				ft_arg_exe(t_shell *pcs, t_test *tst, int i);
 void			ft_multiple_redir(t_shell *pcs, t_test *tst);
 void			ft_get_redir(t_shell *pcs, t_test *tst);
 void			ft_file_out(t_shell *pcs, t_test *tst, int flags);
 char			*ft_dollar_aux_one(t_test *tst, char *tmp, char *res);
 int				ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str);
-void			ft_arg_exit(t_test *tst, t_shell *pcs);
+void			ft_arg_exit(t_shell *pcs);
 void			ft_print_error(char *error);
 void			ft_cut_pcs(t_test *tst);
 void			ft_close_fd(t_shell *pcs, t_test *tst);
 void			ft_err_exit(t_shell *pcs, t_test *tst, int i);
 void			ft_ctrl_process(int sig);
+int				ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str);
 
 #endif

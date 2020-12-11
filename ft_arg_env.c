@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/25 13:11:06 by fernando          #+#    #+#             */
-/*   Updated: 2020/12/10 19:39:49 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/11 13:10:51 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft_arg_env(t_shell *pcs)
 				ft_putendl_fd(g_envp[i], 1);
 		return (0);
 	}
-	ft_putstr_fd("env: ", 1);
+	ft_putstr_fd("\033[1;31menv: ", 1);
 	ft_putstr_fd(pcs->cmp[1], 1);
 	ft_putendl_fd(": No such file or directory", 1);
 	return (127);

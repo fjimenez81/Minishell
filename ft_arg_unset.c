@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 20:14:59 by fernando          #+#    #+#             */
-/*   Updated: 2020/12/10 20:07:10 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/11 13:10:45 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,9 @@ void		ft_arg_unset(t_shell *pcs, t_test *tst)
 				ft_unset_aux(pcs->cmp, i, j);
 			else
 			{
-				ft_putstr_fd("\033[1;31m[Minishell]: unset: ", 1);
+				ft_putstr_fd("\033[1;31m[Minishell]: unset: `", 1);
 				ft_putstr_fd(pcs->cmp[j], 1);
-				ft_putendl_fd(": not a valid identifier", 1);
+				ft_putendl_fd("\': not a valid identifier", 1);
 				tst->status = 1;
 				return ;
 			}

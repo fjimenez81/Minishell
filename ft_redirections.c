@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/10 19:35:08 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/11 15:27:11 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ static void	ft_redir_fd(t_shell *pcs, int flags, char *dir, t_test *tst)
 
 void		ft_ck_redir_two(t_test *tst, t_shell *pcs, int pass)
 {
+	pcs->flag_out = 1;
 	if (pass)
 	{
 		tst->i++;
@@ -70,7 +71,7 @@ void		ft_ck_redir_two(t_test *tst, t_shell *pcs, int pass)
 		if (pcs->redir[tst->i] == '>')
 			tst->i--;
 	}
-	if (!pass)
+	else
 	{
 		tst->check_fdot++;
 		if (pcs->redir[tst->i] == '>')
@@ -94,6 +95,7 @@ static void	ft_check_redir_aux(t_test *tst, t_shell *pcs,
 	else if (pcs->redir[tst->i] == '<' && pcs->redir[tst->i - 1] != '\\' &&
 		*quotes == 0)
 	{
+		pcs->flag_in = 1;
 		if (pass == 1)
 		{
 			tst->i += 1;
@@ -101,7 +103,7 @@ static void	ft_check_redir_aux(t_test *tst, t_shell *pcs,
 			if (pcs->redir[tst->i] == '<')
 				tst->i -= 1;
 		}
-		if (!pass)
+		else
 			tst->check_fdin++;
 		pcs->bool_redir = 1;
 	}
@@ -117,6 +119,8 @@ int			ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass)
 	pcs->bool_redir = 0;
 	tst->fdot_j = 0;
 	tst->fdin_k = 0;
+	pcs->flag_out = 0;
+	pcs->flag_in = 0;
 	if (!pass)
 	{
 		tst->check_fdot = 0;

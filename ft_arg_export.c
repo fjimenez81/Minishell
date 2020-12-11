@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/10/29 19:16:03 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/11 17:11:18 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,7 @@ static char	**ft_join_env(t_test *tst, int j)
 
 	aux = ft_strdup(ft_realloc_str(tst, tst->var_exp[j], -1, 0));
 	ft_change_var(aux);
-	if (aux[0] == '=')
-	{
-		ft_putendl_fd("[Minishell] ~> not found", 1);
-		free(aux);
-		return (g_envp);
-	}
-	if (!(res = (char **)malloc(sizeof(char*) * (tst->len_env + 2))))
+	if (!(res = (char **)malloc(sizeof(char*) * (ft_len_tab(g_envp) + 2))))
 		return (NULL);
 	i = -1;
 	while (g_envp[++i])
