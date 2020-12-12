@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/11 17:05:37 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/12 14:29:33 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,13 @@ void	ft_loop_pipes(char **aux, t_test *tst)
 	char	*tmp;
 	t_shell	*pcs;
 
-	if (!(pcs = ft_calloc(ft_len_tab(aux) + 1, sizeof(t_shell))))
+	if (!(pcs = ft_calloc(ft_len_tab(aux), sizeof(t_shell))))
 		return ;
-	j = -1;
 	pcs->ret = EXIT_SUCCESS;
 	pcs->n_pipe = ft_len_tab(aux);
 	pcs->pipesplit = aux;
-	while (++j < pcs->n_pipe)
+	j = -1;
+	while (pcs->pipesplit[++j])
 	{
 		tmp = ft_strtrim(pcs->pipesplit[j], " \t");
 		free(pcs->pipesplit[j]);
@@ -71,30 +71,3 @@ void	ft_loop_pipes(char **aux, t_test *tst)
 	}
 	free(pcs);
 }
-
-// void	ft_loop_pipes(char **aux, t_test *tst)
-// {
-// 	int		j;
-// 	char	*tmp;
-// 	t_shell	pcs;
-
-// 	j = -1;
-// 	pcs.ret = EXIT_SUCCESS;
-// 	pcs.n_pipe = ft_len_tab(aux);
-// 	while (++j < pcs.n_pipe)
-// 	{
-// 		usleep(10000);
-// 		pcs.pipesplit = aux;
-// 		tmp = ft_strtrim(pcs.pipesplit[j], " \t");
-// 		free(pcs.pipesplit[j]);
-// 		pcs.pipesplit[j] = tmp;
-// 		if (ft_strlen(pcs.pipesplit[j]) == 0)
-// 			break ;
-// 		pcs.cmp = ft_split_cmd(pcs.pipesplit[j], ' ');
-// 		pcs.args = ft_len_tab(pcs.cmp);
-// 		ft_check_redir(tst, &pcs, j, 0);
-// 		ft_loop_pipes_aux(&pcs, tst, j);
-// 		ft_free_tab(pcs.cmp);
-// 	}
-// 	ft_free_tab(aux);
-// }

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 10:21:55 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/11 15:30:21 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/12 14:44:06 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	ft_close_fd(t_shell *pcs, t_test *tst)
 	if (pcs->flag_out)
 	{
 		k = -1;
-		while (++k < tst->check_fdot)
+		while (++k < tst->check_fdot - 1)
 			close(pcs->fd_out[k]);
 		dup2(pcs->std_out, 1);
 		pcs->flag_out = 0;
@@ -51,7 +51,7 @@ void	ft_close_fd(t_shell *pcs, t_test *tst)
 	if (pcs->flag_in)
 	{
 		k = -1;
-		while (++k < tst->check_fdin)
+		while (++k < tst->check_fdin - 1)
 			close(pcs->fd_in[k]);
 		dup2(pcs->fd_in[tst->fdin_k], 1);
 		pcs->flag_in = 0;

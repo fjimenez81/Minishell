@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/22 16:51:37 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/11 18:02:09 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/12 14:55:14 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ static void	ft_read_line(t_test *tst)
 			free(line);
 			line = aux;
 		}
-		
 	}
 	ft_init_struct(tst, line);
 	ft_comands(tst);

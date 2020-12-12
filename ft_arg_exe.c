@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:23:10 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/11 16:16:13 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/12 14:52:54 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,13 @@ int			ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 {
 	char *aux;
 
-	aux = ft_realloc_str(tst, pcs->pipesplit[i], -1, 1);
+	aux = ft_strdup(ft_realloc_str(tst, pcs->pipesplit[i], -1, 1));
 	ft_free_tab(pcs->cmp);
 	if (pcs->pipesplit[i][0] == '\"' || pcs->pipesplit[i][0] == '\'')
-		pcs->cmp = ft_split(pcs->pipesplit[i], '\"' | '\'');
+		pcs->cmp = ft_split(aux, '\"' | '\'');
 	else
 		pcs->cmp = ft_split_cmd(aux, ' ');
+	free(aux);
 	if (!ft_arg_exe_aux(pcs, tst, i))
 		return (127);
 	return (0);

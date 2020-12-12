@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/16 16:48:04 by fernando          #+#    #+#             */
-/*   Updated: 2020/10/29 17:43:45 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/12 13:05:15 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,14 +90,14 @@ static char	**splitter(char const *s, char c)
 	int		len;
 
 	i = 0;
-	t = (char**)malloc(sizeof(char*) * (ft_wordcount((char*)s, c) + 1));
+	t = ft_calloc((ft_wordcount((char*)s, c) + 1), sizeof(char*));
 	while (*s != '\0')
 	{
 		while (*s == c)
 			s++;
 		j = 0;
 		len = (ft_wordlen((char*)s, c) + 1);
-		t[i] = (char*)malloc(len * sizeof(char));
+		t[i] = ft_calloc(len, sizeof(char));
 		while (--len && *s != '\0')
 		{
 			t[i][j] = *s;
