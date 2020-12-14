@@ -6,17 +6,18 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/12 14:29:33 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/14 09:49:45 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_comands(t_test *tst)
+void	ft_comands(t_test *tst, char *line)
 {
 	int		i;
 	char	**aux;
 
+	tst->cmd = ft_split_cmd(line, ';');
 	i = -1;
 	while (tst->cmd[++i])
 	{
@@ -24,6 +25,8 @@ void	ft_comands(t_test *tst)
 		ft_loop_pipes(aux, tst);
 		ft_free_tab(aux);
 	}
+	ft_free_tab(tst->cmd);
+	free(line);
 }
 
 void	ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)

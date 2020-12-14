@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/12/11 12:37:29 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/14 10:03:18 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,11 @@ typedef struct	s_test
 	int			check_get;
 	char		*get_redir;
 	int			cheat;
+	int			count;
+	int			count2;
+	int			count3;
+	char		*line_aux;
+	int			fd_line;
 }				t_test;
 
 typedef struct	s_shell
@@ -94,7 +99,7 @@ typedef struct	s_shell
 	int			pipes[2];
 	pid_t		pid;
 	int			n_pipe;
-	int			*fd_in;
+	int			fd_in;
 	int			*fd_out;
 	int			flag_in;
 	int			flag_out;
@@ -139,7 +144,7 @@ int				ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass);
 char			**ft_split_cmd(char const *s, char c);
 void			ft_check_pipes(t_shell *pcs, t_test *tst, int j);
 void			ft_loop_pipes(char **aux, t_test *tst);
-void			ft_comands(t_test *tst);
+void			ft_comands(t_test *tst, char *line);
 int				ft_arg_exe(t_shell *pcs, t_test *tst, int i);
 void			ft_multiple_redir(t_shell *pcs, t_test *tst);
 void			ft_get_redir(t_shell *pcs, t_test *tst);
@@ -149,7 +154,7 @@ int				ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str);
 void			ft_arg_exit(t_shell *pcs);
 void			ft_print_error(char *error);
 void			ft_cut_pcs(t_test *tst);
-void			ft_close_fd(t_shell *pcs, t_test *tst);
+void			ft_close_fd(t_shell *pcs);
 void			ft_err_exit(t_shell *pcs, t_test *tst, int i);
 void			ft_ctrl_process(int sig);
 int				ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str);

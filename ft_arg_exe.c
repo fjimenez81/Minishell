@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:23:10 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/12 14:52:54 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/14 10:16:59 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void		ft_print_error(char *error)
 	ft_putendl_fd(": command not found", 1);
 }
 
-int			ft_arg_exe_aux(t_shell *pcs, t_test *tst, int i)
+static void	ft_arg_exe_aux(t_shell *pcs, t_test *tst, int i)
 {
 	char	*join;
 	int		exe;
@@ -80,10 +80,8 @@ int			ft_arg_exe_aux(t_shell *pcs, t_test *tst, int i)
 		{
 			dup2(pcs->std_out, 1);
 			ft_err_exit(pcs, tst, i);
-			return (0);
 		}
 	}
-	return (1);
 }
 
 int			ft_arg_exe(t_shell *pcs, t_test *tst, int i)
@@ -96,8 +94,7 @@ int			ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 		pcs->cmp = ft_split(aux, '\"' | '\'');
 	else
 		pcs->cmp = ft_split_cmd(aux, ' ');
-	free(aux);
-	if (!ft_arg_exe_aux(pcs, tst, i))
-		return (127);
-	return (0);
+	ft_arg_exe_aux(pcs, tst, i);
+	//free(aux);
+	return (127);
 }

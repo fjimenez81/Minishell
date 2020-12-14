@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/11 15:27:11 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/12 16:47:17 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,12 @@ void		ft_file_out(t_shell *pcs, t_test *tst, int flags)
 			return ;
 	if ((pcs->fd_out[tst->fdot_j] = open(pcs->out, flags, 0600)) == -1)
 	{
-		ft_putstr_fd("\033[1;31mminishell: ", 1);
+		ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
 		ft_putstr_fd(pcs->out, 1);
 		ft_putendl_fd(": No such file or directory", 1);
 		exit(1);
 	}
-	pcs->flag_out = 1;
-	if (tst->fdot_j == tst->check_fdot - 1)
+	if (tst->fdot_j == tst->check_fdot - 1 && !pcs->flag_in)
 		dup2(pcs->fd_out[tst->fdot_j], STDOUT_FILENO);
 	tst->fdot_j++;
 }
@@ -37,19 +36,19 @@ static void	ft_redir_fd(t_shell *pcs, int flags, char *dir, t_test *tst)
 		tst->i += 1;
 	if (!ft_strcmp(dir, "<"))
 	{
-		if (tst->fdin_k == 0)
-			if (!(pcs->fd_in = (int*)malloc(sizeof(int) * tst->check_fdin)))
-				return ;
 		pcs->in = ft_realloc_str(tst, pcs->redir, tst->i - 1, 2);
-		if ((pcs->fd_in[tst->fdin_k] = open(pcs->in, flags)) == -1)
+		if (tst->fdin_k == tst->check_fdin - 1)
 		{
-			ft_putstr_fd("\033[1;31mminishell: ", 1);
-			ft_putstr_fd(pcs->in, 1);
-			ft_putendl_fd(": No such file or directory", 1);
-			exit(1);
+			if ((pcs->fd_in = open(pcs->in, flags)) == -1)
+			{
+				ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
+				ft_putstr_fd(pcs->in, 1);
+				ft_putendl_fd(": No such file or directory", 1);
+				exit(1);
+			}
+			dup2(pcs->fd_in, 0);
 		}
-		dup2(pcs->fd_in[tst->fdin_k], 0);
-		pcs->flag_in = 1;
+		tst->fdin_k++;
 	}
 	else
 		ft_file_out(pcs, tst, flags);
@@ -119,10 +118,10 @@ int			ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass)
 	pcs->bool_redir = 0;
 	tst->fdot_j = 0;
 	tst->fdin_k = 0;
-	pcs->flag_out = 0;
-	pcs->flag_in = 0;
 	if (!pass)
 	{
+		pcs->flag_out = 0;
+		pcs->flag_in = 0;
 		tst->check_fdot = 0;
 		tst->check_fdin = 0;
 	}

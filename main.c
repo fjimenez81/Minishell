@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/22 16:51:37 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/12 14:55:14 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/14 11:31:48 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static void	ft_ctrl(int sig)
 {
 	if (sig == SIGINT)
 	{
+		//if (g_minish->exit2 == -1)
+			g_minish->exit2 = 3;
 		ft_putstr_fd("\b\b  \n\033[1;92m[Minishell]-1.0$\033[0m ", 1);
 		g_quit = 1;
 	}
@@ -23,10 +25,10 @@ static void	ft_ctrl(int sig)
 		ft_putstr_fd("\b\b  \b\b", 1);
 }
 
-static void	ctrl_d(int fd, t_test *tst)
+static void	ctrl_d(t_test *tst)
 {
 	g_minish->exit2 = -1;
-	if (fd == 0)
+	if (g_minish->fd_line == 0)
 	{
 		system("leaks minishell");
 		ft_putendl_fd("\033[1;31mexit", 1);
@@ -39,43 +41,61 @@ static void	ctrl_d(int fd, t_test *tst)
 	}
 }
 
-static void	ft_init_struct(t_test *tst, char *line)
+static void	ft_init_struct(t_test *tst)
 {
-	tst->len_env = ft_len_tab(g_envp);
+	//tst->len_env = ft_len_tab(g_envp);
 	tst->paths[0] = "/bin/";
 	tst->paths[1] = "/usr/bin/";
 	tst->paths[2] = "";
-	tst->cmd = ft_split_cmd(line, ';');
-	tst->error = "\033[1;31m[Minishell] : command not found : ";
 	g_minish = tst;
+	g_minish->count = 0;
+	g_minish->count2 = 0;
+	g_minish->fd_line = 0;
+}
+
+char	*ft_get_line_eof(char *line)
+{
+	int		byte;
+	
+	while ((g_minish->fd_line = read(0, &byte, 1)) != -1)
+	{
+		ft_putstr_fd("  \b\b", 1);
+		signal(SIGINT, &ft_ctrl);
+		if ((g_minish->exit2 == 3 && g_minish->fd_line == 0) ||
+			byte == '\n' || byte == '\0')
+			break ;
+		else if (g_minish->fd_line > 0)
+		{
+			g_minish->count++;
+			if (g_minish->exit2 == 3)
+				g_minish->count2++;
+			g_minish->line_aux = ft_join_char(line, byte);
+			free(line);
+			line = g_minish->line_aux;
+		}
+	}
+	return (line);
 }
 
 static void	ft_read_line(t_test *tst)
 {
 	char	*line;
-	int		fd;
-	int		byte;
 	char	*aux;
 
 	line = ft_strdup("");
-	fd = 0;
-	while ((fd = read(0, &byte, 1)) != -1)
+	ft_init_struct(tst);
+	line = ft_get_line_eof(line);
+	ctrl_d(tst);
+	if (g_minish->exit2 == -1 && g_quit == 1)
 	{
-		ft_putstr_fd("  \b\b", 1);
-		if (byte == '\n' || byte == '\0')
-			break ;
-		else if (fd > 0)
-		{
-			aux = ft_join_char(line, byte);
-			free(line);
-			line = aux;
-		}
+		aux = g_minish->line_aux;
+		free(line);
+		g_minish->count3 = g_minish->count - g_minish->count2;
+		line = ft_substr(aux, g_minish->count3, ft_strlen(aux));
+		g_minish->exit2 = 0;
+		g_quit = 0;
 	}
-	ft_init_struct(tst, line);
-	ft_comands(tst);
-	ft_free_tab(tst->cmd);
-	free(line);
-	ctrl_d(fd, tst);
+	ft_comands(tst, line);
 }
 
 int			main(int ac, char **av, char **env)

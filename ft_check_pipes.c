@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:27:24 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/12 14:54:03 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/12 16:44:21 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +91,5 @@ void		ft_check_pipes(t_shell *pcs, t_test *tst, int j)
 		ft_pipe_son(pcs, tst, j);
 	else
 		ft_pipe_father(pcs, tst, j);
-	ft_close_fd(pcs, tst);
+	ft_close_fd(pcs);
 }

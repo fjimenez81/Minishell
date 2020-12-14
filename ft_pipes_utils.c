@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 10:21:55 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/12 14:44:06 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/12 16:43:57 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,27 +35,17 @@ void	ft_cut_pcs(t_test *tst)
 	}
 }
 
-void	ft_close_fd(t_shell *pcs, t_test *tst)
+void	ft_close_fd(t_shell *pcs)
 {
-	int k;
-
 	if (pcs->flag_out)
 	{
-		k = -1;
-		while (++k < tst->check_fdot - 1)
-			close(pcs->fd_out[k]);
 		dup2(pcs->std_out, 1);
 		pcs->flag_out = 0;
-		//free(pcs->fd_out);
 	}
 	if (pcs->flag_in)
 	{
-		k = -1;
-		while (++k < tst->check_fdin - 1)
-			close(pcs->fd_in[k]);
-		dup2(pcs->fd_in[tst->fdin_k], 1);
+		dup2(pcs->std_out, 0);
 		pcs->flag_in = 0;
-		//free(pcs->fd_in);
 	}
 }
 
