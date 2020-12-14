@@ -6,13 +6,58 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/14 09:49:45 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/14 13:34:09 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_comands(t_test *tst, char *line)
+static char		*ft_get_line_eof(char *line)
+{
+	int		byte;
+
+	while ((g_minish->fd_line = read(0, &byte, 1)) != -1)
+	{
+		ft_putstr_fd("  \b\b", 1);
+		signal(SIGINT, &ft_ctrl);
+		if ((g_minish->exit2 == 3 && g_minish->fd_line == 0) ||
+			byte == '\n' || byte == '\0' || byte < 2)
+			break ;
+		else if (g_minish->fd_line > 0)
+		{
+			g_minish->count++;
+			if (g_minish->exit2 == 3)
+				g_minish->count2++;
+			g_minish->line_aux = ft_join_char(line, byte);
+			free(line);
+			line = g_minish->line_aux;
+		}
+	}
+	return (line);
+}
+
+void			ft_rd_line(t_test *tst)
+{
+	char	*line;
+	char	*aux;
+
+	line = ft_strdup("");
+	ft_init_struct(tst);
+	line = ft_get_line_eof(line);
+	ctrl_d(tst);
+	if (g_minish->exit2 == -1 && g_quit == 1)
+	{
+		aux = g_minish->line_aux;
+		free(line);
+		g_minish->count3 = g_minish->count - g_minish->count2;
+		line = ft_substr(aux, g_minish->count3, ft_strlen(aux));
+		g_minish->exit2 = 0;
+		g_quit = 0;
+	}
+	ft_comands(tst, line);
+}
+
+void			ft_comands(t_test *tst, char *line)
 {
 	int		i;
 	char	**aux;
@@ -29,7 +74,7 @@ void	ft_comands(t_test *tst, char *line)
 	free(line);
 }
 
-void	ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
+static void		ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
 {
 	tst->bool = 0;
 	if (!ft_strcmp(pcs->cmp[0], "exit") && j == pcs->n_pipe - 1)
@@ -47,7 +92,7 @@ void	ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
 	ft_check_pipes(pcs, tst, j);
 }
 
-void	ft_loop_pipes(char **aux, t_test *tst)
+void			ft_loop_pipes(char **aux, t_test *tst)
 {
 	int		j;
 	char	*tmp;
