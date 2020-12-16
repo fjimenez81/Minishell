@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/22 16:51:37 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/16 09:38:35 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 18:13:29 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,14 @@ void	ft_ctrl(int sig)
 	{
 		g_minish->exit2 = 3;
 		ft_putstr_fd("\b\b  \n\033[1;92m[Minishell]-1.0$\033[0m ", 1);
+		g_minish->cheat = 1;
 		g_quit = 1;
 	}
 	else if (sig == SIGQUIT)
-		ft_putstr_fd("\b\b  \b\b", 1);
+	{
+		g_minish->exit = 131;
+		ft_putstr_fd("Quit\n", 1);
+	}
 }
 
 void	ctrl_d(t_test *tst)
@@ -45,6 +49,7 @@ void	ft_init_struct(t_test *tst)
 	tst->paths[0] = "/bin/";
 	tst->paths[1] = "/usr/bin/";
 	tst->paths[2] = "";
+	tst->cheat = 0;
 	g_minish = tst;
 	g_minish->count = 0;
 	g_minish->count2 = 0;

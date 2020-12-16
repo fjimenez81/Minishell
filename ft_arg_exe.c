@@ -6,30 +6,24 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:23:10 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/16 11:28:30 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 16:50:59 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_check_path(int *check, int i)
+static void	ft_check_path(int *check)
 {
 	int		k;
-	char	**tmp;
-	char	*aux;
 
-	aux = ft_substr(g_envp[i], 5, ft_strlen(g_envp[i]));
-	tmp = ft_split(aux, ':');
 	k = -1;
 	*check = 0;
-	while (tmp[++k])
+	while (g_envp[++k])
 	{
-		if (ft_strstr(tmp[k], "/usr/bin") ||
-			ft_strstr(tmp[k], "/bin"))
+		if (ft_strstr(g_envp[k], "/usr/bin:") ||
+			ft_strstr(g_envp[k], "/bin:"))
 			*check = 1;
 	}
-	free(aux);
-	ft_free_tab(tmp);
 }
 
 static	int	ft_path(int j)
@@ -46,7 +40,7 @@ static	int	ft_path(int j)
 		{
 			check = 1;
 			if (ft_strrchr(g_envp[i], '=') + 1)
-				ft_check_path(&check, i);
+				ft_check_path(&check);
 			return (check);
 		}
 	}
@@ -96,5 +90,6 @@ int			ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 		pcs->cmp = ft_split_cmd(aux, ' ');
 	ft_arg_exe_aux(pcs, tst, i);
 	free(aux);
+	ft_free_tab(pcs->cmp);
 	return (127);
 }

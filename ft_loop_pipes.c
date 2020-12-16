@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/16 13:12:34 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 16:07:52 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ void			ft_comands(t_test *tst, char *line)
 		if (!(pcs = ft_calloc(ft_len_tab(aux), sizeof(t_shell))))
 			return ;
 		ft_loop_pipes(pcs, aux, tst);
-		free(pcs);
 		ft_free_tab(aux);
+		free(pcs);
 	}
 	ft_free_tab(tst->cmd);
 	free(line);

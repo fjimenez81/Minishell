@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 10:21:55 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/16 13:18:21 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 18:17:28 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,17 @@ void	ft_ctrl_process(int sig)
 		g_quit = 0;
 		ft_putstr_fd("\n", 1);
 	}
-	// else if (sig == SIGQUIT)
-	// 	ft_putstr_fd("\b\b  \b\b", 1);
+	else if (sig == SIGQUIT)
+	{
+		g_minish->exit = 131;
+		ft_putstr_fd("Quit\n", 1);
+	}
 }
 
 void	ft_cut_pcs(t_test *tst)
 {
 	signal(SIGINT, &ft_ctrl_process);
-	if (g_quit)
+	if (g_quit == 1)
 	{
 		tst->cheat = 1;
 		g_quit = 0;
@@ -51,11 +54,21 @@ void	ft_close_fd(t_shell *pcs)
 
 void	ft_err_exit(t_shell *pcs, t_test *tst, int i)
 {
-	if (g_minish->exit == 130 &&
+	char *aux;
+
+	if (g_minish->exit > 129 &&
 		WEXITSTATUS(g_minish->status) != 127 && !tst->cheat)
-		ft_print_error(ft_realloc_str(tst, pcs->pipesplit[i], -1, 5));
+		{
+			aux = ft_realloc_str(tst, pcs->pipesplit[i], -1, g_minish->exit);
+			ft_print_error(aux);
+			free(aux);
+		}
 	else if (tst->cheat)
-		ft_print_error(ft_realloc_str(tst, pcs->pipesplit[i], -1, 9));
+	{
+		aux = ft_realloc_str(tst, pcs->pipesplit[i], -1, 9);
+		ft_print_error(aux);
+		free(aux);
+	}
 	else
 		ft_print_error(pcs->cmp[0]);
 }

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 21:08:07 by fernando          #+#    #+#             */
-/*   Updated: 2020/12/10 20:55:29 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 15:56:33 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,15 +55,18 @@ static char	*ft_get_var(char *str)
 
 int			ft_arg_cd(t_shell *pcs, t_test *tst)
 {
-	char oldpath[PATH_MAX];
+	char	oldpath[PATH_MAX];
+	char	*aux;
 
 	getcwd(oldpath, -1);
 	if (pcs->args == 1 || !ft_strcmp(pcs->cmp[0], "~"))
 	{
 		if (chdir(ft_get_var("HOME")) == 0)
 			ft_get_up_var(oldpath);
+		return (1);
 	}
-	else if (chdir(ft_realloc_str(tst, pcs->cmp[1], -1, 0)) == 0)
+	aux = ft_realloc_str(tst, pcs->cmp[1], -1, 0);
+	if (chdir(aux) == 0)
 		ft_get_up_var(oldpath);
 	else
 	{
@@ -72,5 +75,6 @@ int			ft_arg_cd(t_shell *pcs, t_test *tst)
 		ft_putendl_fd(": No such file or directory", 1);
 		tst->status = 1;
 	}
+	free(aux);
 	return (1);
 }

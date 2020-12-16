@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 10:59:34 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/16 10:02:04 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 18:37:21 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ static void	ft_keys_loop(t_test *tmp, int i)
 		if (tmp->dollar[i] == '{')
 			i++;
 		aux = ft_join_char(tmp->c_keys, tmp->dollar[i]);
+		free(tmp->c_keys);
 		tmp->c_keys = aux;
-		free(aux);
 	}
 }
 
@@ -52,10 +52,12 @@ static char	*ft_dollar_aux(t_test *tmp, char *res)
 {
 	char *var;
 
+	free(tmp->c_keys);
 	tmp->c_keys = tmp->ck_key > 0 ?
 		ft_strjoin(ft_strrchr(tmp->c_keys, '$') + 1, "=") :
 		ft_strjoin(ft_strrchr(tmp->dollar, '$') + 1, "=");
 	var = ft_print_var(tmp->c_keys);
+	free(res);
 	res = ft_strjoin(res, var);
 	free(tmp->c_keys);
 	return (res);
@@ -64,7 +66,7 @@ static char	*ft_dollar_aux(t_test *tmp, char *res)
 static void	ft_aux_var(char *str, t_test *tmp)
 {
 	tmp->ck_key = 0;
-	tmp->c_keys = "\0";
+	tmp->c_keys = ft_strdup("");
 	tmp->dollar = ft_cut_end(str + tmp->i, 2);
 	tmp->c_keys = ft_check_keys(tmp);
 }
@@ -76,12 +78,14 @@ char		*ft_realloc_var(char *str, char *res, t_test *tmp)
 	ft_aux_var(str, tmp);
 	if (tmp->c_keys[1] == '?' || tmp->dollar[1] == '?')
 	{
+		free(tmp->c_keys);
 		if (tmp->cut == 9)
 			var = ft_itoa(1);
-		else if (tmp->cut == 5)
-			var = ft_itoa(130);
+		else if (tmp->cut > 129)
+			var = ft_itoa(g_minish->exit);
 		else
 			var = ft_itoa(WEXITSTATUS(tmp->status));
+		free(res);
 		res = ft_strjoin(res, var);
 		free(var);
 	}

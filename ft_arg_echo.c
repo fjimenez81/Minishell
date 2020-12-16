@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 18:07:07 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/16 12:58:51 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 16:05:01 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ static void	ft_echo_aux(t_shell *pcs, t_test *tst, int i)
 	if (ft_strcmp(pcs->cmp[1], "-n"))
 		ft_putchar_fd('\n', 1);
 	free(aux);
+	ft_free_tab(pcs->cmp);
 }
 
 int			ft_arg_echo(t_shell *pcs, t_test *tst, int i)

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 17:14:03 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/16 12:53:42 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 17:25:03 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	ft_aux_loop_two(char *str, t_test *tmp)
 		(str[tmp->i] == ' ' && str[tmp->i + 1] == '>')) &&
 		str[tmp->i - 1] != '\\' && !tmp->d_qu && !tmp->s_qu &&
 		tmp->cut == 1)
-		return (0);
+			return (0);
 	return (1);
 }
 
@@ -82,7 +82,9 @@ char		*ft_realloc_str(t_test *tmp, char *str, int i, int cut)
 	if ((tmp->d_qu || tmp->s_qu) && cut == 13)
 	{
 		free(res);
-		return (NULL);
+		//return (NULL);
+		res = NULL;
 	}
+	tmp->cut = 0;
 	return (res);
 }
