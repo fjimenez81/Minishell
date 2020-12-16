@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 10:21:55 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/12 16:43:57 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 13:18:21 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,6 @@ int		ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str)
 		if (aux[i] == str[i])
 			check++;
 	}
+	free(aux);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/12/11 17:11:18 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 09:23:15 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static char	**ft_join_env(t_test *tst, int j)
 	char	*aux;
 	char	**res;
 
-	aux = ft_strdup(ft_realloc_str(tst, tst->var_exp[j], -1, 0));
+	aux = ft_realloc_str(tst, tst->var_exp[j], -1, 0);
 	ft_change_var(aux);
 	if (!(res = (char **)malloc(sizeof(char*) * (ft_len_tab(g_envp) + 2))))
 		return (NULL);

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:02:40 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/12 14:54:54 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 12:17:39 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ static void	ft_aux_loop(char *str, t_test *tmp)
 void		ft_realloc_aux_two(char *str, t_test *tmp)
 {
 	ft_aux_loop(str, tmp);
+	if (tmp->one_dollar)
+		tmp->one_dollar = 0;
 	if (str[tmp->i] == '\\' && (str[tmp->i + 1] == '\'' ||
 		str[tmp->i + 1] == '\"'))
 		tmp->i += 1;

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/12 16:47:17 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 09:32:37 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void		ft_file_out(t_shell *pcs, t_test *tst, int flags)
 	if (tst->fdot_j == tst->check_fdot - 1 && !pcs->flag_in)
 		dup2(pcs->fd_out[tst->fdot_j], STDOUT_FILENO);
 	tst->fdot_j++;
+	free(pcs->out);
 }
 
 static void	ft_redir_fd(t_shell *pcs, int flags, char *dir, t_test *tst)
@@ -49,6 +50,7 @@ static void	ft_redir_fd(t_shell *pcs, int flags, char *dir, t_test *tst)
 			dup2(pcs->fd_in, 0);
 		}
 		tst->fdin_k++;
+		free(pcs->in);
 	}
 	else
 		ft_file_out(pcs, tst, flags);

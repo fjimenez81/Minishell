@@ -6,7 +6,7 @@
 #    By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/18 21:02:40 by fernando          #+#    #+#              #
-#    Updated: 2020/12/10 19:35:28 by fjimenez         ###   ########.fr        #
+#    Updated: 2020/12/16 11:24:52 by fjimenez         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,7 +63,7 @@ all: $(NAME)
 
 $(NAME): $(OFILES)
 	@$(M_LIBFT)
-	@$(CC) $(LIBFT) ${SRCGNL} $(CFILES) -o $(NAME)
+	@$(CC) ${SRCGNL} $(CFILES) $(LIBFT) -o $(NAME)
 	@echo "$(RED)(MINISHELL)$(BLUE)====CREATED====$(RESET)"
 	
 

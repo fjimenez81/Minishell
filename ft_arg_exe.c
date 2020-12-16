@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:23:10 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/14 10:16:59 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 11:28:30 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static	int	ft_path(int j)
 		if (ft_strstr(g_envp[i], "PATH="))
 		{
 			check = 1;
-			if (ft_strrchr(g_envp[i], '=') + 1 != '\0')
+			if (ft_strrchr(g_envp[i], '=') + 1)
 				ft_check_path(&check, i);
 			return (check);
 		}
@@ -88,13 +88,13 @@ int			ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 {
 	char *aux;
 
-	aux = ft_strdup(ft_realloc_str(tst, pcs->pipesplit[i], -1, 1));
+	aux = ft_realloc_str(tst, pcs->pipesplit[i], -1, 1);
 	ft_free_tab(pcs->cmp);
 	if (pcs->pipesplit[i][0] == '\"' || pcs->pipesplit[i][0] == '\'')
 		pcs->cmp = ft_split(aux, '\"' | '\'');
 	else
 		pcs->cmp = ft_split_cmd(aux, ' ');
 	ft_arg_exe_aux(pcs, tst, i);
-	//free(aux);
+	free(aux);
 	return (127);
 }

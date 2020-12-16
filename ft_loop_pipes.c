@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/14 13:34:09 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 13:12:34 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,17 @@ void			ft_comands(t_test *tst, char *line)
 {
 	int		i;
 	char	**aux;
+	t_shell	*pcs;
 
 	tst->cmd = ft_split_cmd(line, ';');
 	i = -1;
 	while (tst->cmd[++i])
 	{
 		aux = ft_split_cmd(tst->cmd[i], '|');
-		ft_loop_pipes(aux, tst);
+		if (!(pcs = ft_calloc(ft_len_tab(aux), sizeof(t_shell))))
+			return ;
+		ft_loop_pipes(pcs, aux, tst);
+		free(pcs);
 		ft_free_tab(aux);
 	}
 	ft_free_tab(tst->cmd);
@@ -92,14 +96,11 @@ static void		ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
 	ft_check_pipes(pcs, tst, j);
 }
 
-void			ft_loop_pipes(char **aux, t_test *tst)
+void			ft_loop_pipes(t_shell *pcs, char **aux, t_test *tst)
 {
 	int		j;
 	char	*tmp;
-	t_shell	*pcs;
 
-	if (!(pcs = ft_calloc(ft_len_tab(aux), sizeof(t_shell))))
-		return ;
 	pcs->ret = EXIT_SUCCESS;
 	pcs->n_pipe = ft_len_tab(aux);
 	pcs->pipesplit = aux;
@@ -109,13 +110,14 @@ void			ft_loop_pipes(char **aux, t_test *tst)
 		tmp = ft_strtrim(pcs->pipesplit[j], " \t");
 		free(pcs->pipesplit[j]);
 		pcs->pipesplit[j] = tmp;
-		if (ft_strlen(pcs->pipesplit[j]) == 0)
+		tst->ckqu = ft_realloc_str(tst, pcs->pipesplit[j], -1, 13);
+		if (ft_strlen(pcs->pipesplit[j]) == 0 || !tst->ckqu)
 			break ;
 		pcs->cmp = ft_split_cmd(pcs->pipesplit[j], ' ');
 		pcs->args = ft_len_tab(pcs->cmp);
 		ft_check_redir(tst, pcs, j, 0);
 		ft_loop_pipes_aux(pcs, tst, j);
 		ft_free_tab(pcs->cmp);
+		free(tst->ckqu);
 	}
-	free(pcs);
 }

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 17:14:03 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/09 21:25:40 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 12:53:42 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,42 +27,43 @@ static int	ft_aux_loop_two(char *str, t_test *tmp)
 	return (1);
 }
 
-static char	*ft_only_dollar(char *str, char *aux, char *res, t_test *tmp)
+static void	ft_only_dollar(char *str, t_test *tmp)
 {
-	if (str[tmp->i] == '$' && str[tmp->i + 1] == ' ')
-		aux = ft_strjoin(res, "$ ");
-	else if (str[tmp->i] == '$' && str[tmp->i + 1] == '\0')
-		aux = ft_strjoin(res, "$");
-	else if (str[tmp->i] == '$' && (str[tmp->i + 1] == '\"' ||
-		(str[tmp->i + 1] == '\'' && tmp->d_qu == 1) || str[tmp->i + 1] == '\\'))
-		aux = ft_join_char(res, str[tmp->i]);
-	return (aux);
+	
+	if (str[tmp->i] == '$' && (str[tmp->i + 1] == '\"' ||
+		str[tmp->i + 1] == '\'' || str[tmp->i + 1] == '\\'))
+		{
+			if (str[tmp->i + 1] == '\'' && !tmp->d_qu)
+				tmp->s_qu = 1;
+			if (!tmp->d_qu)
+				tmp->i += 2;
+			if (str[tmp->i + 1] == '\'' && tmp->d_qu)
+				tmp->one_dollar = 1;
+		}
 }
 
 static char	*ft_realloc_aux_one(char *str, t_test *tmp)
 {
 	char	*res;
 	char	*aux;
-	char	*var;
 
-	res = "\0";
+	res = ft_strdup("");
 	while (str[++tmp->i] != '\0')
 	{
 		ft_realloc_aux_two(str, tmp);
 		if (!ft_aux_loop_two(str, tmp))
 			break ;
-		aux = (str[tmp->i] == '$' && str[tmp->i - 1] != '\\' &&
-			tmp->s_qu == 0) ? ft_strdup(res) :
-			ft_join_char(res, str[tmp->i]);
-		aux = ft_only_dollar(str, aux, res, tmp);
-		res = aux;
-		if (str[tmp->i] == '$' && str[tmp->i - 1] != '\\' && tmp->s_qu == 0)
+		ft_only_dollar(str, tmp);
+		if (str[tmp->i] == '$' && str[tmp->i - 1] != '\\' &&
+			(str[tmp->i + 1] != ' ' && str[tmp->i + 1] != '\0') &&
+			!tmp->s_qu && !tmp->one_dollar)
 		{
-			var = ft_realloc_var(str, res, tmp);
-			res = var;
-			free(var);
+			res = ft_realloc_var(str, res, tmp);
+			tmp->i++;
 		}
-		free(aux);
+		aux = ft_join_char(res, str[tmp->i]);
+		free(res);
+		res = aux;	
 	}
 	return (res);
 }
@@ -70,25 +71,18 @@ static char	*ft_realloc_aux_one(char *str, t_test *tmp)
 char		*ft_realloc_str(t_test *tmp, char *str, int i, int cut)
 {
 	char	*res;
-	int		j;
 
 	tmp->d_qu = 0;
 	tmp->s_qu = 0;
 	tmp->cut = cut;
 	tmp->i = i;
 	tmp->key = 0;
-	j = i;
-	// while (str[++j])
-	// {
-	// 	if (str[j] == '{' && str[j - 1] != '\\')
-	// 		tmp->key = 1;
-	// 	if (str[j] == '}' && str[j - 1] != '\\' &&
-	// 		(str[j + 1] == ' ' || str[j + 1] == '\0') && tmp->key == 0)
-	// 	{
-	// 		tmp->key = 2;
-	// 		ft_putstr_fd("minishell : parse error near \'}\'", 1);
-	// 	}
-	// }
+	tmp->one_dollar = 0;
 	res = ft_realloc_aux_one(str, tmp);
+	if ((tmp->d_qu || tmp->s_qu) && cut == 13)
+	{
+		free(res);
+		return (NULL);
+	}
 	return (res);
 }

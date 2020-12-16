@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:27:24 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/12 16:44:21 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/16 13:04:07 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 		(!ft_strcmp(pcs->cmp[0], "env") &&
 		pcs->bool_redir == 0))
 		return (ft_arg_env(pcs));
-	else if (!ft_strcmp(pcs->cmp[0], "echo"))
+	if (!ft_strcmp(pcs->cmp[0], "echo"))
 		return (ft_arg_echo(pcs, tst, i));
 	else if (!tst->bool)
 		return (ft_arg_exe(pcs, tst, i));
