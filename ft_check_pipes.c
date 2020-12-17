@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:27:24 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/16 13:04:07 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/17 09:31:07 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,6 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 
 static void	ft_pipe_son(t_shell *pcs, t_test *tst, int j)
 {
-	// if (dup2(pcs[j].pipes[SIDEIN], STDOUT) < 0)
-	// {
-	// 	ft_putendl_fd("fatal error", 1);
-	// 	exit(131);
-	// }
 	dup2(pcs[j].pipes[SIDEIN], STDOUT);
 	if (j > 0)
 		dup2(pcs[j - 1].pipes[SIDEOUT], STDIN);

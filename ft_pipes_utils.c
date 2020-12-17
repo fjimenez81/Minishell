@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 10:21:55 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/16 18:17:28 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/17 09:30:27 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,11 @@ void	ft_err_exit(t_shell *pcs, t_test *tst, int i)
 
 	if (g_minish->exit > 129 &&
 		WEXITSTATUS(g_minish->status) != 127 && !tst->cheat)
-		{
-			aux = ft_realloc_str(tst, pcs->pipesplit[i], -1, g_minish->exit);
-			ft_print_error(aux);
-			free(aux);
-		}
+	{
+		aux = ft_realloc_str(tst, pcs->pipesplit[i], -1, g_minish->exit);
+		ft_print_error(aux);
+		free(aux);
+	}
 	else if (tst->cheat)
 	{
 		aux = ft_realloc_str(tst, pcs->pipesplit[i], -1, 9);

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 17:14:03 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/16 17:25:03 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/17 09:29:47 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,22 @@ static int	ft_aux_loop_two(char *str, t_test *tmp)
 		(str[tmp->i] == ' ' && str[tmp->i + 1] == '>')) &&
 		str[tmp->i - 1] != '\\' && !tmp->d_qu && !tmp->s_qu &&
 		tmp->cut == 1)
-			return (0);
+		return (0);
 	return (1);
 }
 
 static void	ft_only_dollar(char *str, t_test *tmp)
 {
-	
 	if (str[tmp->i] == '$' && (str[tmp->i + 1] == '\"' ||
 		str[tmp->i + 1] == '\'' || str[tmp->i + 1] == '\\'))
-		{
-			if (str[tmp->i + 1] == '\'' && !tmp->d_qu)
-				tmp->s_qu = 1;
-			if (!tmp->d_qu)
-				tmp->i += 2;
-			if (str[tmp->i + 1] == '\'' && tmp->d_qu)
-				tmp->one_dollar = 1;
-		}
+	{
+		if (str[tmp->i + 1] == '\'' && !tmp->d_qu)
+			tmp->s_qu = 1;
+		if (!tmp->d_qu)
+			tmp->i += 2;
+		if (str[tmp->i + 1] == '\'' && tmp->d_qu)
+			tmp->one_dollar = 1;
+	}
 }
 
 static char	*ft_realloc_aux_one(char *str, t_test *tmp)
@@ -63,7 +62,7 @@ static char	*ft_realloc_aux_one(char *str, t_test *tmp)
 		}
 		aux = ft_join_char(res, str[tmp->i]);
 		free(res);
-		res = aux;	
+		res = aux;
 	}
 	return (res);
 }
@@ -82,7 +81,6 @@ char		*ft_realloc_str(t_test *tmp, char *str, int i, int cut)
 	if ((tmp->d_qu || tmp->s_qu) && cut == 13)
 	{
 		free(res);
-		//return (NULL);
 		res = NULL;
 	}
 	tmp->cut = 0;

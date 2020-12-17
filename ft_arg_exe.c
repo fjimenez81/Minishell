@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:23:10 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/16 16:50:59 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/17 09:31:31 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ static void	ft_arg_exe_aux(t_shell *pcs, t_test *tst, int i)
 	{
 		join = ft_strjoin(tst->paths[j], pcs->cmp[0]);
 		j++;
-		//free(join);
 		if (ft_path(j))
 			exe = execve(join, pcs->cmp, g_envp);
 		free(join);

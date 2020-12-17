@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/16 16:07:52 by fjimenez         ###   ########.fr       */
+/*   Updated: 2020/12/17 10:05:22 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,10 @@ void			ft_comands(t_test *tst, char *line)
 		aux = ft_split_cmd(tst->cmd[i], '|');
 		if (!(pcs = ft_calloc(ft_len_tab(aux), sizeof(t_shell))))
 			return ;
-		ft_loop_pipes(pcs, aux, tst);
+		pcs->ret = EXIT_SUCCESS;
+		pcs->n_pipe = ft_len_tab(aux);
+		pcs->pipesplit = aux;
+		ft_loop_pipes(pcs, tst);
 		ft_free_tab(aux);
 		free(pcs);
 	}
@@ -96,14 +99,11 @@ static void		ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
 	ft_check_pipes(pcs, tst, j);
 }
 
-void			ft_loop_pipes(t_shell *pcs, char **aux, t_test *tst)
+void			ft_loop_pipes(t_shell *pcs, t_test *tst)
 {
 	int		j;
 	char	*tmp;
 
-	pcs->ret = EXIT_SUCCESS;
-	pcs->n_pipe = ft_len_tab(aux);
-	pcs->pipesplit = aux;
 	j = -1;
 	while (pcs->pipesplit[++j])
 	{
@@ -112,7 +112,12 @@ void			ft_loop_pipes(t_shell *pcs, char **aux, t_test *tst)
 		pcs->pipesplit[j] = tmp;
 		tst->ckqu = ft_realloc_str(tst, pcs->pipesplit[j], -1, 13);
 		if (ft_strlen(pcs->pipesplit[j]) == 0 || !tst->ckqu)
+		{
+			if (!tst->ckqu)
+				ft_putendl_fd("multilines are not allowed!!", 1);
+			free(tst->ckqu);
 			break ;
+		}
 		pcs->cmp = ft_split_cmd(pcs->pipesplit[j], ' ');
 		pcs->args = ft_len_tab(pcs->cmp);
 		ft_check_redir(tst, pcs, j, 0);
