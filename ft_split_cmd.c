@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/16 16:48:04 by fernando          #+#    #+#             */
-/*   Updated: 2021/01/11 18:51:33 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/11 20:03:08 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ static	int	getcount(char *s, int count, int c)
 		}
 		if (*s == '\0')
 			return (count);
+		if (*s && (*(s - 1) == c && *s == c))
+			s++;
 		if (*s && (*(s - 1) != c && *s == c))
 			count++;
-		if (*s == c && *(s - 1) == 92)
-			count--;
 		s++;
 	}
 	if (*(s - 1) != c)
