@@ -6,13 +6,13 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/17 10:05:22 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/11 11:12:20 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char		*ft_get_line_eof(char *line)
+char			*ft_get_line_eof(char *line)
 {
 	int		byte;
 
@@ -36,25 +36,29 @@ static char		*ft_get_line_eof(char *line)
 	return (line);
 }
 
-void			ft_rd_line(t_test *tst)
+int				ft_check_sintax(char *line)
 {
-	char	*line;
-	char	*aux;
+	int	i;
 
-	line = ft_strdup("");
-	ft_init_struct(tst);
-	line = ft_get_line_eof(line);
-	ctrl_d(tst);
-	if (g_minish->exit2 == -1 && g_quit == 1)
+	i = -1;
+	while (line[++i])
 	{
-		aux = g_minish->line_aux;
-		free(line);
-		g_minish->count3 = g_minish->count - g_minish->count2;
-		line = ft_substr(aux, g_minish->count3, ft_strlen(aux));
-		g_minish->exit2 = 0;
-		g_quit = 0;
+		if (line[i - 1] == line[i] && line[i] == ';')
+		{
+			ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
+			ft_putendl_fd("syntax error near unexpected token `;'", 1);
+			return (0);
+		}
+		if (!ft_print_syntax(line, i))
+			return (0);
+		if (line[i] == 92 && line[i + 1] == '\0' && line[i - 1] != 92)
+		{
+			ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
+			ft_putendl_fd("syntax error multilines are not allowed!!", 1);
+			return (0);
+		}
 	}
-	ft_comands(tst, line);
+	return (1);
 }
 
 void			ft_comands(t_test *tst, char *line)
@@ -63,6 +67,11 @@ void			ft_comands(t_test *tst, char *line)
 	char	**aux;
 	t_shell	*pcs;
 
+	if (!ft_check_sintax(line))
+	{
+		free(line);
+		return ;
+	}
 	tst->cmd = ft_split_cmd(line, ';');
 	i = -1;
 	while (tst->cmd[++i])

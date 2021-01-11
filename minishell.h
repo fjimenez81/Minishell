@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2020/12/17 09:51:20 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/11 11:12:35 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ typedef struct	s_test
 	int			status;
 	int			exit;
 	int			exit2;
-	int			forked;
 	int			cut;
 	int			d_qu;
 	int			s_qu;
@@ -55,18 +54,13 @@ typedef struct	s_test
 	char		*paths[3];
 	char		**cmd;
 	char		**var_exp;
-	char		**c_envp;
 	int			ck_key;
 	int			check_fdot;
 	int			check_fdin;
 	int			fdot_j;
 	int			fdin_k;
 	int			pass;
-	int			fd_tst;
 	pid_t		*pid;
-	int			check_pid;
-	int			check_get;
-	char		*get_redir;
 	int			cheat;
 	int			count;
 	int			count2;
@@ -80,11 +74,7 @@ typedef struct	s_test
 typedef struct	s_shell
 {
 	char		**pipesplit;
-	char		**setfd;
-	char		**env;
-	char		**aux_exp;
 	char		*cmd;
-	char		*dollar;
 	char		*out;
 	char		*in;
 	char		*redir;
@@ -94,7 +84,6 @@ typedef struct	s_shell
 	int			check_fd;
 	int			bool_redir;
 	char		**cmp;
-	int			enter;
 	int			ret;
 	int			std_out;
 	int			std_in;
@@ -105,8 +94,6 @@ typedef struct	s_shell
 	int			*fd_out;
 	int			flag_in;
 	int			flag_out;
-	char		*test;
-	int			exit;
 }				t_shell;
 
 char			**g_envp;
@@ -142,10 +129,12 @@ void			ft_arg_unset(t_shell *pcs, t_test *tst);
 int				ft_arg_echo(t_shell *pcs, t_test *tst, int i);
 char			*ft_print_var(char *aux);
 void			init_env(char **env);
+int				ft_print_syntax(char *line, int i);
 int				ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass);
 char			**ft_split_cmd(char const *s, char c);
 void			ft_check_pipes(t_shell *pcs, t_test *tst, int j);
 void			ft_loop_pipes(t_shell *pcs, t_test *tst);
+char			*ft_get_line_eof(char *line);
 void			ft_rd_line(t_test *tst);
 void			ft_ctrl(int sig);
 void			ctrl_d(t_test *tst);
