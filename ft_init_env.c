@@ -6,29 +6,34 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 13:52:05 by fernando          #+#    #+#             */
-/*   Updated: 2021/01/11 11:13:13 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/11 16:45:13 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		ft_print_syntax(char *line, int i)
+void	ft_wordlen_aux(char *s, int *count)
 {
-	if ((line[i - 1] == ';' && line[i] == '|') ||
-		(line[i - 1] == '|' && line[i] == ';') ||
-		(line[i - 1] == '|' && line[i] == '|'))
+	if (*s == '\"')
 	{
-		ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
-		ft_putstr_fd("syntax error near unexpected token ", 1);
-		if (line[i - 1] == '|' && line[i] == '|')
-			ft_putendl_fd("`||'", 1);
-		else if (line[i - 1] == ';')
-			ft_putendl_fd("`;'", 1);
-		else if (line[i - 1] == '|')
-			ft_putendl_fd("`|'", 1);
-		return (0);
+		*count += 1;
+		s++;
+		while (*s && *s != '\"')
+		{
+			*count += 1;
+			s++;
+		}
 	}
-	return (1);
+	if (*s == '\'')
+	{
+		*count += 1;
+		s++;
+		while (*s && *s != '\'')
+		{
+			*count += 1;
+			s++;
+		}
+	}
 }
 
 void	init_env(char **env)

@@ -6,7 +6,7 @@
 #    By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/18 21:02:40 by fernando          #+#    #+#              #
-#    Updated: 2020/12/16 11:24:52 by fjimenez         ###   ########.fr        #
+#    Updated: 2021/01/11 16:44:29 by fjimenez         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRC =	main \
 		ft_arg_exe \
 		ft_arg_exit \
 		ft_pipes_utils \
+		ft_check_syntax \
 
 CFILES = $(addsuffix .c, $(SRC))
 

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/11 11:12:20 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/11 18:46:00 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,20 @@ char			*ft_get_line_eof(char *line)
 	return (line);
 }
 
-int				ft_check_sintax(char *line)
+int				ft_check_sintax(t_test *tst, char *line)
 {
 	int	i;
 
 	i = -1;
+	tst->d_qu = 0;
+	tst->s_qu = 0;
 	while (line[++i])
 	{
-		if (line[i - 1] == line[i] && line[i] == ';')
-		{
-			ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
-			ft_putendl_fd("syntax error near unexpected token `;'", 1);
+		ft_syntax_quotes(tst, line, &i);
+		if (!ft_print_syntax(tst, line, i))
 			return (0);
-		}
-		if (!ft_print_syntax(line, i))
-			return (0);
-		if (line[i] == 92 && line[i + 1] == '\0' && line[i - 1] != 92)
+		if ((line[i] == 92 && line[i + 1] == '\0' && line[i - 1] != 92) ||
+			(line[i] == '|' && line[i - 1] == ';' && line[i - 2] == 92))
 		{
 			ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
 			ft_putendl_fd("syntax error multilines are not allowed!!", 1);
@@ -67,7 +65,7 @@ void			ft_comands(t_test *tst, char *line)
 	char	**aux;
 	t_shell	*pcs;
 
-	if (!ft_check_sintax(line))
+	if (!ft_check_sintax(tst, line))
 	{
 		free(line);
 		return ;

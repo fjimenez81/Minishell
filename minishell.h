@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2021/01/11 11:12:35 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/11 16:45:41 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void			ft_arg_unset(t_shell *pcs, t_test *tst);
 int				ft_arg_echo(t_shell *pcs, t_test *tst, int i);
 char			*ft_print_var(char *aux);
 void			init_env(char **env);
-int				ft_print_syntax(char *line, int i);
+void			ft_wordlen_aux(char *s, int *count);
 int				ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass);
 char			**ft_split_cmd(char const *s, char c);
 void			ft_check_pipes(t_shell *pcs, t_test *tst, int j);
@@ -153,5 +153,7 @@ void			ft_close_fd(t_shell *pcs);
 void			ft_err_exit(t_shell *pcs, t_test *tst, int i);
 void			ft_ctrl_process(int sig);
 int				ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str);
+int				ft_print_syntax(t_test *tst, char *line, int i);
+void			ft_syntax_quotes(t_test *tst, char *line, int *i);
 
 #endif
