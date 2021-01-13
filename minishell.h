@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2021/01/11 16:45:41 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/13 18:18:52 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,8 @@ void			ft_arg_unset(t_shell *pcs, t_test *tst);
 int				ft_arg_echo(t_shell *pcs, t_test *tst, int i);
 char			*ft_print_var(char *aux);
 void			init_env(char **env);
-void			ft_wordlen_aux(char *s, int *count);
+void			ft_wordlen_aux(char **s, int *count);
+void			ft_getcount_aux(char **s, int c);
 int				ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass);
 char			**ft_split_cmd(char const *s, char c);
 void			ft_check_pipes(t_shell *pcs, t_test *tst, int j);

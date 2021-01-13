@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 10:21:55 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/17 09:30:27 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/13 16:02:59 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,11 @@ void	ft_err_exit(t_shell *pcs, t_test *tst, int i)
 		free(aux);
 	}
 	else
-		ft_print_error(pcs->cmp[0]);
+	{
+		aux = ft_realloc_str(tst, pcs->cmp[0], -1, 1);
+		ft_print_error(aux);
+		free(aux);
+	}
 }
 
 int		ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str)

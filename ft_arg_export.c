@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 12:33:08 by fernando          #+#    #+#             */
-/*   Updated: 2020/12/16 09:23:15 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/13 18:15:59 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,7 @@ int			ft_arg_export(t_test *tst, t_shell *pcs, int j)
 {
 	int i;
 
-	tst->aux = ft_pass_space(pcs, pcs->pipesplit[j]);
-	tst->var_exp = ft_split_cmd(tst->aux, ' ');
+	tst->var_exp = ft_split_cmd(pcs->pipesplit[j], ' ');
 	if (ft_len_tab(tst->var_exp) == 1)
 		ft_sort_export();
 	else if (ft_len_tab(tst->var_exp) > 1)
@@ -98,7 +97,6 @@ int			ft_arg_export(t_test *tst, t_shell *pcs, int j)
 			if (ft_strcmp(tst->var_exp[i], "") != 0)
 				g_envp = ft_join_env(tst, i);
 	}
-	free(tst->aux);
 	ft_free_tab(tst->var_exp);
 	return (1);
 }

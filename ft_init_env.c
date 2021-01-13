@@ -6,32 +6,52 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 13:52:05 by fernando          #+#    #+#             */
-/*   Updated: 2021/01/11 16:45:13 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/13 18:15:34 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_wordlen_aux(char *s, int *count)
+void	ft_getcount_aux(char **s, int c)
 {
-	if (*s == '\"')
+	if (**s == '\"')
+	{
+		*s += 1;
+		while (**s && **s != '\"')
+			*s += 1;
+	}
+	if (**s == '\'')
+	{
+		*s += 1;
+		while (**s && **s != '\'')
+			*s += 1;
+	}
+	if (**s == 92 && **(s + 1) == 92)
+		*s += 1;
+	else if (**s == 92 && **(s + 1) == c)
+		*s += 1;
+}
+
+void	ft_wordlen_aux(char **s, int *count)
+{
+	if (**s == '\"')
 	{
 		*count += 1;
-		s++;
-		while (*s && *s != '\"')
+		*s += 1;
+		while (**s && **s != '\"')
 		{
+			*s += 1;
 			*count += 1;
-			s++;
 		}
 	}
-	if (*s == '\'')
+	if (**s == '\'')
 	{
+		*s += 1;
 		*count += 1;
-		s++;
-		while (*s && *s != '\'')
+		while (**s && **s != '\'')
 		{
+			*s += 1;
 			*count += 1;
-			s++;
 		}
 	}
 }

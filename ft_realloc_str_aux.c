@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:02:40 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/11 15:18:20 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/13 18:15:12 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,13 @@ void		ft_realloc_aux_two(char *str, t_test *tmp)
 	if (str[tmp->i] == '\\' && (str[tmp->i + 1] == '\'' ||
 		str[tmp->i + 1] == '\"'))
 		tmp->i += 1;
-	else if (str[tmp->i] == '\\' && str[tmp->i + 1] == ' ' &&
-		(tmp->d_qu == 1 || tmp->s_qu == 1))
-		tmp->i += 1;
-	else if (str[tmp->i] == '\\' && (tmp->d_qu == 0 && tmp->s_qu == 0))
-		tmp->i += 1;
-	else if (str[tmp->i] == '\\' && str[tmp->i + 1] == '\\' &&
-		(tmp->d_qu == 0 && tmp->s_qu == 0))
-		tmp->i += 1;
+	else if (str[tmp->i] == 92 && (!tmp->d_qu && !tmp->s_qu))
+		tmp->i++;
+	else if (str[tmp->i] == 92 && (tmp->d_qu || tmp->s_qu))
+	{
+		if (str[tmp->i + 1] == 92)
+			tmp->i++;
+	}
 	else if (str[tmp->i] == ' ' && str[tmp->i - 1] != '\\' &&
 		str[tmp->i + 1] == ' ' && (tmp->d_qu == 0 && tmp->s_qu == 0))
 	{
