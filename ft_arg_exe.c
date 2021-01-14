@@ -76,13 +76,12 @@ static void	ft_exe_cmd(t_shell *pcs, t_test *tst, int i, char **aux)
 int			ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 {
 	char	**aux;
+	char	*tmp;
 	int		exe;
 
 	ft_free_tab(pcs->cmp);
-	if (pcs->pipesplit[i][0] == '\"' || pcs->pipesplit[i][0] == '\'')
-		pcs->cmp = ft_split(pcs->pipesplit[i], '\"' | '\'');
-	else
-		pcs->cmp = ft_split_cmd(pcs->pipesplit[i], ' ');
+	tmp = ft_realloc_str(tst, pcs->pipesplit[i], -1, 4);
+	pcs->cmp = ft_split(tmp, ' ');
 	aux = ft_path_split();
 	if (aux == NULL)
 	{
@@ -98,6 +97,7 @@ int			ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 	}
 	else
 		ft_exe_cmd(pcs, tst, i, aux);
+	free(tmp);
 	ft_free_tab(pcs->cmp);
 	return (127);
 }

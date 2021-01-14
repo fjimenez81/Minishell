@@ -69,7 +69,7 @@ static void	ft_echo_aux(t_shell *pcs, t_test *tst, int i)
 	else if (tst->cheat)
 		aux = ft_realloc_str(tst, cmd, -1, 9);
 	else
-		aux = ft_realloc_str(tst, cmd, -1, 1);
+		aux = ft_realloc_str(tst, cmd, -1, 0);
 	ft_putstr_fd(aux, 1);
 	if (ft_strcmp(pcs->cmp[1], "-n"))
 		ft_putchar_fd('\n', 1);

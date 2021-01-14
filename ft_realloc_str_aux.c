@@ -28,52 +28,65 @@ char		*ft_join_char(char *s, int c)
 	return (res);
 }
 
-static void	ft_aux_loop(char *str, t_test *tmp)
+static void	ft_aux_loop_two(char *str, t_test *tmp)
 {
-	if (str[tmp->i] == '\"' && str[tmp->i - 1] != '\\' &&
-		tmp->d_qu == 0 && tmp->s_qu == 0)
+	if (str[tmp->i] == 34 && !tmp->d_qu && !tmp->s_qu)
 	{
-		tmp->i += 1;
+		if (tmp->cut != 4)
+			tmp->i++;
 		tmp->d_qu = 1;
 	}
-	if (str[tmp->i] == '\"' && str[tmp->i - 1] != '\\' && tmp->d_qu == 1)
+	if (str[tmp->i] == 34 && tmp->d_qu)
 	{
-		tmp->i += 1;
+		if (tmp->cut != 4)
+			tmp->i++;
 		tmp->d_qu = 0;
 	}
-	if (str[tmp->i] == '\'' && str[tmp->i - 1] != '\\' &&
-		tmp->s_qu == 0 && tmp->d_qu == 0)
+	if (str[tmp->i] == 39 && !tmp->s_qu && !tmp->d_qu)
 	{
-		tmp->i += 1;
+		if (tmp->cut != 4)
+			tmp->i++;
 		tmp->s_qu = 1;
 	}
-	if (str[tmp->i] == '\'' && str[tmp->i - 1] != '\\' && tmp->s_qu == 1)
+	if (str[tmp->i] == 39 && tmp->s_qu)
 	{
-		tmp->i += 1;
+		if (tmp->cut != 4)
+			tmp->i++;
 		tmp->s_qu = 0;
 	}
+}
+
+static void	ft_aux_loop(char *str, t_test *tmp)
+{
+	ft_aux_loop_two(str, tmp);
+	if (tmp->one_dollar)
+		tmp->one_dollar = 0;
+	if (tmp->check_redir)
+		tmp->check_redir = 0;
+	if (str[tmp->i] == 92 && (str[tmp->i + 1] == 39 || str[tmp->i + 1] == 34))
+		tmp->i++;
 }
 
 void		ft_realloc_aux_two(char *str, t_test *tmp)
 {
 	ft_aux_loop(str, tmp);
-	if (tmp->one_dollar)
-		tmp->one_dollar = 0;
-	if (str[tmp->i] == '\\' && (str[tmp->i + 1] == '\'' ||
-		str[tmp->i + 1] == '\"'))
-		tmp->i += 1;
-	else if (str[tmp->i] == 92 && (!tmp->d_qu && !tmp->s_qu))
+	if (str[tmp->i] == 92 && (!tmp->d_qu && !tmp->s_qu))
+	{
 		tmp->i++;
+		if (str[tmp->i] == '$')
+			tmp->one_dollar = 1;
+		if (str[tmp->i] == '<' || str[tmp->i] == '>')
+			tmp->check_redir = 1;
+	}
 	else if (str[tmp->i] == 92 && (tmp->d_qu || tmp->s_qu))
 	{
 		if (str[tmp->i + 1] == 92)
 			tmp->i++;
 	}
-	else if (str[tmp->i] == ' ' && str[tmp->i - 1] != '\\' &&
-		str[tmp->i + 1] == ' ' && (tmp->d_qu == 0 && tmp->s_qu == 0))
+	else if (str[tmp->i] == ' ' && (!tmp->d_qu && !tmp->s_qu))
 	{
 		while (ft_isspace(str[tmp->i]))
-			tmp->i += 1;
-		tmp->i -= 1;
+			tmp->i++;
+		tmp->i--;
 	}
 }

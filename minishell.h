@@ -57,6 +57,7 @@ typedef struct	s_test
 	int			ck_key;
 	int			check_fdot;
 	int			check_fdin;
+	int			check_redir;
 	int			fdot_j;
 	int			fdin_k;
 	int			pass;
@@ -130,7 +131,7 @@ int				ft_arg_echo(t_shell *pcs, t_test *tst, int i);
 char			*ft_print_var(char *aux);
 void			init_env(char **env);
 void			ft_wordlen_aux(char **s, int *count);
-void			ft_getcount_aux(char **s, int c);
+void			ft_getcount_aux(char **s);
 int				ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass);
 char			**ft_split_cmd(char const *s, char c);
 void			ft_check_pipes(t_shell *pcs, t_test *tst, int j);

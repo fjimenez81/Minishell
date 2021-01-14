@@ -42,12 +42,10 @@ CFILES = $(addsuffix .c, $(SRC))
 
 OFILES = $(addsuffix .o, $(SRC))
 
-SRCGNL = gnl/get_next_line.c gnl/get_next_line_utils.c
-
 LIBFT = libft/libft.a
 M_LIBFT = make -C libft/
 
-CC = gcc -Wall -Wextra -Werror
+CC = gcc -Wall -Wextra -Werror 
 
 RM = rm -rf
 
@@ -64,7 +62,7 @@ all: $(NAME)
 
 $(NAME): $(OFILES)
 	@$(M_LIBFT)
-	@$(CC) ${SRCGNL} $(CFILES) $(LIBFT) -o $(NAME)
+	@$(CC) $(CFILES) $(LIBFT) -o $(NAME) 
 	@echo "$(RED)(MINISHELL)$(BLUE)====CREATED====$(RESET)"
 	
 

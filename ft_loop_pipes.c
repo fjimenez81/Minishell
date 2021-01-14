@@ -125,7 +125,7 @@ void			ft_loop_pipes(t_shell *pcs, t_test *tst)
 			free(tst->ckqu);
 			break ;
 		}
-		pcs->cmp = ft_split_cmd(pcs->pipesplit[j], ' ');
+		pcs->cmp = ft_split(pcs->pipesplit[j], ' ');
 		pcs->args = ft_len_tab(pcs->cmp);
 		ft_check_redir(tst, pcs, j, 0);
 		ft_loop_pipes_aux(pcs, tst, j);

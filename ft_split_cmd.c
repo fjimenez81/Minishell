@@ -12,11 +12,18 @@
 
 #include "minishell.h"
 
-static	int	getcount(char *s, int count, int c)
+static int	ft_wordcount(char *s, char c)
 {
+	int count;
+
+	count = 0;
 	while (*s)
 	{
-		ft_getcount_aux(&s, c);
+		ft_getcount_aux(&s);
+		if (*s == 92 && *(s + 1) == 92)
+			s++;
+		else if (*s == 92 && *(s + 1) == c)
+			s++;
 		if (*s == '\0')
 			return (count);
 		if (*s && (*(s - 1) != c && *s == c))
@@ -25,20 +32,6 @@ static	int	getcount(char *s, int count, int c)
 	}
 	if (*(s - 1) != c)
 		count++;
-	return (count);
-}
-
-static int	ft_wordcount(char *s, char c)
-{
-	int count;
-
-	count = 0;
-	if (*s == '\0')
-		return (0);
-	s++;
-	if (*s == '\0' && *(s - 1) != c)
-		return (1);
-	count = getcount(s, count, c);
 	return (count);
 }
 

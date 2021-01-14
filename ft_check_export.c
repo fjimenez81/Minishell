@@ -41,8 +41,9 @@ static int	ft_loop_caracter(char *vars, int bool)
 
 static void	ft_valid_args(t_test *tst, int *bool)
 {
-	int j;
-	int k;
+	int		j;
+	int		k;
+	char	*aux;
 
 	j = 0;
 	while (tst->var_exp[++j])
@@ -55,9 +56,11 @@ static void	ft_valid_args(t_test *tst, int *bool)
 				tst->var_exp[j][k + 1] == '\\') ||
 				tst->var_exp[j][k] == ' ') && *bool == 0)
 			{
+				aux = ft_realloc_str(tst, tst->var_exp[j], -1, 0);
 				ft_putstr_fd("\033[1;31m[Minishell]: export: `", 1);
-				ft_putstr_fd(ft_realloc_str(tst, tst->var_exp[j], -1, 0), 1);
+				ft_putstr_fd(aux, 1);
 				ft_putendl_fd("\': not a valid identifier", 1);
+				free(aux);
 				*bool = 1;
 				tst->status = 1;
 				break ;

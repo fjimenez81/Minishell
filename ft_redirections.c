@@ -81,20 +81,25 @@ void		ft_ck_redir_two(t_test *tst, t_shell *pcs, int pass)
 	pcs->bool_redir = 1;
 }
 
-static void	ft_check_redir_aux(t_test *tst, t_shell *pcs,
-	int *quotes, int pass)
+static void	ft_check_redir_aux(t_test *tst, t_shell *pcs, int pass)
 {
-	if ((pcs->redir[tst->i] == '\"' || pcs->redir[tst->i] == '\'') &&
-		pcs->redir[tst->i - 1] != '\\' && *quotes == 0)
-		*quotes = 1;
-	else if ((pcs->redir[tst->i] == '\"' || pcs->redir[tst->i] == '\'') &&
-		pcs->redir[tst->i - 1] != '\\' && *quotes == 1)
-		*quotes = 0;
-	else if (pcs->redir[tst->i] == '>' && pcs->redir[tst->i - 1] != '\\' &&
-		*quotes == 0)
+	if (tst->check_redir)
+		tst->check_redir = 0;
+	if ((pcs->redir[tst->i] == 34 || pcs->redir[tst->i] == 39) && !pcs->quotes)
+		pcs->quotes = 1;
+	else if ((pcs->redir[tst->i] == 34 || pcs->redir[tst->i] == 39) &&
+			pcs->quotes)
+		pcs->quotes = 0;
+	else if (pcs->redir[tst->i] == 92)
+	{
+		tst->i++;
+		if ((pcs->redir[tst->i] == '>' || pcs->redir[tst->i] == '<') &&
+			!pcs->quotes)
+			tst->check_redir = 1;
+	}
+	if (pcs->redir[tst->i] == '>' && !pcs->quotes && !tst->check_redir)
 		ft_ck_redir_two(tst, pcs, pass);
-	else if (pcs->redir[tst->i] == '<' && pcs->redir[tst->i - 1] != '\\' &&
-		*quotes == 0)
+	else if (pcs->redir[tst->i] == '<' && !tst->check_redir && !pcs->quotes)
 	{
 		pcs->flag_in = 1;
 		if (pass == 1)
@@ -112,14 +117,13 @@ static void	ft_check_redir_aux(t_test *tst, t_shell *pcs,
 
 int			ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass)
 {
-	int quotes;
-
 	tst->i = -1;
-	quotes = 0;
+	pcs->quotes = 0;
 	pcs->redir = pcs->pipesplit[j];
 	pcs->bool_redir = 0;
 	tst->fdot_j = 0;
 	tst->fdin_k = 0;
+	tst->check_redir = 0;
 	if (!pass)
 	{
 		pcs->flag_out = 0;
@@ -128,6 +132,6 @@ int			ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass)
 		tst->check_fdin = 0;
 	}
 	while (pcs->redir[++tst->i])
-		ft_check_redir_aux(tst, pcs, &quotes, pass);
+		ft_check_redir_aux(tst, pcs, pass);
 	return (1);
 }

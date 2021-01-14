@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	ft_getcount_aux(char **s, int c)
+void	ft_getcount_aux(char **s)
 {
 	if (**s == '\"')
 	{
@@ -26,10 +26,6 @@ void	ft_getcount_aux(char **s, int c)
 		while (**s && **s != '\'')
 			*s += 1;
 	}
-	if (**s == 92 && **(s + 1) == 92)
-		*s += 1;
-	else if (**s == 92 && **(s + 1) == c)
-		*s += 1;
 }
 
 void	ft_wordlen_aux(char **s, int *count)
