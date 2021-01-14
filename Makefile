@@ -27,7 +27,6 @@ SRC =	main \
 		ft_realloc_str \
 		ft_realloc_str_aux \
 		ft_redirections \
-		ft_exp_pass_spc \
 		ft_exp_print \
 		ft_check_export \
 		ft_realloc_var \

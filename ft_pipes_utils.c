@@ -57,7 +57,7 @@ void	ft_err_exit(t_shell *pcs, t_test *tst, int i)
 	char *aux;
 
 	ft_free_tab(pcs->cmp);
-	pcs->cmp = ft_split_cmd(pcs->pipesplit[i],' ');
+	pcs->cmp = ft_split_cmd(pcs->pipesplit[i], ' ');
 	if (g_minish->exit > 129 &&
 		WEXITSTATUS(g_minish->status) != 127 && !tst->cheat)
 	{
@@ -67,7 +67,7 @@ void	ft_err_exit(t_shell *pcs, t_test *tst, int i)
 	}
 	else if (tst->cheat)
 	{
-		aux = ft_realloc_str(tst,pcs->cmp[0], -1, 9);
+		aux = ft_realloc_str(tst, pcs->cmp[0], -1, 9);
 		ft_print_error(aux);
 		free(aux);
 	}

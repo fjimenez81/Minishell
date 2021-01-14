@@ -39,13 +39,11 @@ static int	ft_loop_caracter(char *vars, int bool)
 	return (1);
 }
 
-static void	ft_valid_args(t_test *tst, int *bool)
+static void	ft_valid_args(t_test *tst, int *bool, int j)
 {
-	int		j;
-	int		k;
 	char	*aux;
+	int		k;
 
-	j = 0;
 	while (tst->var_exp[++j])
 	{
 		k = -1;
@@ -85,15 +83,17 @@ static int	ft_check_var(char *vars)
 void		ft_check_var_loop(t_test *tst)
 {
 	int i;
+	int j;
 	int bool;
 
 	i = 0;
 	bool = 0;
+	j = 0;
 	while (tst->var_exp[++i])
 	{
 		if (!ft_check_var(tst->var_exp[i]))
 		{
-			ft_valid_args(tst, &bool);
+			ft_valid_args(tst, &bool, j);
 			ft_memmove(tst->var_exp[i], "", ft_strlen(tst->var_exp[i]));
 		}
 	}

@@ -24,7 +24,6 @@
 # include <limits.h>
 # include <dirent.h>
 # include <fcntl.h>
-# include "gnl/get_next_line.h"
 # include "libft/libft.h"
 
 # define BUFFER_SIZE 2
@@ -82,7 +81,6 @@ typedef struct	s_shell
 	int			args;
 	int			quotes;
 	int			equal;
-	int			check_fd;
 	int			bool_redir;
 	char		**cmp;
 	int			ret;
@@ -117,7 +115,6 @@ void			ft_realloc_aux_two(char *str, t_test *test);
 char			*ft_realloc_var(char *str, char *res, t_test *tmp);
 char			*ft_join_char(char *s, int c);
 int				ft_len_char(char *str);
-char			*ft_pass_space(t_shell *pcs, char *str);
 int				ft_sort_export();
 char			*ft_check_dollar(t_test *tst, t_shell *pcs, int j, int bool);
 char			**ft_str_tok(char *s, char *sep);
@@ -130,6 +127,7 @@ void			ft_arg_unset(t_shell *pcs, t_test *tst);
 int				ft_arg_echo(t_shell *pcs, t_test *tst, int i);
 char			*ft_print_var(char *aux);
 void			init_env(char **env);
+void			ft_redir_quotes(t_test *tst, t_shell *pcs);
 void			ft_wordlen_aux(char **s, int *count);
 void			ft_getcount_aux(char **s);
 int				ft_check_redir(t_test *tst, t_shell *pcs, int j, int pass);
