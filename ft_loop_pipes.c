@@ -16,6 +16,7 @@ char			*ft_get_line_eof(char *line)
 {
 	int		byte;
 
+	byte = 0;
 	while ((g_minish->fd_line = read(0, &byte, 1)) != -1)
 	{
 		ft_putstr_fd("  \b\b", 1);
