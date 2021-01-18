@@ -46,9 +46,6 @@ void	ctrl_d(t_test *tst)
 
 void	ft_init_struct(t_test *tst)
 {
-	tst->paths[0] = "/bin/";
-	tst->paths[1] = "/usr/bin/";
-	tst->paths[2] = "";
 	tst->cheat = 0;
 	g_minish = tst;
 	g_minish->count = 0;
