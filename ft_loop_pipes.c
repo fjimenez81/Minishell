@@ -37,20 +37,19 @@ char			*ft_get_line_eof(char *line)
 	return (line);
 }
 
-int				ft_check_sintax(t_test *tst, char *line)
+int				ft_check_sintax(t_test *t, char *line)
 {
-	int	i;
-
-	i = -1;
-	tst->d_qu = 0;
-	tst->s_qu = 0;
-	while (line[++i])
+	t->i = -1;
+	t->d_qu = 0;
+	t->s_qu = 0;
+	while (line[++t->i])
 	{
-		ft_syntax_quotes(tst, line, &i);
-		if (!ft_print_syntax(tst, line, i))
+		ft_syntax_quotes(t, line);
+		if (!ft_print_syntax(t, line))
 			return (0);
-		if ((line[i] == 92 && line[i + 1] == '\0' && line[i - 1] != 92) ||
-			(line[i] == '|' && line[i - 1] == ';' && line[i - 2] == 92))
+		if ((line[t->i] == 92 && line[t->i + 1] == '\0' &&
+			line[t->i - 1] != 92) || (line[t->i] == '|' &&
+			line[t->i - 1] == ';' && line[t->i - 2] == 92))
 		{
 			ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
 			ft_putendl_fd("syntax error multilines are not allowed!!", 1);

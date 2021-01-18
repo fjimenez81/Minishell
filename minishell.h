@@ -50,7 +50,6 @@ typedef struct	s_test
 	char		*error;
 	char		*dollar;
 	char		*c_keys;
-	char		*paths[3];
 	char		**cmd;
 	char		**var_exp;
 	int			ck_key;
@@ -100,7 +99,6 @@ int				g_quit;
 t_test			*g_minish;
 
 int				ft_strcmp(const char *s1, const char *s2);
-char			*ft_strnew(size_t size);
 int				ft_len_tab(char **args);
 void			*ft_memalloc(size_t size);
 void			ft_free_tab(char **str);
@@ -153,7 +151,7 @@ void			ft_close_fd(t_shell *pcs);
 void			ft_err_exit(t_shell *pcs, t_test *tst, int i);
 void			ft_ctrl_process(int sig);
 int				ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str);
-int				ft_print_syntax(t_test *tst, char *line, int i);
-void			ft_syntax_quotes(t_test *tst, char *line, int *i);
+int				ft_print_syntax(t_test *tst, char *line);
+void			ft_syntax_quotes(t_test *tst, char *line);
 
 #endif
