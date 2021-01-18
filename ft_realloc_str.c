@@ -26,14 +26,17 @@ static int	ft_aux_loop_two(char *str, t_test *tmp)
 
 static void	ft_only_dollar(char *str, t_test *tmp)
 {
-	if (str[tmp->i] == '$' && (str[tmp->i + 1] == '\"' ||
-		str[tmp->i + 1] == '\'' || str[tmp->i + 1] == '\\'))
+	if (str[tmp->i] == '$' && (str[tmp->i + 1] == 34 ||
+		str[tmp->i + 1] == 39 || str[tmp->i + 1] == 92))
 	{
-		if (str[tmp->i + 1] == '\'' && !tmp->d_qu)
-			tmp->s_qu = 1;
-		if (!tmp->d_qu)
+		if (str[tmp->i + 1] == 34 && !tmp->d_qu)
+		{
+			tmp->d_qu = 1;
 			tmp->i += 2;
-		if (str[tmp->i + 1] == '\'' && tmp->d_qu)
+		}
+		if (str[tmp->i + 1] == 39 && !tmp->d_qu)
+			tmp->s_qu = 1;
+		if (str[tmp->i + 1] == 39 && tmp->d_qu)
 			tmp->one_dollar = 1;
 	}
 }
@@ -55,6 +58,7 @@ static char	*ft_realloc_aux_one(char *str, t_test *tmp)
 		{
 			res = ft_realloc_var(str, res, tmp);
 			tmp->i++;
+			ft_aux_loop_quotes(str, tmp);
 		}
 		if (str[tmp->i] != 0)
 		{

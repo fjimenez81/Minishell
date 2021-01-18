@@ -28,7 +28,7 @@ char		*ft_join_char(char *s, int c)
 	return (res);
 }
 
-static void	ft_aux_loop_two(char *str, t_test *tmp)
+void		ft_aux_loop_quotes(char *str, t_test *tmp)
 {
 	if (str[tmp->i] == 34 && !tmp->d_qu && !tmp->s_qu)
 	{
@@ -58,7 +58,7 @@ static void	ft_aux_loop_two(char *str, t_test *tmp)
 
 static void	ft_aux_loop(char *str, t_test *tmp)
 {
-	ft_aux_loop_two(str, tmp);
+	ft_aux_loop_quotes(str, tmp);
 	if (tmp->one_dollar)
 		tmp->one_dollar = 0;
 	if (tmp->check_redir)

@@ -22,16 +22,6 @@ int		ft_strcmp(const char *s1, const char *s2)
 	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
 
-char	*ft_strnew(size_t size)
-{
-	char	*str;
-
-	if (!(str = (char*)malloc(sizeof(char) * size + 1)))
-		return (NULL);
-	ft_memset((char*)str, (int)'\0', size + 1);
-	return (str);
-}
-
 int		ft_len_tab(char **args)
 {
 	int i;

@@ -110,6 +110,7 @@ char			*ft_cutstr(char *src, char *cut);
 char			*ft_cut_end(char *s, int bool);
 char			*ft_realloc_str(t_test *tmp, char *str, int i, int cut);
 void			ft_realloc_aux_two(char *str, t_test *test);
+void			ft_aux_loop_quotes(char *str, t_test *tmp);
 char			*ft_realloc_var(char *str, char *res, t_test *tmp);
 char			*ft_join_char(char *s, int c);
 int				ft_len_char(char *str);
