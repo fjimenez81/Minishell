@@ -59,7 +59,8 @@ int			ft_arg_cd(t_shell *pcs, t_test *tst)
 	char	*aux;
 
 	getcwd(oldpath, -1);
-	if (pcs->args == 1 || !ft_strcmp(pcs->cmp[0], "~"))
+	if (pcs->args == 1 || !ft_strcmp(pcs->cmp[0], "~") ||
+		pcs->cmp[1][0] == '<' || pcs->cmp[1][0] == '>')
 	{
 		if (chdir(ft_get_var("HOME")) == 0)
 			ft_get_up_var(oldpath);

@@ -32,26 +32,22 @@ void		ft_aux_loop_quotes(char *str, t_test *tmp)
 {
 	if (str[tmp->i] == 34 && !tmp->d_qu && !tmp->s_qu)
 	{
-		if (tmp->cut != 4)
-			tmp->i++;
+		tmp->i++;
 		tmp->d_qu = 1;
 	}
 	if (str[tmp->i] == 34 && tmp->d_qu)
 	{
-		if (tmp->cut != 4)
-			tmp->i++;
+		tmp->i++;
 		tmp->d_qu = 0;
 	}
 	if (str[tmp->i] == 39 && !tmp->s_qu && !tmp->d_qu)
 	{
-		if (tmp->cut != 4)
-			tmp->i++;
+		tmp->i++;
 		tmp->s_qu = 1;
 	}
 	if (str[tmp->i] == 39 && tmp->s_qu)
 	{
-		if (tmp->cut != 4)
-			tmp->i++;
+		tmp->i++;
 		tmp->s_qu = 0;
 	}
 }

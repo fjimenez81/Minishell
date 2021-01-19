@@ -30,7 +30,7 @@ static void	ft_exit_aux(t_shell *pcs)
 		ft_putendl_fd(": too many arguments", 1);
 		exit(1);
 	}
-	if (bool)
+	if (bool == 1)
 	{
 		ft_putstr_fd("[Minishell]: exit: ", 1);
 		ft_putstr_fd(pcs->cmp[1], 1);
@@ -46,7 +46,12 @@ void		ft_arg_exit(t_shell *pcs)
 	system("leaks minishell");
 	ft_putendl_fd("\033[1;31mexit", 1);
 	if (pcs->args > 1)
-		ft_exit_aux(pcs);
+	{
+		if (pcs->cmp[1][0] == '<' || pcs->cmp[1][0] == '>')
+			exit(0);
+		else
+			ft_exit_aux(pcs);
+	}
 	if (g_minish)
 	{
 		if (g_quit && g_minish->exit != 127)

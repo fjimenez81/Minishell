@@ -24,7 +24,7 @@ static int	ft_wordcount(char *s, char c)
 			s++;
 		else if (*s == 92 && *(s + 1) == c)
 			s++;
-		if (*s == '\0')
+		if (*s == 0)
 			return (count);
 		if (*s && (*(s - 1) != c && *s == c))
 			count++;
@@ -61,7 +61,7 @@ static int	ft_wordlen(char *s, char c)
 	return (count);
 }
 
-static char	**splitter(char const *s, char c)
+static char	**splitter(char const *s, char c, int slot)
 {
 	int		i;
 	int		j;
@@ -69,8 +69,8 @@ static char	**splitter(char const *s, char c)
 	int		len;
 
 	i = 0;
-	t = ft_calloc((ft_wordcount((char*)s, c) + 1), sizeof(char*));
-	while (*s != '\0')
+	t = ft_calloc((slot + 1), sizeof(char*));
+	while (*s != '\0' && i < slot)
 	{
 		while (*s == c)
 			s++;
@@ -93,6 +93,7 @@ static char	**splitter(char const *s, char c)
 char		**ft_split_cmd(char const *s, char c)
 {
 	char	**t;
+	int		slot;
 
 	if (!s)
 		return (NULL);
@@ -103,7 +104,8 @@ char		**ft_split_cmd(char const *s, char c)
 		*t = NULL;
 		return (t);
 	}
-	if (!(t = splitter(s, c)))
+	slot = ft_wordcount((char*)s, c);
+	if (!(t = splitter(s, c, slot)))
 		return (NULL);
 	return (t);
 }

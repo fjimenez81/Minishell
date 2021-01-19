@@ -32,23 +32,6 @@ static char	**ft_path_split(void)
 	return (NULL);
 }
 
-static char	**ft_add_str(char **s)
-{
-	int		i;
-	char	**aux;
-
-	if (!s || (!(aux = (char**)malloc(sizeof(char*) * (ft_len_tab(s) + 2)))))
-		return (NULL);
-	i = -1;
-	while (s[++i])
-		aux[i] = ft_join_char(s[i], '/');
-	aux[i] = ft_strdup("");
-	i++;
-	aux[i] = NULL;
-	ft_free_tab(s);
-	return (aux);
-}
-
 static void	ft_exe_cmd(t_shell *pcs, t_test *tst, int i, char **aux)
 {
 	char	*join;
@@ -73,16 +56,11 @@ static void	ft_exe_cmd(t_shell *pcs, t_test *tst, int i, char **aux)
 	ft_free_tab(tmp);
 }
 
-int			ft_arg_exe(t_shell *pcs, t_test *tst, int i)
+void		ft_not_path(t_shell *pcs, t_test *tst, int i, char **aux)
 {
-	char	**aux;
-	char	*tmp;
-	int		exe;
+	int exe;
 
-	ft_free_tab(pcs->cmp);
-	tmp = ft_realloc_str(tst, pcs->pipesplit[i], -1, 4);
-	pcs->cmp = ft_split(tmp, ' ');
-	aux = ft_path_split();
+	exe = -1;
 	if (aux == NULL)
 	{
 		exe = execve(pcs->cmp[0], pcs->cmp, g_envp);
@@ -95,8 +73,23 @@ int			ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 			exit(127);
 		}
 	}
+}
+
+int			ft_arg_exe(t_shell *pcs, t_test *tst, int i)
+{
+	char	**aux;
+	char	*tmp;
+
+	tmp = ft_realloc_str(tst, pcs->pipesplit[i], -1, 0);
+	ft_free_tab(pcs->cmp);
+	if ((pcs->pipesplit[i][0] == 34 || pcs->pipesplit[i][0] == 39 ||
+		pcs->pipesplit[i][0] == 92) && pcs->args > 1)
+		pcs->cmp = ft_split_cmd(pcs->pipesplit[i], ' ');
 	else
-		ft_exe_cmd(pcs, tst, i, aux);
+		pcs->cmp = ft_split_cmd(tmp, ' ');
+	aux = ft_path_split();
+	ft_not_path(pcs, tst, i, aux);
+	ft_exe_cmd(pcs, tst, i, aux);
 	free(tmp);
 	ft_free_tab(pcs->cmp);
 	return (127);

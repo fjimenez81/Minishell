@@ -51,3 +51,20 @@ void	ft_free_tab(char **str)
 		free(str[i++]);
 	(str) ? free(str) : 0;
 }
+
+char	**ft_add_str(char **s)
+{
+	int		i;
+	char	**aux;
+
+	if (!s || (!(aux = (char**)malloc(sizeof(char*) * (ft_len_tab(s) + 2)))))
+		return (NULL);
+	i = -1;
+	while (s[++i])
+		aux[i] = ft_join_char(s[i], '/');
+	aux[i] = ft_strdup("");
+	i++;
+	aux[i] = NULL;
+	ft_free_tab(s);
+	return (aux);
+}

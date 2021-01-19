@@ -21,11 +21,6 @@ void	ft_ctrl(int sig)
 		g_minish->cheat = 1;
 		g_quit = 1;
 	}
-	else if (sig == SIGQUIT)
-	{
-		g_minish->exit = 131;
-		ft_putstr_fd("Quit\n", 1);
-	}
 }
 
 void	ctrl_d(t_test *tst)

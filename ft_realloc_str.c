@@ -35,8 +35,12 @@ static void	ft_only_dollar(char *str, t_test *tmp)
 			tmp->i += 2;
 		}
 		if (str[tmp->i + 1] == 39 && !tmp->d_qu)
+		{
 			tmp->s_qu = 1;
-		if (str[tmp->i + 1] == 39 && tmp->d_qu)
+			tmp->i += 2;
+		}
+		if ((str[tmp->i + 1] == 39 && tmp->d_qu) ||
+			str[tmp->i + 1] == 92)
 			tmp->one_dollar = 1;
 	}
 }

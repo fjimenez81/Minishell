@@ -94,7 +94,10 @@ int		ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str)
 	{
 		if (check == len &&
 			(pcs->cmp[0][i] == '>' || pcs->cmp[0][i] == '<'))
+		{
+			free(aux);
 			return (0);
+		}
 		if (aux[i] == str[i])
 			check++;
 	}

@@ -93,12 +93,13 @@ static void		ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
 	tst->bool = 0;
 	if (!ft_strcmp(pcs->cmp[0], "exit") && j == pcs->n_pipe - 1)
 		ft_arg_exit(pcs);
-	else if ((!ft_strcmp(pcs->cmp[0], "cd") ||
-		!ft_strcmp(pcs->cmp[0], "~")) && j == pcs->n_pipe - 1 &&
-		pcs->bool_redir == 0 && (tst->bool = 1))
-		ft_arg_cd(pcs, tst);
+	else if ((!ft_ck_rd_envp(pcs, tst, "cd") ||
+			!ft_strcmp(pcs->cmp[0], "cd") ||
+			!ft_strcmp(pcs->cmp[0], "~")) &&
+			j == pcs->n_pipe - 1 && (tst->bool = 1))
+			ft_arg_cd(pcs, tst);
 	else if (!ft_strcmp(pcs->cmp[0], "export") &&
-		j == pcs->n_pipe - 1 && pcs->bool_redir == 0 && (tst->bool = 1))
+		j == pcs->n_pipe - 1 && (tst->bool = 1) && !pcs->bool_redir)
 		ft_arg_export(tst, pcs, j);
 	else if (!ft_strcmp(pcs->cmp[0], "unset") &&
 		j == pcs->n_pipe - 1 && (tst->bool = 1))

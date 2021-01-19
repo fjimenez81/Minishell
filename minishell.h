@@ -103,7 +103,7 @@ int				ft_len_tab(char **args);
 void			*ft_memalloc(size_t size);
 void			ft_free_tab(char **str);
 int				ft_isspace(int c);
-void			ignore_space(char **line);
+char			**ft_add_str(char **s);
 void			ft_swap(char **a, char **b);
 int				ft_isalpha_cm(int c);
 char			*ft_cutstr(char *src, char *cut);
