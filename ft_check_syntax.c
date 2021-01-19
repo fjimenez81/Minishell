@@ -27,16 +27,9 @@ static int	ft_print_syntax_aux(t_test *t)
 	return (1);
 }
 
-static int	ft_print_syntax_two(t_test *t)
+static int	ft_print_syntax_three(t_test *t)
 {
-	if (t->aux[t->i] == '|' && t->aux[t->i + 1] == '|')
-	{
-		ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
-		ft_putendl_fd("syntax error near unexpected token `||'", 1);
-		free(t->aux);
-		return (0);
-	}
-	else if ((t->aux[t->i] == '|' && t->aux[t->i + 1] == ';') ||
+	if ((t->aux[t->i] == '|' && t->aux[t->i + 1] == ';') ||
 			t->aux[0] == '|')
 	{
 		ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
@@ -44,7 +37,7 @@ static int	ft_print_syntax_two(t_test *t)
 		free(t->aux);
 		return (0);
 	}
-	else if ((t->aux[t->i] == ';' && t->aux[t->i + 1] == '|') ||
+	if ((t->aux[t->i] == ';' && t->aux[t->i + 1] == '|') ||
 			t->aux[0] == ';')
 	{
 		ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
@@ -52,6 +45,30 @@ static int	ft_print_syntax_two(t_test *t)
 		free(t->aux);
 		return (0);
 	}
+	return (1);
+}
+
+static int	ft_print_syntax_two(t_test *t)
+{
+	if (t->aux[t->i + 1] == ' ')
+	{
+		t->i++;
+		while (ft_isspace(t->aux[t->i]))
+			t->i++;
+		if (t->aux[t->i] == ';')
+			t->aux[0] = ';';
+		else if (t->aux[t->i] == '|')
+			t->aux[0] = '|';
+	}
+	if (t->aux[t->i] == '|' && t->aux[t->i + 1] == '|')
+	{
+		ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
+		ft_putendl_fd("syntax error near unexpected token `||'", 1);
+		free(t->aux);
+		return (0);
+	}
+	if (!ft_print_syntax_three(t))
+		return (0);
 	return (1);
 }
 
