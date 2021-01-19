@@ -80,6 +80,8 @@ int			ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 	char	**aux;
 	char	*tmp;
 
+	if (pcs->pipesplit[i][0] == '>' || pcs->pipesplit[i][0] == '<')
+		return (0);
 	tmp = ft_realloc_str(tst, pcs->pipesplit[i], -1, 0);
 	ft_free_tab(pcs->cmp);
 	if ((pcs->pipesplit[i][0] == 34 || pcs->pipesplit[i][0] == 39 ||

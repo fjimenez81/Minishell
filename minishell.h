@@ -152,7 +152,6 @@ void			ft_close_fd(t_shell *pcs);
 void			ft_err_exit(t_shell *pcs, t_test *tst, int i);
 void			ft_ctrl_process(int sig);
 int				ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str);
-int				ft_print_syntax(t_test *tst, char *line);
-void			ft_syntax_quotes(t_test *tst, char *line);
+int				ft_print_syntax(t_test *tst);
 
 #endif

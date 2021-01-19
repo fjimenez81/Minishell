@@ -42,20 +42,22 @@ int				ft_check_sintax(t_test *t, char *line)
 	t->i = -1;
 	t->d_qu = 0;
 	t->s_qu = 0;
-	while (line[++t->i])
+	t->aux = ft_strtrim(line, " \t");
+	while (t->aux[++t->i])
 	{
-		ft_syntax_quotes(t, line);
-		if (!ft_print_syntax(t, line))
+		ft_aux_loop_quotes(t->aux, t);
+		if (!ft_print_syntax(t))
 			return (0);
-		if ((line[t->i] == 92 && line[t->i + 1] == '\0' &&
-			line[t->i - 1] != 92) || (line[t->i] == '|' &&
-			line[t->i - 1] == ';' && line[t->i - 2] == 92))
+		if ((t->aux[t->i] == 92 || t->aux[t->i] == '|') &&
+			t->aux[t->i + 1] == 0 && !t->d_qu && !t->s_qu)
 		{
 			ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
 			ft_putendl_fd("syntax error multilines are not allowed!!", 1);
+			free(t->aux);
 			return (0);
 		}
 	}
+	free(t->aux);
 	return (1);
 }
 
@@ -97,7 +99,7 @@ static void		ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
 			!ft_strcmp(pcs->cmp[0], "cd") ||
 			!ft_strcmp(pcs->cmp[0], "~")) &&
 			j == pcs->n_pipe - 1 && (tst->bool = 1))
-			ft_arg_cd(pcs, tst);
+		ft_arg_cd(pcs, tst);
 	else if (!ft_strcmp(pcs->cmp[0], "export") &&
 		j == pcs->n_pipe - 1 && (tst->bool = 1) && !pcs->bool_redir)
 		ft_arg_export(tst, pcs, j);
