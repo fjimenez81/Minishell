@@ -56,7 +56,7 @@ static int	ft_print_syntax_two(t_test *t)
 		{
 			if (t->aux[t->i] != ' ' && t->aux[t->i] != '<' &&
 				t->aux[t->i] != '>')
-			break ;
+				break ;
 		}
 		if (t->aux[t->i] == ';')
 			t->aux[0] = ';';

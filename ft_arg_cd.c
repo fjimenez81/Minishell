@@ -53,12 +53,14 @@ static char	*ft_get_var(char *str)
 	return (NULL);
 }
 
-int			ft_arg_cd(t_shell *pcs, t_test *tst)
+int			ft_arg_cd(t_shell *pcs, t_test *tst, int i)
 {
 	char	oldpath[PATH_MAX];
 	char	*aux;
 
 	getcwd(oldpath, -1);
+	ft_free_tab(pcs->cmp);
+	pcs->cmp = ft_split_cmd(pcs->pipesplit[i], ' ');
 	if (pcs->args == 1 || !ft_strcmp(pcs->cmp[0], "~") ||
 		pcs->cmp[1][0] == '<' || pcs->cmp[1][0] == '>')
 	{
@@ -72,7 +74,7 @@ int			ft_arg_cd(t_shell *pcs, t_test *tst)
 	else
 	{
 		ft_putstr_fd("\033[1;31m[Minishell]: cd: ", 1);
-		ft_putstr_fd(pcs->cmp[1], 1);
+		ft_putstr_fd(aux, 1);
 		ft_putendl_fd(": No such file or directory", 1);
 		tst->status = 1;
 	}

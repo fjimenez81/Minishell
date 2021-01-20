@@ -12,23 +12,6 @@
 
 #include "minishell.h"
 
-char	*ft_trim_ctm(char *src, char *cut)
-{
-	char	*res;
-	int		len;
-
-	if (!src)
-		return (NULL);
-	len = 0;
-	while (*src && ft_strchr(cut, *src))
-	{
-		src++;
-		len++;
-	}
-	res = ft_substr(src, 0, len);
-	return (res);
-}
-
 void	ft_redir_quotes(t_test *tst, t_shell *pcs)
 {
 	if (tst->check_redir)

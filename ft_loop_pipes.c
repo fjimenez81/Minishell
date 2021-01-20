@@ -103,7 +103,7 @@ static void		ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
 			!ft_strcmp(pcs->cmp[0], "cd") ||
 			!ft_strcmp(pcs->cmp[0], "~")) &&
 			j == pcs->n_pipe - 1 && (tst->bool = 1))
-		ft_arg_cd(pcs, tst);
+		ft_arg_cd(pcs, tst, j);
 	else if (!ft_strcmp(pcs->cmp[0], "export") &&
 		j == pcs->n_pipe - 1 && (tst->bool = 1) && !pcs->bool_redir)
 		ft_arg_export(tst, pcs, j);

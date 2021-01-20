@@ -56,14 +56,36 @@ char		*ft_print_var(char *aux)
 	return (var);
 }
 
+static int	ft_check_n(char *s)
+{
+	int i;
+
+	i = -1;
+	while (s[++i])
+	{
+		if (s[i] == '-' && s[i + 1] == 'n')
+			i++;
+		if (s[i] == 'n' && s[i + 1] == '-')
+			i++;
+		if (s[i] != 'n')
+			return (0);
+	}
+	return (1);
+}
+
 static void	ft_echo_aux(t_shell *pcs, t_test *tst, int i)
 {
 	char *cmd;
 	char *aux;
+	char *tmp;
 
-	cmd = ft_cutstr(pcs->pipesplit[i], "echo");
-	if (!ft_strcmp(pcs->cmp[1], "-n"))
-		cmd = ft_trim_ctm(cmd, " -n");
+	cmd = ft_cutstr(pcs->pipesplit[i], "echo ");
+	tmp = ft_realloc_str(tst, pcs->cmp[1], -1 , 0);
+	if (ft_check_n(tmp))
+	{
+		while (*cmd && ft_strchr(" \'\"-n", *cmd))
+			cmd++;
+	}
 	if (g_minish->exit == 130)
 		aux = ft_realloc_str(tst, cmd, -1, 5);
 	else if (tst->cheat)
@@ -71,11 +93,10 @@ static void	ft_echo_aux(t_shell *pcs, t_test *tst, int i)
 	else
 		aux = ft_realloc_str(tst, cmd, -1, 0);
 	ft_putstr_fd(aux, 1);
-	if (ft_strcmp(pcs->cmp[1], "-n"))
+	if (!ft_check_n(tmp))
 		ft_putchar_fd('\n', 1);
-	if (!ft_strcmp(pcs->cmp[1], "-n"))
-		free(cmd);
 	free(aux);
+	free(tmp);
 	ft_free_tab(pcs->cmp);
 }
 

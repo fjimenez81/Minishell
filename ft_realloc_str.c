@@ -21,6 +21,8 @@ static int	ft_aux_loop_two(char *str, t_test *tmp)
 	if ((str[tmp->i] == '<' || str[tmp->i] == '>') && !tmp->check_redir &&
 		!tmp->d_qu && !tmp->s_qu)
 		return (0);
+	if (str[tmp->i] == 0)
+		return (0);
 	return (1);
 }
 
