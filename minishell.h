@@ -126,6 +126,7 @@ void			ft_arg_unset(t_shell *pcs, t_test *tst);
 int				ft_arg_echo(t_shell *pcs, t_test *tst, int i);
 char			*ft_print_var(char *aux);
 void			init_env(char **env);
+char			*ft_trim_ctm(char *src, char *cut);
 void			ft_redir_quotes(t_test *tst, t_shell *pcs);
 void			ft_wordlen_aux(char **s, int *count);
 void			ft_getcount_aux(char **s);

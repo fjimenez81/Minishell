@@ -52,9 +52,12 @@ static int	ft_print_syntax_two(t_test *t)
 {
 	if (t->aux[t->i + 1] == ' ')
 	{
-		t->i++;
-		while (ft_isspace(t->aux[t->i]))
-			t->i++;
+		while (t->aux[++t->i])
+		{
+			if (t->aux[t->i] != ' ' && t->aux[t->i] != '<' &&
+				t->aux[t->i] != '>')
+			break ;
+		}
 		if (t->aux[t->i] == ';')
 			t->aux[0] = ';';
 		else if (t->aux[t->i] == '|')

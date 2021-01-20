@@ -32,8 +32,8 @@ void	ctrl_d(t_test *tst)
 		ft_putendl_fd("\033[1;31mexit", 1);
 		if (g_quit && tst->exit != 127)
 			exit(1);
-		else if (tst->exit == 130 && WEXITSTATUS(tst->status) != 127)
-			exit(130);
+		else if (tst->exit > 129 && WEXITSTATUS(tst->status) != 127)
+			exit(tst->exit);
 		else
 			exit(WEXITSTATUS(tst->status));
 	}

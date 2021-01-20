@@ -56,8 +56,8 @@ void		ft_arg_exit(t_shell *pcs)
 	{
 		if (g_quit && g_minish->exit != 127)
 			exit(1);
-		else if (g_minish->exit == 130 && WEXITSTATUS(g_minish->status) != 127)
-			exit(130);
+		else if (g_minish->exit > 129 && WEXITSTATUS(g_minish->status) != 127)
+			exit(g_minish->exit);
 		else
 			exit(WEXITSTATUS(g_minish->status));
 	}

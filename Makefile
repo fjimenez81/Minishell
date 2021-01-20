@@ -67,7 +67,7 @@ $(NAME): $(OFILES)
 
 clean:
 	@$(RM) $(OFILES)
-	@make -C libft/ clean
+	@make -C libft/ fclean
 
 fclean: clean
 	@$(RM) $(NAME)

@@ -47,7 +47,11 @@ int				ft_check_sintax(t_test *t, char *line)
 	{
 		ft_aux_loop_quotes(t->aux, t);
 		if (!ft_print_syntax(t))
+		{
+			g_minish->exit = 258;
+			t->status = 258;
 			return (0);
+		}
 		if ((t->aux[t->i] == 92 || t->aux[t->i] == '|') &&
 			t->aux[t->i + 1] == 0 && !t->d_qu && !t->s_qu)
 		{

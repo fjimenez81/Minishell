@@ -63,7 +63,7 @@ static void	ft_echo_aux(t_shell *pcs, t_test *tst, int i)
 
 	cmd = ft_cutstr(pcs->pipesplit[i], "echo");
 	if (!ft_strcmp(pcs->cmp[1], "-n"))
-		cmd = ft_cutstr(cmd, "-n");
+		cmd = ft_trim_ctm(cmd, " -n");
 	if (g_minish->exit == 130)
 		aux = ft_realloc_str(tst, cmd, -1, 5);
 	else if (tst->cheat)
@@ -73,6 +73,8 @@ static void	ft_echo_aux(t_shell *pcs, t_test *tst, int i)
 	ft_putstr_fd(aux, 1);
 	if (ft_strcmp(pcs->cmp[1], "-n"))
 		ft_putchar_fd('\n', 1);
+	if (!ft_strcmp(pcs->cmp[1], "-n"))
+		free(cmd);
 	free(aux);
 	ft_free_tab(pcs->cmp);
 }
