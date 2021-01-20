@@ -47,30 +47,29 @@ static void	ft_only_dollar(char *str, t_test *tmp)
 	}
 }
 
-static char	*ft_realloc_aux_one(char *str, t_test *tmp)
+static char	*ft_realloc_aux_one(char *s, t_test *t, char *res)
 {
-	char	*res;
-	char	*aux;
-
-	res = ft_strdup("");
-	while (str[++tmp->i] != '\0')
+	while (s[++t->i] != '\0')
 	{
-		ft_realloc_aux_two(str, tmp);
-		if (!ft_aux_loop_two(str, tmp))
+		ft_realloc_aux_two(s, t);
+		if (!ft_aux_loop_two(s, t))
 			break ;
-		ft_only_dollar(str, tmp);
-		if (str[tmp->i] == '$' && (str[tmp->i + 1] != ' ' &&
-			str[tmp->i + 1] != '\0') && !tmp->s_qu && !tmp->one_dollar)
+		ft_only_dollar(s, t);
+		if (s[t->i] == '$' && (s[t->i + 1] != ' ' &&
+			s[t->i + 1] != '\0') && !t->s_qu && !t->one_dollar)
 		{
-			res = ft_realloc_var(str, res, tmp);
-			tmp->i++;
-			ft_aux_loop_quotes(str, tmp);
+			res = ft_realloc_var(s, res, t);
+			t->i++;
 		}
-		if (str[tmp->i] != 0)
+		ft_aux_loop_quotes(s, t);
+		if (s[t->i] == 92 && (s[t->i + 1] == 39 || s[t->i + 1] == 34 ||
+			s[t->i + 1] == 92))
+			t->i++;
+		if (s[t->i] != 0)
 		{
-			aux = ft_join_char(res, str[tmp->i]);
+			t->aux = ft_join_char(res, s[t->i]);
 			free(res);
-			res = aux;
+			res = t->aux;
 		}
 	}
 	return (res);
@@ -79,6 +78,7 @@ static char	*ft_realloc_aux_one(char *str, t_test *tmp)
 char		*ft_realloc_str(t_test *tmp, char *str, int i, int cut)
 {
 	char	*res;
+	char	*aux;
 
 	tmp->d_qu = 0;
 	tmp->s_qu = 0;
@@ -87,7 +87,8 @@ char		*ft_realloc_str(t_test *tmp, char *str, int i, int cut)
 	tmp->key = 0;
 	tmp->one_dollar = 0;
 	tmp->check_redir = 0;
-	res = ft_realloc_aux_one(str, tmp);
+	aux = ft_strdup("");
+	res = ft_realloc_aux_one(str, tmp, aux);
 	if ((tmp->d_qu || tmp->s_qu) && cut == 13)
 	{
 		free(res);
