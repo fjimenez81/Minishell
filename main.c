@@ -28,7 +28,6 @@ void	ctrl_d(t_test *tst)
 	g_minish->exit2 = -1;
 	if (g_minish->fd_line == 0)
 	{
-		system("leaks minishell");
 		ft_putendl_fd("\033[1;31mexit", 1);
 		if (g_quit && tst->exit != 127)
 			exit(1);

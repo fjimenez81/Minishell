@@ -30,6 +30,8 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 {
 	if (tst->status == 1)
 		return (1);
+	if (tst->status == 126)
+		return (126);
 	if (!ft_execute_aux(pcs, tst, i))
 		return (1);
 	else if (!ft_ck_rd_envp(pcs, tst, "export") ||

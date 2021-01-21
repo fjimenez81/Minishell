@@ -149,7 +149,7 @@ void			ft_get_redir(t_shell *pcs, t_test *tst);
 void			ft_file_out(t_shell *pcs, t_test *tst, int flags);
 char			*ft_dollar_aux_one(t_test *tst, char *tmp, char *res);
 int				ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str);
-void			ft_arg_exit(t_test *t,t_shell *pcs, int i);
+void			ft_arg_exit(t_test *t, t_shell *pcs, int i);
 void			ft_print_error(char *error);
 void			ft_cut_pcs(t_test *tst);
 void			ft_close_fd(t_shell *pcs);

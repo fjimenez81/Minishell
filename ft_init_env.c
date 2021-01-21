@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void		ft_free_all(t_test *t, t_shell *pcs)
+void	ft_free_all(t_test *t, t_shell *pcs)
 {
 	ft_free_tab(pcs->cmp);
 	ft_free_tab(t->cmd);

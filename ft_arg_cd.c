@@ -55,7 +55,7 @@ static char	*ft_get_var(t_test *tst, char *str)
 	return (NULL);
 }
 
-static void		ft_arg_cd_aux(t_shell *pcs, t_test *t, char *oldpath, int i)
+static void	ft_arg_cd_aux(t_shell *pcs, t_test *t, char *oldpath, int i)
 {
 	if (i == pcs->n_pipe - 1)
 	{
@@ -78,13 +78,21 @@ static void		ft_arg_cd_aux(t_shell *pcs, t_test *t, char *oldpath, int i)
 	}
 }
 
-void			ft_arg_cd(t_shell *pcs, t_test *t, int i)
+void		ft_arg_cd(t_shell *pcs, t_test *t, int i)
 {
 	char	oldpath[PATH_MAX];
 
 	getcwd(oldpath, -1);
 	ft_free_tab(pcs->cmp);
 	pcs->cmp = ft_split_cmd(pcs->pipesplit[i], ' ');
+	if (!ft_strcmp(pcs->cmp[0], "$HOME"))
+	{
+		ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
+		ft_putstr_fd(ft_get_var(t, "HOME"), 1);
+		ft_putendl_fd(": is a directory", 1);
+		t->status = 126;
+		return ;
+	}
 	if (i == pcs->n_pipe - 1 && (ft_len_tab(pcs->cmp) == 1 ||
 		!ft_strcmp(pcs->cmp[0], "~") || pcs->cmp[1][0] == '<' ||
 		pcs->cmp[1][0] == '>'))
