@@ -18,7 +18,7 @@ static int	ft_execute_aux(t_shell *pcs, t_test *tst, int i)
 
 	ft_check_redir(tst, pcs, i, 1);
 	if (!ft_ck_rd_envp(pcs, tst, "pwd") ||
-		!ft_strcmp(pcs->cmp[0], "pwd"))
+		!ft_strcmp(pcs->cmp[0], "pwd") || !ft_strcmp(pcs->cmp[0], "PWD"))
 	{
 		ft_putendl_fd(getcwd(pwd, -1), 1);
 		return (0);
@@ -32,18 +32,20 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 		return (1);
 	if (tst->status == 126)
 		return (126);
+	if (!ft_strcmp(pcs->cmp[0], "$PATH"))
+		return (127);
 	if (!ft_execute_aux(pcs, tst, i))
-		return (1);
+		return (0);
 	else if (!ft_ck_rd_envp(pcs, tst, "export") ||
 		(!ft_strcmp(pcs->cmp[0], "export") && pcs->cmp[1][0] == '>') ||
 		(!ft_strcmp(pcs->cmp[0], "export") &&
 		(!ft_strcmp(pcs->cmp[1], ">") || !ft_strcmp(pcs->cmp[1], ">>"))))
 		return (ft_sort_export());
-	else if (!ft_ck_rd_envp(pcs, tst, "env") ||
-		(!ft_strcmp(pcs->cmp[0], "env") &&
-		pcs->bool_redir == 0))
+	else if ((!ft_ck_rd_envp(pcs, tst, "env") ||
+		!ft_strcmp(pcs->cmp[0], "env") || !ft_strcmp(pcs->cmp[0], "ENV")) &&
+		pcs->bool_redir == 0)
 		return (ft_arg_env(pcs));
-	if (!ft_strcmp(pcs->cmp[0], "echo"))
+	if (!ft_strcmp(pcs->cmp[0], "echo") || !ft_strcmp(pcs->cmp[0], "ECHO"))
 		return (ft_arg_echo(pcs, tst, i));
 	else if (!tst->bool)
 		return (ft_arg_exe(pcs, tst, i));

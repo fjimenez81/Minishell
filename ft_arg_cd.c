@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 21:08:07 by fernando          #+#    #+#             */
-/*   Updated: 2020/12/16 15:56:33 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/21 07:39:23 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,25 @@ static void	ft_get_up_var(char *oldpath)
 	g_envp[pos] = ft_strjoin("OLDPWD=", oldpath);
 }
 
-static char	*ft_get_var(t_test *tst, char *str)
+char		*ft_get_var(t_test *t, char *path, int find)
 {
 	int i;
 
 	i = -1;
+	t->aux = NULL;
 	while (g_envp[++i])
 	{
-		if (ft_strstr(g_envp[i], str))
-			return (ft_strnstr(g_envp[i], "=", ft_strlen(g_envp[i])) + 1);
+		if (ft_strstr(g_envp[i], path))
+		{
+			t->aux = ft_strrchr(g_envp[i], '=') + 1;
+			return (t->aux);
+		}
 	}
-	ft_putendl_fd("\033[1;31m[Minishell]: cd: HOME not set", 1);
-	tst->status = 1;
+	if (!t->aux && find == 1)
+	{
+		ft_putendl_fd("\033[1;31m[Minishell]: cd: HOME not set", 1);
+		t->status = 1;
+	}
 	return (NULL);
 }
 
@@ -85,19 +92,13 @@ void		ft_arg_cd(t_shell *pcs, t_test *t, int i)
 	getcwd(oldpath, -1);
 	ft_free_tab(pcs->cmp);
 	pcs->cmp = ft_split_cmd(pcs->pipesplit[i], ' ');
-	if (!ft_strcmp(pcs->cmp[0], "$HOME"))
-	{
-		ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
-		ft_putstr_fd(ft_get_var(t, "HOME"), 1);
-		ft_putendl_fd(": is a directory", 1);
-		t->status = 126;
+	if (!ft_only_path(pcs, t))
 		return ;
-	}
 	if (i == pcs->n_pipe - 1 && (ft_len_tab(pcs->cmp) == 1 ||
 		!ft_strcmp(pcs->cmp[0], "~") || pcs->cmp[1][0] == '<' ||
 		pcs->cmp[1][0] == '>'))
 	{
-		if (chdir(ft_get_var(t, "HOME")) == 0)
+		if (chdir(ft_get_var(t, "HOME", 1)) == 0)
 			ft_get_up_var(oldpath);
 		return ;
 	}

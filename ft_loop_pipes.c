@@ -103,7 +103,9 @@ static void		ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
 	else if ((!ft_ck_rd_envp(pcs, tst, "cd") ||
 			!ft_strcmp(pcs->cmp[0], "cd") ||
 			!ft_strcmp(pcs->cmp[0], "~") ||
-			!ft_strcmp(pcs->cmp[0], "$HOME")) && (tst->bool = 1))
+			!ft_strcmp(pcs->cmp[0], "$HOME") ||
+			!ft_strcmp(pcs->cmp[0], "$PWD") ||
+			!ft_strcmp(pcs->cmp[0], "$PATH")) && (tst->bool = 1))
 		ft_arg_cd(pcs, tst, j);
 	else if (!ft_strcmp(pcs->cmp[0], "export") &&
 			(tst->bool = 1) && !pcs->bool_redir)

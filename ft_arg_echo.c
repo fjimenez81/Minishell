@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 18:07:07 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/16 16:05:01 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/21 08:12:54 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,11 @@ static int	ft_check_n(char *s)
 	int i;
 
 	i = -1;
+	if (!ft_strcmp(s, ""))
+		return (0);
 	while (s[++i])
 	{
-		if (i == 0 && s[i] != '-')
+		if (i == 0 && s[i] == '-' && s[i + 1] == '-')
 			return (0);
 		if (s[i] == '-' && s[i + 1] == 'n')
 			i++;

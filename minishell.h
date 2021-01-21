@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2021/01/13 18:18:52 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/21 07:25:07 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ char			*ft_check_dollar(t_test *tst, t_shell *pcs, int j, int bool);
 char			**ft_str_tok(char *s, char *sep);
 char			*ft_strstr(char *str, char *to_find);
 void			ft_arg_cd(t_shell *pcs, t_test *tst, int i);
+char			*ft_get_var(t_test *t, char *path, int find);
 int				ft_arg_env(t_shell *pcs);
 int				ft_arg_export(t_test *tst, t_shell *pcs, int j);
 void			ft_check_var_loop(t_test *tst);
@@ -157,5 +158,6 @@ void			ft_err_exit(t_shell *pcs, t_test *tst, int i);
 void			ft_ctrl_process(int sig);
 int				ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str);
 int				ft_print_syntax(t_test *tst);
+int				ft_only_path(t_shell *pcs, t_test *t);
 
 #endif
