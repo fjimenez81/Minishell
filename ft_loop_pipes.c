@@ -97,19 +97,19 @@ void			ft_comands(t_test *tst, char *line)
 static void		ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
 {
 	tst->bool = 0;
-	if (!ft_strcmp(pcs->cmp[0], "exit") && j == pcs->n_pipe - 1)
-		ft_arg_exit(pcs);
+	if ((!ft_ck_rd_envp(pcs, tst, "exit") ||
+		!ft_strcmp(pcs->cmp[0], "exit")) && (tst->bool = 1))
+		ft_arg_exit(tst, pcs, j);
 	else if ((!ft_ck_rd_envp(pcs, tst, "cd") ||
 			!ft_strcmp(pcs->cmp[0], "cd") ||
-			!ft_strcmp(pcs->cmp[0], "~")) &&
-			j == pcs->n_pipe - 1 && (tst->bool = 1))
+			!ft_strcmp(pcs->cmp[0], "~")) && (tst->bool = 1))
 		ft_arg_cd(pcs, tst, j);
 	else if (!ft_strcmp(pcs->cmp[0], "export") &&
-		j == pcs->n_pipe - 1 && (tst->bool = 1) && !pcs->bool_redir)
+			(tst->bool = 1) && !pcs->bool_redir)
 		ft_arg_export(tst, pcs, j);
-	else if (!ft_strcmp(pcs->cmp[0], "unset") &&
-		j == pcs->n_pipe - 1 && (tst->bool = 1))
-		ft_arg_unset(pcs, tst);
+	else if ((!ft_ck_rd_envp(pcs, tst, "unset") ||
+			!ft_strcmp(pcs->cmp[0], "unset")) && (tst->bool = 1))
+		ft_arg_unset(pcs, tst, j);
 	ft_check_pipes(pcs, tst, j);
 }
 

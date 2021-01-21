@@ -32,54 +32,57 @@ char		*ft_strstr(char *str, char *to_find)
 	return (0);
 }
 
-static void	ft_unset_aux(char **aux, int i, int j)
+static void	ft_unset_aux(t_test *t, char **aux, int j)
 {
 	char	*unset;
 	char	*tmp;
 	char	**split;
 
+	tmp = ft_strjoin(aux[j], "=");
 	if (ft_strchr(aux[j], '='))
 	{
-		tmp = ft_strjoin(aux[j], "=");
-		split = ft_split(g_envp[i], '=');
-		unset = ft_strstr(g_envp[i], tmp);
+		split = ft_split(g_envp[t->k], '=');
+		unset = ft_strstr(g_envp[t->k], tmp);
 	}
 	else
 	{
-		split = ft_split(g_envp[i], '=');
-		unset = ft_strstr(g_envp[i], aux[j]);
+		split = ft_split(g_envp[t->k], '=');
+		unset = ft_strstr(g_envp[t->k], aux[j]);
 	}
 	if (unset != NULL)
 	{
 		if (!ft_strcmp(split[0], aux[j]))
-			ft_memmove(g_envp[i], "", ft_strlen(g_envp[i]));
+			ft_memmove(g_envp[t->k], "", ft_strlen(g_envp[t->k]));
 	}
-	if (ft_strchr(aux[j], '='))
-		free(tmp);
+	free(tmp);
 	ft_free_tab(split);
 }
 
-void		ft_arg_unset(t_shell *pcs, t_test *tst)
+void		ft_arg_unset(t_shell *pcs, t_test *t, int k)
 {
-	int i;
 	int j;
 
-	i = -1;
-	while (g_envp[++i])
+	t->k = -1;
+	t->aux = ft_realloc_str(t, pcs->pipesplit[k], -1, 0);
+	ft_free_tab(pcs->cmp);
+	pcs->cmp = ft_split_cmd(t->aux, ' ');
+	while (g_envp[++t->k])
 	{
 		j = 0;
-		while (++j < pcs->args)
+		while (++j < ft_len_tab(pcs->cmp))
 		{
-			if (!ft_strchr(pcs->cmp[j], '='))
-				ft_unset_aux(pcs->cmp, i, j);
-			else
+			if (!ft_strchr(pcs->cmp[j], '=') && k == pcs->n_pipe - 1)
+				ft_unset_aux(t, pcs->cmp, j);
+			else if (ft_strchr(pcs->cmp[j], '='))
 			{
 				ft_putstr_fd("\033[1;31m[Minishell]: unset: `", 1);
 				ft_putstr_fd(pcs->cmp[j], 1);
 				ft_putendl_fd("\': not a valid identifier", 1);
-				tst->status = 1;
+				t->status = 1;
+				free(t->aux);
 				return ;
 			}
 		}
 	}
+	free(t->aux);
 }

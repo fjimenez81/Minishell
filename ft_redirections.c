@@ -25,7 +25,8 @@ void		ft_file_out(t_shell *pcs, t_test *tst, int flags)
 		ft_putendl_fd(": No such file or directory", 1);
 		exit(1);
 	}
-	if (tst->fdot_j == tst->check_fdot - 1 && !pcs->flag_in)
+	if (tst->fdot_j == tst->check_fdot - 1 && !pcs->flag_in &&
+		ft_strcmp(pcs->cmp[0], "exit"))
 		dup2(pcs->fd_out[tst->fdot_j], STDOUT_FILENO);
 	tst->fdot_j++;
 	free(pcs->out);

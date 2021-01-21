@@ -93,9 +93,12 @@ int			ft_arg_export(t_test *tst, t_shell *pcs, int j)
 	{
 		ft_check_var_loop(tst);
 		i = 0;
-		while (tst->var_exp[++i])
-			if (ft_strcmp(tst->var_exp[i], "") != 0)
-				g_envp = ft_join_env(tst, i);
+		if (j == pcs->n_pipe - 1)
+		{
+			while (tst->var_exp[++i])
+				if (ft_strcmp(tst->var_exp[i], "") != 0)
+					g_envp = ft_join_env(tst, i);
+		}
 	}
 	ft_free_tab(tst->var_exp);
 	return (1);

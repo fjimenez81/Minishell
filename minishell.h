@@ -42,6 +42,7 @@ typedef struct	s_test
 	int			d_qu;
 	int			s_qu;
 	int			i;
+	int			k;
 	int			key;
 	int			bool;
 	int			bool2;
@@ -68,6 +69,8 @@ typedef struct	s_test
 	int			fd_line;
 	int			one_dollar;
 	char		*ckqu;
+	int			cd;
+	char		*line;
 }				t_test;
 
 typedef struct	s_shell
@@ -118,11 +121,11 @@ int				ft_sort_export();
 char			*ft_check_dollar(t_test *tst, t_shell *pcs, int j, int bool);
 char			**ft_str_tok(char *s, char *sep);
 char			*ft_strstr(char *str, char *to_find);
-int				ft_arg_cd(t_shell *pcs, t_test *tst, int i);
+void			ft_arg_cd(t_shell *pcs, t_test *tst, int i);
 int				ft_arg_env(t_shell *pcs);
 int				ft_arg_export(t_test *tst, t_shell *pcs, int j);
 void			ft_check_var_loop(t_test *tst);
-void			ft_arg_unset(t_shell *pcs, t_test *tst);
+void			ft_arg_unset(t_shell *pcs, t_test *tst, int k);
 int				ft_arg_echo(t_shell *pcs, t_test *tst, int i);
 char			*ft_print_var(char *aux);
 void			init_env(char **env);
@@ -145,7 +148,7 @@ void			ft_get_redir(t_shell *pcs, t_test *tst);
 void			ft_file_out(t_shell *pcs, t_test *tst, int flags);
 char			*ft_dollar_aux_one(t_test *tst, char *tmp, char *res);
 int				ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str);
-void			ft_arg_exit(t_shell *pcs);
+void			ft_arg_exit(t_test *t,t_shell *pcs, int i);
 void			ft_print_error(char *error);
 void			ft_cut_pcs(t_test *tst);
 void			ft_close_fd(t_shell *pcs);

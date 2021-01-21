@@ -24,8 +24,6 @@ static int	ft_wordcount(char *s, char c)
 			s++;
 		else if (*s == 92 && *(s + 1) == c)
 			s++;
-		// if (*s == 0)
-		// 	return (count);
 		if (*s && (*(s - 1) != c && *s == c))
 			count++;
 		s++;

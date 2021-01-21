@@ -63,6 +63,8 @@ static int	ft_check_n(char *s)
 	i = -1;
 	while (s[++i])
 	{
+		if (i == 0 && s[i] != '-')
+			return (0);
 		if (s[i] == '-' && s[i + 1] == 'n')
 			i++;
 		if (s[i] == 'n' && s[i + 1] == '-')
@@ -80,7 +82,7 @@ static void	ft_echo_aux(t_shell *pcs, t_test *tst, int i)
 	char *tmp;
 
 	cmd = ft_cutstr(pcs->pipesplit[i], "echo ");
-	tmp = ft_realloc_str(tst, pcs->cmp[1], -1 , 0);
+	tmp = ft_realloc_str(tst, pcs->cmp[1], -1, 0);
 	if (ft_check_n(tmp))
 	{
 		while (*cmd && ft_strchr(" \'\"-n", *cmd))

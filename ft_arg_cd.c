@@ -40,7 +40,7 @@ static void	ft_get_up_var(char *oldpath)
 	g_envp[pos] = ft_strjoin("OLDPWD=", oldpath);
 }
 
-static char	*ft_get_var(char *str)
+static char	*ft_get_var(t_test *tst, char *str)
 {
 	int i;
 
@@ -50,34 +50,50 @@ static char	*ft_get_var(char *str)
 		if (ft_strstr(g_envp[i], str))
 			return (ft_strnstr(g_envp[i], "=", ft_strlen(g_envp[i])) + 1);
 	}
+	ft_putendl_fd("\033[1;31m[Minishell]: cd: HOME not set", 1);
+	tst->status = 1;
 	return (NULL);
 }
 
-int			ft_arg_cd(t_shell *pcs, t_test *tst, int i)
+static void		ft_arg_cd_aux(t_shell *pcs, t_test *t, char *oldpath, int i)
+{
+	if (i == pcs->n_pipe - 1)
+	{
+		if (chdir(t->aux) == 0)
+		{
+			ft_get_up_var(oldpath);
+			t->cd = 1;
+		}
+	}
+	if (!t->cd)
+	{
+		if (chdir(t->aux) != 0)
+		{
+			ft_putstr_fd("\033[1;31m[Minishell]: cd: ", 1);
+			ft_putstr_fd(t->aux, 1);
+			ft_putendl_fd(": No such file or directory", 1);
+			t->status = 1;
+		}
+		chdir(oldpath);
+	}
+}
+
+void			ft_arg_cd(t_shell *pcs, t_test *t, int i)
 {
 	char	oldpath[PATH_MAX];
-	char	*aux;
 
 	getcwd(oldpath, -1);
 	ft_free_tab(pcs->cmp);
 	pcs->cmp = ft_split_cmd(pcs->pipesplit[i], ' ');
-	if (pcs->args == 1 || !ft_strcmp(pcs->cmp[0], "~") ||
-		pcs->cmp[1][0] == '<' || pcs->cmp[1][0] == '>')
+	if (i == pcs->n_pipe - 1 && (ft_len_tab(pcs->cmp) == 1 ||
+		!ft_strcmp(pcs->cmp[0], "~") || pcs->cmp[1][0] == '<' ||
+		pcs->cmp[1][0] == '>'))
 	{
-		if (chdir(ft_get_var("HOME")) == 0)
+		if (chdir(ft_get_var(t, "HOME")) == 0)
 			ft_get_up_var(oldpath);
-		return (1);
+		return ;
 	}
-	aux = ft_realloc_str(tst, pcs->cmp[1], -1, 0);
-	if (chdir(aux) == 0)
-		ft_get_up_var(oldpath);
-	else
-	{
-		ft_putstr_fd("\033[1;31m[Minishell]: cd: ", 1);
-		ft_putstr_fd(aux, 1);
-		ft_putendl_fd(": No such file or directory", 1);
-		tst->status = 1;
-	}
-	free(aux);
-	return (1);
+	t->aux = ft_realloc_str(t, pcs->cmp[1], -1, 0);
+	ft_arg_cd_aux(pcs, t, oldpath, i);
+	free(t->aux);
 }

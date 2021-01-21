@@ -42,6 +42,7 @@ void	ctrl_d(t_test *tst)
 void	ft_init_struct(t_test *tst)
 {
 	tst->cheat = 0;
+	tst->cd = 0;
 	g_minish = tst;
 	g_minish->count = 0;
 	g_minish->count2 = 0;
@@ -66,6 +67,7 @@ void	ft_rd_line(t_test *tst)
 		g_minish->exit2 = 0;
 		g_quit = 0;
 	}
+	tst->line = line;
 	ft_comands(tst, line);
 }
 
