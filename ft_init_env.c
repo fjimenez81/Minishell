@@ -12,6 +12,14 @@
 
 #include "minishell.h"
 
+void		ft_free_all(t_test *t, t_shell *pcs)
+{
+	ft_free_tab(pcs->cmp);
+	ft_free_tab(t->cmd);
+	free(t->line);
+	free(pcs);
+}
+
 void	ft_redir_quotes(t_test *tst, t_shell *pcs)
 {
 	if (tst->check_redir)

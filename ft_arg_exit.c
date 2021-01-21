@@ -12,14 +12,6 @@
 
 #include "minishell.h"
 
-void		ft_free_all(t_test *t, t_shell *pcs)
-{
-	ft_free_tab(pcs->cmp);
-	ft_free_tab(t->cmd);
-	free(t->line);
-	free(pcs);
-}
-
 static void	ft_print_exit_two(t_test *t, t_shell *pcs, int j, int bool)
 {
 	if (pcs->args > 2 && !bool)
@@ -76,6 +68,33 @@ static void	ft_exit_aux(t_test *t, t_shell *pcs, int j)
 	ft_print_exit(t, pcs, j, bool);
 }
 
+static void	ft_exit_aux_two(t_test *t, t_shell *pcs, int i)
+{
+	if (g_minish && i == pcs->n_pipe - 1)
+	{
+		if (g_quit && g_minish->exit != 127)
+		{
+			ft_free_all(t, pcs);
+			exit(1);
+		}
+		else if (g_minish->exit > 129 && WEXITSTATUS(g_minish->status) != 127)
+		{
+			ft_free_all(t, pcs);
+			exit(g_minish->exit);
+		}
+		else
+		{
+			ft_free_all(t, pcs);
+			exit(WEXITSTATUS(g_minish->status));
+		}
+	}
+	if (i == pcs->n_pipe - 1)
+	{
+		ft_free_all(t, pcs);
+		exit(0);
+	}
+}
+
 void		ft_arg_exit(t_test *t, t_shell *pcs, int i)
 {
 	if (!ft_strcmp(pcs->cmp[0], "exit"))
@@ -87,15 +106,5 @@ void		ft_arg_exit(t_test *t, t_shell *pcs, int i)
 		if (pcs->cmp[1][0] != '<' || pcs->cmp[1][0] != '>')
 			ft_exit_aux(t, pcs, i);
 	}
-	if (g_minish && i == pcs->n_pipe - 1)
-	{
-		if (g_quit && g_minish->exit != 127)
-			exit(1);
-		else if (g_minish->exit > 129 && WEXITSTATUS(g_minish->status) != 127)
-			exit(g_minish->exit);
-		else
-			exit(WEXITSTATUS(g_minish->status));
-	}
-	if (i == pcs->n_pipe - 1)	
-		exit(0);
+	ft_exit_aux_two(t, pcs, i);
 }
