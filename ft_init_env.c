@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 13:52:05 by fernando          #+#    #+#             */
-/*   Updated: 2021/01/13 18:15:34 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/21 19:36:22 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,12 @@
 void	ft_free_all(t_test *t, t_shell *pcs)
 {
 	ft_free_tab(pcs->cmp);
+	ft_free_tab(pcs->pipesplit);
 	ft_free_tab(t->cmd);
 	free(t->line);
+	free(t->ckqu);
 	free(pcs);
+	ft_free_tab(g_envp);
 }
 
 void	ft_redir_quotes(t_test *tst, t_shell *pcs)

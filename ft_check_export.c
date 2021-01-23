@@ -6,95 +6,78 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 10:55:30 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/11 10:32:06 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/22 21:03:13 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ft_loop_caracter(char *vars, int bool)
+static int	ft_loop_caracter(t_test *t, char *s)
 {
-	while (*vars)
+	while (s[++t->i])
 	{
-		if (*vars == '{' && *(vars - 1) == '$')
+		ft_aux_loop_quotes(s, t);
+		if (s[t->i] == '$' && s[t->i + 1] == '{' && !t->d_qu && !t->s_qu)
 		{
-			bool = 1;
-			vars++;
+			t->i++;
+			while (s[t->i] != '}')
+				t->i++;
+			t->i++;
 		}
-		if (*vars == '?' && bool == 1)
-			vars++;
-		if (*vars == '}' && bool == 1)
-			vars++;
-		if (((*vars == '\"' || *vars == '\'') && *(vars - 1) != '\\') ||
-			(*vars == '\\' && *(vars + 1) != '\\') || (*vars == '?' &&
-			*(vars - 1) == '$'))
-			vars++;
-		if (*vars == '=')
+		if (s[t->i] == 92)
+			t->i++;
+		if (s[t->i] == '$' && s[t->i + 1] == '?')
+			t->i += 2;
+		if (s[t->i] == '=' && !t->d_qu && !t->s_qu)
 			break ;
-		if (!ft_isalpha(*vars) && !ft_isalnum(*vars) && !ft_isdigit(*vars) &&
-			*vars != '_')
+		if (!ft_isalnum(s[t->i]))
 			return (0);
-		vars++;
 	}
 	return (1);
 }
 
-static void	ft_valid_args(t_test *tst, int *bool, int j)
+static int	ft_check_var(t_test *t, char *vars)
 {
-	char	*aux;
-	int		k;
-
-	while (tst->var_exp[++j])
-	{
-		k = -1;
-		while (tst->var_exp[j][++k])
-		{
-			if (((!ft_isalpha(tst->var_exp[j][k]) && k == 0) ||
-				(tst->var_exp[j][k] == '\\' &&
-				tst->var_exp[j][k + 1] == '\\') ||
-				tst->var_exp[j][k] == ' ') && *bool == 0)
-			{
-				aux = ft_realloc_str(tst, tst->var_exp[j], -1, 0);
-				ft_putstr_fd("\033[1;31m[Minishell]: export: `", 1);
-				ft_putstr_fd(aux, 1);
-				ft_putendl_fd("\': not a valid identifier", 1);
-				free(aux);
-				*bool = 1;
-				tst->status = 1;
-				break ;
-			}
-		}
-	}
-}
-
-static int	ft_check_var(char *vars)
-{
-	int bool;
-
-	bool = 0;
+	t->i = -1;
+	t->d_qu = 0;
+	t->s_qu = 0;
 	if ((!ft_isalpha_cm(vars[0]) && vars[0] != '_') ||
 		(vars[0] == '\\' && vars[1] == '\\'))
-		return (0);
-	if (!ft_loop_caracter(vars + 1, bool))
+			return (0);
+	if (!ft_loop_caracter(t, vars + 1))
 		return (0);
 	return (1);
 }
 
-void		ft_check_var_loop(t_test *tst)
+// static void	ft_valid_args(t_test *t, int k)
+// {
+// 	char	*aux;
+
+// 	aux = ft_realloc_str(t, t->var_exp[k], -1, 0);
+// 	ft_putstr_fd("\033[1;31m[Minishell]: export: `", 1);
+// 	ft_putstr_fd(aux, 1);
+// 	ft_putendl_fd("\': not a valid identifier", 1);
+// 	free(aux);
+// 	t->status = 1;
+// }
+
+void		ft_check_var_loop(t_test *t)
 {
-	int i;
-	int j;
-	int bool;
+	int		i;
+	char	*aux;
 
 	i = 0;
-	bool = 0;
-	j = 0;
-	while (tst->var_exp[++i])
+	while (t->var_exp[++i])
 	{
-		if (!ft_check_var(tst->var_exp[i]))
+		if (!ft_check_var(t, t->var_exp[i]))
 		{
-			ft_valid_args(tst, &bool, j);
-			ft_memmove(tst->var_exp[i], "", ft_strlen(tst->var_exp[i]));
+			aux = ft_realloc_str(t, t->var_exp[i], -1, 0);
+			ft_putstr_fd("\033[1;31m[Minishell]: export: `", 1);
+			ft_putstr_fd(aux, 1);
+			ft_putendl_fd("\': not a valid identifier", 1);
+			free(aux);
+			t->status = 1;
+			ft_memmove(t->var_exp[i], "", ft_strlen(t->var_exp[i]));
 		}
 	}
 }

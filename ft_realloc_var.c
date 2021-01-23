@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 10:59:34 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/16 18:37:21 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/23 10:34:19 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,38 +27,40 @@ static void	ft_keys_loop(t_test *tmp, int i)
 	}
 }
 
-static char	*ft_check_keys(t_test *tmp)
+static char	*ft_check_keys(t_test *t)
 {
 	int i;
 	int bool;
 
 	i = -1;
 	bool = 0;
-	while (tmp->dollar[++i])
+	while (t->dollar[++i])
 	{
-		if (tmp->dollar[i] == '{' && bool == 0 && i == 1)
+		if (t->dollar[i] == '{' && bool == 0 && i == 1)
 			bool = 1;
-		if (tmp->dollar[i] == '}' && bool == 1)
-			tmp->ck_key = 1;
-		if (tmp->ck_key > 0)
-			tmp->ck_key += 1;
+		if (t->dollar[i] == '}' && bool == 1)
+			t->ck_key = 1;
+		if (t->ck_key > 0)
+			t->ck_key += 1;
 	}
-	if (tmp->ck_key > 0)
-		ft_keys_loop(tmp, i);
-	return (tmp->c_keys);
+	if (t->ck_key > 0)
+		ft_keys_loop(t, i);
+	return (t->c_keys);
 }
 
 static char	*ft_dollar_aux(t_test *tmp, char *res)
 {
 	char *var;
+	char *aux;
 
 	free(tmp->c_keys);
 	tmp->c_keys = tmp->ck_key > 0 ?
 		ft_strjoin(ft_strrchr(tmp->c_keys, '$') + 1, "=") :
-		ft_strjoin(ft_strrchr(tmp->dollar, '$') + 1, "=");
+		ft_strdup(ft_strrchr(tmp->dollar, '$') + 1);
 	var = ft_print_var(tmp->c_keys);
+	aux = ft_strjoin(res, var);
 	free(res);
-	res = ft_strjoin(res, var);
+	res = aux;
 	free(tmp->c_keys);
 	return (res);
 }
@@ -71,31 +73,39 @@ static void	ft_aux_var(char *str, t_test *tmp)
 	tmp->c_keys = ft_check_keys(tmp);
 }
 
-char		*ft_realloc_var(char *str, char *res, t_test *tmp)
+void		ft_inc_i(char *s, char *res, t_test *t)
+{
+	t->i += (!ft_strcmp(res, "") && s[t->i + 1] == ' ') ?
+		1 : ft_strlen(t->dollar) - 1;
+	t->i -= t->ck_key > 0 ? t->ck_key - 2 : 0;
+	if (t->dollar[ft_strlen(t->dollar) - 1] == '=')
+		t->i -= 1;
+	free(t->dollar);
+	t->i++;
+}
+
+char		*ft_realloc_var(char *s, char *res, t_test *t)
 {
 	char *var;
+	char *aux;
 
-	ft_aux_var(str, tmp);
-	if (tmp->c_keys[1] == '?' || tmp->dollar[1] == '?')
+	ft_aux_var(s, t);
+	if (t->c_keys[1] == '?' || t->dollar[1] == '?')
 	{
-		free(tmp->c_keys);
-		if (tmp->cut == 9)
+		if (t->cut == 9)
 			var = ft_itoa(1);
-		else if (tmp->cut > 129)
+		else if (t->cut > 129)
 			var = ft_itoa(g_minish->exit);
 		else
-			var = ft_itoa(WEXITSTATUS(tmp->status));
+			var = ft_itoa(WEXITSTATUS(t->status));
+		aux = ft_strjoin(res, var);
 		free(res);
-		res = ft_strjoin(res, var);
+		res = aux;
+		free(t->c_keys);
 		free(var);
 	}
 	else
-		res = ft_dollar_aux(tmp, res);
-	tmp->i += (!ft_strcmp(var, "") && str[tmp->i + 1] == ' ') ?
-		1 : ft_strlen(tmp->dollar) - 1;
-	tmp->i -= tmp->ck_key > 0 ? tmp->ck_key - 2 : 0;
-	if (tmp->dollar[ft_strlen(tmp->dollar) - 1] == '=')
-		tmp->i -= 1;
-	free(tmp->dollar);
+		res = ft_dollar_aux(t, res);
+	ft_inc_i(s, res, t);
 	return (res);
 }

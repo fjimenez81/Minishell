@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/22 16:51:37 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/11 09:45:59 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/21 19:37:15 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,27 @@ void	ft_ctrl(int sig)
 	}
 }
 
-void	ctrl_d(t_test *tst)
+void	ctrl_d(t_test *t)
 {
 	g_minish->exit2 = -1;
 	if (g_minish->fd_line == 0)
 	{
 		ft_putendl_fd("\033[1;31mexit", 1);
-		if (g_quit && tst->exit != 127)
+		if (g_quit && t->exit != 127)
+		{
+			ft_free_struct(t);
 			exit(1);
-		else if (tst->exit > 129 && WEXITSTATUS(tst->status) != 127)
-			exit(tst->exit);
+		}
+		else if (t->exit > 129 && WEXITSTATUS(t->status) != 127)
+		{
+			ft_free_struct(t);
+			exit(t->exit);
+		}
 		else
-			exit(WEXITSTATUS(tst->status));
+		{
+			ft_free_struct(t);
+			exit(WEXITSTATUS(t->status));
+		}
 	}
 }
 
@@ -56,6 +65,7 @@ void	ft_rd_line(t_test *tst)
 	line = ft_strdup("");
 	ft_init_struct(tst);
 	line = ft_get_line_eof(line);
+	tst->line = line;
 	ctrl_d(tst);
 	if (g_minish->exit2 == -1 && g_quit == 1)
 	{
@@ -66,7 +76,6 @@ void	ft_rd_line(t_test *tst)
 		g_minish->exit2 = 0;
 		g_quit = 0;
 	}
-	tst->line = line;
 	ft_comands(tst, line);
 }
 

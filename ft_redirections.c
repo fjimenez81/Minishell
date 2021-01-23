@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/16 14:27:27 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/21 21:16:34 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ void		ft_file_out(t_shell *pcs, t_test *tst, int flags)
 		ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
 		ft_putstr_fd(pcs->out, 1);
 		ft_putendl_fd(": No such file or directory", 1);
+		free(pcs->out);
+		free(pcs->fd_out);
+		ft_free_all(tst, pcs);
 		exit(1);
 	}
 	if (tst->fdot_j == tst->check_fdot - 1 && !pcs->flag_in &&
@@ -39,17 +42,16 @@ static void	ft_redir_fd(t_shell *pcs, int flags, char *dir, t_test *tst)
 	if (!ft_strcmp(dir, "<"))
 	{
 		pcs->in = ft_realloc_str(tst, pcs->redir, tst->i - 1, 2);
-		if (tst->fdin_k == tst->check_fdin - 1)
+		if ((pcs->fd_in = open(pcs->in, flags)) == -1)
 		{
-			if ((pcs->fd_in = open(pcs->in, flags)) == -1)
-			{
-				ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
-				ft_putstr_fd(pcs->in, 1);
-				ft_putendl_fd(": No such file or directory", 1);
-				exit(1);
-			}
-			dup2(pcs->fd_in, 0);
+			ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
+			ft_putstr_fd(pcs->in, 1);
+			ft_putendl_fd(": No such file or directory", 1);
+			free(pcs->in);
+			ft_free_all(tst, pcs);
+			exit(1);
 		}
+		dup2(pcs->fd_in, 0);
 		tst->fdin_k++;
 		free(pcs->in);
 	}

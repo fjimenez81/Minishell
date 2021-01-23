@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:02:40 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/13 18:15:12 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/22 19:45:41 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,28 +52,17 @@ void		ft_aux_loop_quotes(char *s, t_test *t)
 	}
 }
 
-void		ft_realloc_aux_two(char *str, t_test *tmp)
+void		ft_realloc_aux_two(char *s, t_test *t)
 {
-	ft_aux_loop_quotes(str, tmp);
-	if (tmp->one_dollar)
-		tmp->one_dollar = 0;
-	if (tmp->check_redir)
-		tmp->check_redir = 0;
-	if (str[tmp->i] == 92 && (!tmp->d_qu && !tmp->s_qu))
+	ft_aux_loop_quotes(s, t);
+	if (t->one_dollar)
+		t->one_dollar = 0;
+	if (t->check_redir)
+		t->check_redir = 0;
+	else if (s[t->i] == ' ' && (!t->d_qu && !t->s_qu))
 	{
-		if (str[tmp->i + 1] == '$' || str[tmp->i + 1] == '<' ||
-			str[tmp->i + 1] == '>' || str[tmp->i + 1] == ' ' ||
-			str[tmp->i + 1] == ';' || str[tmp->i + 1] == '|')
-			tmp->i++;
-		if (str[tmp->i] == '$')
-			tmp->one_dollar = 1;
-		if (str[tmp->i] == '<' || str[tmp->i] == '>')
-			tmp->check_redir = 1;
-	}
-	else if (str[tmp->i] == ' ' && (!tmp->d_qu && !tmp->s_qu))
-	{
-		while (ft_isspace(str[tmp->i]))
-			tmp->i++;
-		tmp->i--;
+		while (ft_isspace(s[t->i]))
+			t->i++;
+		t->i--;
 	}
 }

@@ -6,11 +6,17 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 07:16:14 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/21 08:19:23 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/22 21:06:34 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void		ft_free_struct(t_test *t)
+{
+	free(t->line);
+	ft_free_tab(g_envp);
+}
 
 static int	ft_only_path_aux(t_shell *pcs, t_test *t)
 {

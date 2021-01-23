@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:23:10 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/13 18:18:13 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/22 10:40:44 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ static void	ft_exe_cmd(t_shell *pcs, t_test *tst, int i, char **aux)
 	while (exe == -1 && ++j < ft_len_tab(tmp))
 	{
 		join = ft_strjoin(tmp[j], pcs->cmp[0]);
-		free(join);
 		exe = execve(join, pcs->cmp, g_envp);
+		free(join);
 		if (j == ft_len_tab(tmp) - 1 && exe == -1)
 		{
 			dup2(pcs->std_out, 1);
@@ -68,8 +68,8 @@ void		ft_not_path(t_shell *pcs, t_test *tst, int i, char **aux)
 		{
 			dup2(pcs->std_out, 1);
 			ft_err_exit(pcs, tst, i);
-			ft_free_tab(aux);
-			ft_free_tab(pcs->cmp);
+			free(tst->sub);
+			ft_free_all(tst, pcs);
 			exit(127);
 		}
 	}
@@ -78,21 +78,19 @@ void		ft_not_path(t_shell *pcs, t_test *tst, int i, char **aux)
 int			ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 {
 	char	**aux;
-	char	*tmp;
 
 	if (pcs->pipesplit[i][0] == '>' || pcs->pipesplit[i][0] == '<')
 		return (0);
-	tmp = ft_realloc_str(tst, pcs->pipesplit[i], -1, 0);
+	tst->sub = ft_realloc_str(tst, pcs->pipesplit[i], -1, 0);
 	ft_free_tab(pcs->cmp);
 	if ((pcs->pipesplit[i][0] == 34 || pcs->pipesplit[i][0] == 39 ||
 		pcs->pipesplit[i][0] == 92) && pcs->args > 1)
 		pcs->cmp = ft_split_cmd(pcs->pipesplit[i], ' ');
 	else
-		pcs->cmp = ft_split_cmd(tmp, ' ');
+		pcs->cmp = ft_split_cmd(tst->sub, ' ');
 	aux = ft_path_split();
 	ft_not_path(pcs, tst, i, aux);
 	ft_exe_cmd(pcs, tst, i, aux);
-	free(tmp);
-	ft_free_tab(pcs->cmp);
+	free(tst->sub);
 	return (127);
 }

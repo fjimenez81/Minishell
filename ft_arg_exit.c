@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/09 11:59:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/11 10:24:29 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/21 21:26:05 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@ static void	ft_print_exit_two(t_test *t, t_shell *pcs, int j, int bool)
 
 static void	ft_print_exit(t_test *t, t_shell *pcs, int j, int bool)
 {
+	int out;
+
+	out = ft_atoi(pcs->cmp[1]);
 	ft_print_exit_two(t, pcs, j, bool);
 	if (bool == 1)
 	{
@@ -46,7 +49,7 @@ static void	ft_print_exit(t_test *t, t_shell *pcs, int j, int bool)
 	{
 		free(t->aux);
 		ft_free_all(t, pcs);
-		exit(ft_atoi(pcs->cmp[1]));
+		exit(out);
 	}
 }
 
@@ -103,7 +106,7 @@ void		ft_arg_exit(t_test *t, t_shell *pcs, int i)
 		ft_putendl_fd("\033[1;31mexit", 1);
 	if (pcs->args > 1)
 	{
-		if (pcs->cmp[1][0] != '<' || pcs->cmp[1][0] != '>')
+		if (pcs->cmp[1][0] != '<' && pcs->cmp[1][0] != '>')
 			ft_exit_aux(t, pcs, i);
 	}
 	ft_exit_aux_two(t, pcs, i);

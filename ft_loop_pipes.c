@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/11 18:46:00 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/22 16:26:25 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ char			*ft_get_line_eof(char *line)
 			g_minish->count++;
 			if (g_minish->exit2 == 3)
 				g_minish->count2++;
-			g_minish->line_aux = ft_join_char(line, byte);
+			g_minish->line_aux = byte == '\t' ? ft_join_char(line, ' ') :
+				ft_join_char(line, byte);
 			free(line);
 			line = g_minish->line_aux;
 		}

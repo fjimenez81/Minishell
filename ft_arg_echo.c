@@ -6,11 +6,33 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 18:07:07 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/21 08:27:13 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/22 21:22:48 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*ft_first_ap(const char *s, int c)
+{
+	char *first;
+
+	first = NULL;
+	if (*s == c)
+		return (char*)s;
+	while (*s++)
+	{
+		if (*s == c)
+		{
+			first = (char*)s;
+			break ;
+		}
+	}
+	if (first)
+		return (first);
+	if (c == '\0')
+		return ((char*)s);
+	return (0);
+}
 
 static char	*ft_print_var_aux(char *var, char **tmp, int i)
 {
@@ -19,7 +41,7 @@ static char	*ft_print_var_aux(char *var, char **tmp, int i)
 	cut = ft_cut_end(var, 0);
 	if (!ft_strcmp(cut, tmp[0]))
 	{
-		var = ft_strrchr(g_envp[i], '=') + 1;
+		var = ft_first_ap(g_envp[i], '=') + 1;
 		free(cut);
 		return (var);
 	}
@@ -79,19 +101,43 @@ static int	ft_check_n(char *s)
 	return (1);
 }
 
+char	*ft_quit_n(char *s)
+{
+	int i;
+	int j;
+
+	i = -1;
+	while (s[++i])
+	{
+		if (s[i] == '-' && s[i + 1] == 'n')
+		{
+			i++;
+			j = 0;
+			while (s[i] == 'n')
+			{
+				j++;
+				i++;
+			}
+			if (s[i] != 'n' && s[i] != 34 && s[i] != 39 && s[i] != ' ')
+				return (s + i - j - 1);
+			
+		}
+		if (s[i] != 'n' && s[i] != 34 && s[i] != 39 && s[i] != ' ')
+			break ;
+	}
+	return (s + i);
+}
+
 static void	ft_echo_aux(t_shell *pcs, t_test *tst, int i)
 {
 	char *cmd;
 	char *aux;
 	char *tmp;
 
-	cmd = ft_cutstr(pcs->pipesplit[i], "echo ");
+	cmd = ft_cutstr(pcs->pipesplit[i], "echo");
 	tmp = ft_realloc_str(tst, pcs->cmp[1], -1, 0);
 	if (ft_check_n(tmp))
-	{
-		while (*cmd && ft_strchr(" \'\"-n", *cmd))
-			cmd++;
-	}
+	 	cmd = ft_quit_n(cmd);
 	if (g_minish->exit == 130)
 		aux = ft_realloc_str(tst, cmd, -1, 5);
 	else if (tst->cheat)
@@ -103,7 +149,6 @@ static void	ft_echo_aux(t_shell *pcs, t_test *tst, int i)
 		ft_putchar_fd('\n', 1);
 	free(aux);
 	free(tmp);
-	ft_free_tab(pcs->cmp);
 }
 
 int			ft_arg_echo(t_shell *pcs, t_test *tst, int i)

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 10:21:55 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/13 16:02:59 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/21 20:50:25 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	ft_close_fd(t_shell *pcs)
 	{
 		dup2(pcs->std_out, 1);
 		pcs->flag_out = 0;
+		free(pcs->fd_out);
 	}
 	if (pcs->flag_in)
 	{
