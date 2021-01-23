@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 21:05:01 by fernando          #+#    #+#             */
-/*   Updated: 2021/01/23 12:05:58 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/23 16:03:48 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ int				ft_isalpha_cm(int c);
 char			*ft_cutstr(char *src, char *cut);
 char			*ft_cut_end(char *s, int bool);
 char			*ft_realloc_str(t_test *tmp, char *str, int i, int cut);
+void			ft_inc_cont(char *s, char *res, t_test *t);
 void			ft_realloc_aux_two(char *str, t_test *test);
 void			ft_aux_loop_quotes(char *str, t_test *tmp);
 char			*ft_realloc_var(char *str, char *res, t_test *tmp);
@@ -162,5 +163,9 @@ int				ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str);
 int				ft_print_syntax(t_test *tst);
 int				ft_only_path(t_shell *pcs, t_test *t);
 void			ft_free_struct(t_test *t);
+void			ft_redir_in_aux(t_shell *pcs, t_test *tst);
+void			ft_redir_out_aux(t_shell *pcs, t_test *tst);
+int				ft_check_n(char *s);
+char			*ft_quit_n(char *s);
 
 #endif

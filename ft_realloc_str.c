@@ -6,23 +6,34 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 17:14:03 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/23 14:36:38 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/23 17:42:54 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void		ft_inc_cont(char *s, char *res, t_test *t)
+{
+	t->i += (!ft_strcmp(res, "") && s[t->i + 1] == ' ') ?
+		1 : ft_strlen(t->dollar) - 1;
+	t->i -= t->ck_key > 0 ? t->ck_key - 2 : 0;
+	if (t->dollar[ft_strlen(t->dollar) - 1] == '=')
+		t->i -= 1;
+	free(t->dollar);
+	t->i++;
+}
 
 static void	ft_only_dollar(char *s, t_test *t)
 {
 	if (s[t->i] == '$' && (s[t->i + 1] == 34 || s[t->i + 1] == 39 ||
 		s[t->i + 1] == 92))
 	{
-		if (s[t->i + 1] == 34 && !t->d_qu)
+		if (s[t->i + 1] == 34 && !t->d_qu && !t->s_qu)
 		{
 			t->d_qu = 1;
 			t->i += 2;
 		}
-		if (s[t->i + 1] == 39 && !t->d_qu)
+		if (s[t->i + 1] == 39 && !t->s_qu)
 		{
 			t->s_qu = 1;
 			t->i += 2;
@@ -56,14 +67,14 @@ static char	*ft_realloc_aux_one(char *s, t_test *t, char *res)
 		if (!ft_aux_loop_two(s, t))
 			break ;
 		if (s[t->i] == '$' && (s[t->i + 1] != ' ' &&
-			s[t->i + 1] != '\0') && !t->s_qu && !t->one_dollar && t->cut != 2)
+			s[t->i + 1] != '\0') && !t->s_qu && !t->one_dollar && t->cut != 4)
 		{
 			while (s[t->i] == '$')
 				res = ft_realloc_var(s, res, t);
 			if (s[t->i] == 0)
 				break ;
+			ft_aux_loop_quotes(s, t);
 		}
-		ft_aux_loop_quotes(s, t);
 		if (s[t->i] == 92)
 			t->i++;
 		if (s[t->i] != 0)

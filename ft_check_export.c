@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 10:55:30 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/23 14:34:03 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/23 16:01:22 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	ft_check_var(t_test *t, char *vars)
 	t->s_qu = 0;
 	if ((!ft_isalpha_cm(vars[0]) && vars[0] != '_') ||
 		(vars[0] == '\\' && vars[1] == '\\'))
-			return (0);
+		return (0);
 	if (!ft_loop_caracter(t, vars + 1))
 		return (0);
 	return (1);

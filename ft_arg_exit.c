@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/09 11:59:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/21 21:26:05 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/23 16:12:57 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ static void	ft_exit_aux(t_test *t, t_shell *pcs, int j)
 	pcs->cmp = ft_split_cmd(t->aux, ' ');
 	while (pcs->cmp[1][++i])
 	{
+		if (i == 0 && pcs->cmp[1][i] == '-')
+			i++;
 		if (!ft_isdigit(pcs->cmp[1][i]))
 			bool = 1;
 	}

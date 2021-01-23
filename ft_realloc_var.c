@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 10:59:34 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/23 10:34:19 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/23 15:59:22 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,17 +73,6 @@ static void	ft_aux_var(char *str, t_test *tmp)
 	tmp->c_keys = ft_check_keys(tmp);
 }
 
-void		ft_inc_i(char *s, char *res, t_test *t)
-{
-	t->i += (!ft_strcmp(res, "") && s[t->i + 1] == ' ') ?
-		1 : ft_strlen(t->dollar) - 1;
-	t->i -= t->ck_key > 0 ? t->ck_key - 2 : 0;
-	if (t->dollar[ft_strlen(t->dollar) - 1] == '=')
-		t->i -= 1;
-	free(t->dollar);
-	t->i++;
-}
-
 char		*ft_realloc_var(char *s, char *res, t_test *t)
 {
 	char *var;
@@ -106,6 +95,6 @@ char		*ft_realloc_var(char *s, char *res, t_test *t)
 	}
 	else
 		res = ft_dollar_aux(t, res);
-	ft_inc_i(s, res, t);
+	ft_inc_cont(s, res, t);
 	return (res);
 }

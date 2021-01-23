@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:13:48 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/23 14:41:53 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/23 16:33:43 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,7 @@
 
 void		ft_file_out(t_shell *pcs, t_test *tst, int flags)
 {
-	pcs->out = ft_realloc_str(tst, pcs->redir, tst->i - 1, 2);
-	if (ft_strchr(pcs->out, '$'))
-	{
-		ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
-		ft_putstr_fd(pcs->out, 1);
-		ft_putendl_fd(": ambiguous redirect", 1);
-		free(pcs->out);
-		ft_free_all(tst, pcs);
-		exit(1);
-	}
+	ft_redir_out_aux(pcs, tst);
 	if (tst->fdot_j == 0)
 		if (!(pcs->fd_out = (int*)malloc(sizeof(int) * tst->check_fdot)))
 			return ;
@@ -50,16 +41,7 @@ static void	ft_redir_fd(t_shell *pcs, int flags, char *dir, t_test *tst)
 		tst->i += 1;
 	if (!ft_strcmp(dir, "<"))
 	{
-		pcs->in = ft_realloc_str(tst, pcs->redir, tst->i - 1, 2);
-		if (ft_strchr(pcs->in, '$'))
-		{
-			ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
-			ft_putstr_fd(pcs->in, 1);
-			ft_putendl_fd(": ambiguous redirect", 1);
-			free(pcs->out);
-			ft_free_all(tst, pcs);
-			exit(1);
-		}
+		ft_redir_in_aux(pcs, tst);
 		if ((pcs->fd_in = open(pcs->in, flags)) == -1)
 		{
 			ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
@@ -105,7 +87,8 @@ void		ft_ck_redir_two(t_test *tst, t_shell *pcs, int pass)
 static void	ft_check_redir_aux(t_test *tst, t_shell *pcs, int pass)
 {
 	ft_redir_quotes(tst, pcs);
-	if (pcs->redir[tst->i] == '>' && !pcs->quotes && !tst->check_redir)
+	if ((pcs->redir[tst->i] == '>' || (pcs->redir[tst->i] == '<' &&
+		pcs->redir[tst->i + 1] == '>')) && !pcs->quotes && !tst->check_redir)
 		ft_ck_redir_two(tst, pcs, pass);
 	else if (pcs->redir[tst->i] == '<' && !tst->check_redir && !pcs->quotes)
 	{
