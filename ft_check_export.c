@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 10:55:30 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/22 21:03:13 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/23 14:34:03 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,6 @@ static int	ft_check_var(t_test *t, char *vars)
 		return (0);
 	return (1);
 }
-
-// static void	ft_valid_args(t_test *t, int k)
-// {
-// 	char	*aux;
-
-// 	aux = ft_realloc_str(t, t->var_exp[k], -1, 0);
-// 	ft_putstr_fd("\033[1;31m[Minishell]: export: `", 1);
-// 	ft_putstr_fd(aux, 1);
-// 	ft_putendl_fd("\': not a valid identifier", 1);
-// 	free(aux);
-// 	t->status = 1;
-// }
 
 void		ft_check_var_loop(t_test *t)
 {

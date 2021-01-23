@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 17:14:03 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/23 12:07:52 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/23 14:36:38 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static char	*ft_realloc_aux_one(char *s, t_test *t, char *res)
 		if (!ft_aux_loop_two(s, t))
 			break ;
 		if (s[t->i] == '$' && (s[t->i + 1] != ' ' &&
-			s[t->i + 1] != '\0') && !t->s_qu && !t->one_dollar)
+			s[t->i + 1] != '\0') && !t->s_qu && !t->one_dollar && t->cut != 2)
 		{
 			while (s[t->i] == '$')
 				res = ft_realloc_var(s, res, t);

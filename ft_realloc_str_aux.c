@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:02:40 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/22 19:45:41 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/23 13:58:15 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,28 @@ char		*ft_join_char(char *s, int c)
 
 void		ft_aux_loop_quotes(char *s, t_test *t)
 {
-	if (s[t->i] == 34 && !t->d_qu && !t->s_qu)
+	while (s[t->i] == 34 || s[t->i] == 39)
 	{
-		t->i++;
-		t->d_qu = 1;
-	}
-	if (s[t->i] == 34 && t->d_qu)
-	{
-		t->i++;
-		t->d_qu = 0;
-	}
-	if (s[t->i] == 39 && !t->s_qu && !t->d_qu)
-	{
-		t->i++;
-		t->s_qu = 1;
-	}
-	if (s[t->i] == 39 && t->s_qu)
-	{
-		t->i++;
-		t->s_qu = 0;
+		if (s[t->i] == 34 && !t->d_qu && !t->s_qu)
+		{
+			t->i++;
+			t->d_qu = 1;
+		}
+		if (s[t->i] == 34 && t->d_qu)
+		{
+			t->i++;
+			t->d_qu = 0;
+		}
+		if (s[t->i] == 39 && !t->s_qu && !t->d_qu)
+		{
+			t->i++;
+			t->s_qu = 1;
+		}
+		if (s[t->i] == 39 && t->s_qu)
+		{
+			t->i++;
+			t->s_qu = 0;
+		}
 	}
 }
 

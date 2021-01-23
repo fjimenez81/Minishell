@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 20:14:59 by fernando          #+#    #+#             */
-/*   Updated: 2021/01/23 13:37:35 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/23 13:46:11 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	ft_unset_aux(t_test *t)
 	else
 	{
 		split = ft_split(g_envp[t->k], '=');
-		unset = ft_strstr(g_envp[t->k],t->aux);
+		unset = ft_strstr(g_envp[t->k], t->aux);
 	}
 	if (unset != NULL)
 	{
@@ -61,12 +61,12 @@ static void	ft_loop_unset(t_test *t, t_shell *pcs, int j, int i)
 	if (!ft_strchr(pcs->cmp[j], '=') && i == pcs->n_pipe - 1 &&
 		ft_strlen(t->aux))
 		ft_unset_aux(t);
-	else if ((ft_strchr(pcs->cmp[j], '=') || !ft_strlen(t->aux)) && !t->bool)
+	else if ((ft_strchr(pcs->cmp[j], '=') || !ft_strlen(t->aux)) && !t->bool2)
 	{
 		ft_putstr_fd("\033[1;31m[Minishell]: unset: `", 1);
 		ft_putstr_fd(t->aux, 1);
 		ft_putendl_fd("\': not a valid identifier", 1);
-		t->bool = 1;
+		t->bool2 = 1;
 		t->status = 1;
 	}
 	free(t->aux);
@@ -77,7 +77,7 @@ void		ft_arg_unset(t_shell *pcs, t_test *t, int i)
 	int j;
 
 	t->k = -1;
-	t->bool = 0;
+	t->bool2 = 0;
 	ft_free_tab(pcs->cmp);
 	pcs->cmp = ft_split_cmd(pcs->pipesplit[i], ' ');
 	while (g_envp[++t->k])
