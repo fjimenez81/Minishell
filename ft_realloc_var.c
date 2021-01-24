@@ -58,6 +58,9 @@ static char	*ft_dollar_aux(t_test *tmp, char *res)
 		ft_strjoin(ft_strrchr(tmp->c_keys, '$') + 1, "=") :
 		ft_strdup(ft_strrchr(tmp->dollar, '$') + 1);
 	var = ft_print_var(tmp->c_keys);
+	if (!tmp->d_qu)
+		while (*var == ' ')
+			var++;
 	aux = ft_strjoin(res, var);
 	free(res);
 	res = aux;

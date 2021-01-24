@@ -19,8 +19,9 @@ void		ft_inc_cont(char *s, char *res, t_test *t)
 	t->i -= t->ck_key > 0 ? t->ck_key - 2 : 0;
 	if (t->dollar[ft_strlen(t->dollar) - 1] == '=')
 		t->i -= 1;
-	free(t->dollar);
 	t->i++;
+	free(t->dollar);
+	ft_aux_loop_quotes(s, t);
 }
 
 static void	ft_only_dollar(char *s, t_test *t)
@@ -73,7 +74,6 @@ static char	*ft_realloc_aux_one(char *s, t_test *t, char *res)
 				res = ft_realloc_var(s, res, t);
 			if (s[t->i] == 0)
 				break ;
-			ft_aux_loop_quotes(s, t);
 		}
 		if (s[t->i] == 92)
 			t->i++;

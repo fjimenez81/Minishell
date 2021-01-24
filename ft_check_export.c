@@ -17,13 +17,6 @@ static int	ft_loop_caracter(t_test *t, char *s)
 	while (s[++t->i])
 	{
 		ft_aux_loop_quotes(s, t);
-		if (s[t->i] == '$' && s[t->i + 1] == '{' && !t->d_qu && !t->s_qu)
-		{
-			t->i++;
-			while (s[t->i] != '}')
-				t->i++;
-			t->i++;
-		}
 		if (s[t->i] == 92)
 			t->i++;
 		if (s[t->i] == '$' && s[t->i + 1] == '?')
@@ -57,15 +50,15 @@ void		ft_check_var_loop(t_test *t)
 	i = 0;
 	while (t->var_exp[++i])
 	{
-		if (!ft_check_var(t, t->var_exp[i]))
+		aux = ft_realloc_str(t, t->var_exp[i], -1, 0);
+		if (!ft_check_var(t, t->var_exp[i]) || !ft_strlen(aux))
 		{
-			aux = ft_realloc_str(t, t->var_exp[i], -1, 0);
 			ft_putstr_fd("\033[1;31m[Minishell]: export: `", 1);
 			ft_putstr_fd(aux, 1);
 			ft_putendl_fd("\': not a valid identifier", 1);
-			free(aux);
 			t->status = 1;
 			ft_memmove(t->var_exp[i], "", ft_strlen(t->var_exp[i]));
 		}
+		free(aux);
 	}
 }
