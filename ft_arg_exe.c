@@ -78,13 +78,16 @@ void		ft_not_path(t_shell *pcs, t_test *tst, int i, char **aux)
 int			ft_arg_exe(t_shell *pcs, t_test *tst, int i)
 {
 	char	**aux;
+	int		len;
 
 	if (pcs->pipesplit[i][0] == '>' || pcs->pipesplit[i][0] == '<')
 		return (0);
+	len = ft_strlen(pcs->cmp[0]) - 1;
 	tst->sub = ft_realloc_str(tst, pcs->pipesplit[i], -1, 0);
 	ft_free_tab(pcs->cmp);
-	if ((pcs->pipesplit[i][0] == 34 || pcs->pipesplit[i][0] == 39 ||
-		pcs->pipesplit[i][0] == 92) && pcs->args > 1)
+	if (((pcs->pipesplit[i][0] == 34 || pcs->pipesplit[i][0] == 39 ||
+		pcs->pipesplit[i][0] == 92) && pcs->args > 1) ||
+		pcs->pipesplit[i][len] == 92)
 		pcs->cmp = ft_split_cmd(pcs->pipesplit[i], ' ');
 	else
 		pcs->cmp = ft_split_cmd(tst->sub, ' ');

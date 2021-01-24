@@ -109,11 +109,11 @@ int			ft_print_syntax(t_test *t)
 	if (!ft_print_syntax_aux(t))
 		return (0);
 	if (t->aux[t->i] == 92 && t->aux[t->i + 1] == 92)
-		t->i += 1;
-	else if (t->aux[t->i] == 92 && (t->aux[t->i + 1] == ';' ||
+		t->i += 2;
+	if (t->aux[t->i] == 92 && (t->aux[t->i + 1] == ';' ||
 			t->aux[t->i + 1] == '|'))
-		t->i += 1;
-	else if (t->aux[t->i] == ';' && t->aux[t->i + 1] == ';' &&
+		t->i += 2;
+	if (t->aux[t->i] == ';' && t->aux[t->i + 1] == ';' &&
 			!t->d_qu && !t->s_qu)
 	{
 		ft_putstr_fd("\033[1;31m[Minishell]: ", 1);

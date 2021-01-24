@@ -54,11 +54,15 @@ static int	ft_execute(t_shell *pcs, int i, t_test *tst)
 
 static void	ft_pipe_son(t_shell *pcs, t_test *tst, int j)
 {
-	dup2(pcs[j].pipes[SIDEIN], STDOUT);
-	if (j > 0)
-		dup2(pcs[j - 1].pipes[SIDEOUT], STDIN);
+	if (pcs->n_pipe > 1)
+	{
+		close(pcs[j].pipes[READ]);//Cierra el extremo de lectura no necesario del pipe actual
+		dup2(pcs[j].pipes[WRITE], STDOUT);//Copia la salida extandar al extremo de escritura del pipe actual
+		if (j > 0)
+			dup2(pcs[j - 1].pipes[READ], STDIN);//Copia la entrada extandar al extremo de lectura del pipe previo
+	}
 	if (j == pcs->n_pipe - 1)
-		dup2(pcs->std_out, STDOUT);
+		dup2(pcs->std_out, STDOUT);//Copia la salida extandar a std_out para mostrarlo en pantalla
 	pcs->ret = ft_execute(pcs, j, tst);
 	ft_close_fd(pcs);
 	ft_free_all(tst, pcs);
@@ -67,22 +71,20 @@ static void	ft_pipe_son(t_shell *pcs, t_test *tst, int j)
 
 static void	ft_pipe_father(t_shell *pcs, t_test *tst, int j)
 {
-	waitpid(pcs->pid, &tst->status, 0);
 	if (pcs->n_pipe > 1)
 	{
-		close(pcs[j].pipes[SIDEIN]);
-		if (j == pcs->n_pipe)
-			close(pcs[j].pipes[SIDEOUT]);
-		if (j > 0)
-			close(pcs[j - 1].pipes[SIDEOUT]);
-		if (WIFEXITED(tst->status))
-			pcs->ret = WEXITSTATUS(tst->status);
+		close(pcs[j].pipes[WRITE]);//El padre va cerrando el extremo de escritura del pipe actual
+		if (j == pcs->n_pipe - 1)
+			close(pcs[j].pipes[READ]);//El padre cierra el extremo de lectura del ultimo pipe
 	}
+	waitpid(pcs->pid, &tst->status, WUNTRACED);
+	if (WIFEXITED(tst->status))
+		pcs->ret = WEXITSTATUS(tst->status);
 }
 
 void		ft_check_pipes(t_shell *pcs, t_test *tst, int j)
 {
-	pcs->std_in = dup(0);
+	//pcs->std_in = dup(0);
 	pcs->std_out = dup(1);
 	if (pcs->n_pipe > 1)
 		pipe(pcs[j].pipes);

@@ -17,7 +17,7 @@ void	ft_ctrl_process(int sig)
 	if (sig == SIGINT)
 	{
 		g_minish->exit = 130;
-		g_minish->status = 0;
+		g_minish->status = 130;
 		g_quit = 0;
 		ft_putstr_fd("\n", 1);
 	}

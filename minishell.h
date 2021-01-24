@@ -28,8 +28,8 @@
 
 # define BUFFER_SIZE 2
 # define TOK_LIMITS " \t"
-# define SIDEIN 1
-# define SIDEOUT 0
+# define WRITE 1
+# define READ 0
 # define STDOUT 1
 # define STDIN 0
 
@@ -91,6 +91,7 @@ typedef struct	s_shell
 	int			std_out;
 	int			std_in;
 	int			pipes[2];
+	int			fpip[2];
 	pid_t		pid;
 	int			n_pipe;
 	int			fd_in;
