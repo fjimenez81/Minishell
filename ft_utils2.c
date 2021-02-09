@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/28 18:03:57 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/10/29 20:44:23 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/02/08 11:35:18 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,24 @@ void	ft_swap(char **a, char **b)
 	*b = c;
 }
 
-int		ft_isalpha_cm(int c)
+char	*ft_get_var(char *path, int find)
 {
-	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '$' ||
-		c == '\"' || c == '\'' || c == '\\');
+	int		i;
+	char	*aux;
+
+	i = -1;
+	aux = NULL;
+	while (g_envp[++i])
+	{
+		if (!ft_strncmp(g_envp[i], path, ft_strlen(path)))
+		{
+			aux = ft_strdup(ft_first_ap(g_envp[i], '=') + 1);
+			return (aux);
+		}
+	}
+	if (!aux && find == 1)
+		ft_putendl_fd("\033[1;31m[Minishell]: cd: HOME not set", 2);
+	return (NULL);
 }
 
 char	*ft_cutstr(char *src, char *cut)
@@ -47,7 +61,7 @@ char	*ft_cutstr(char *src, char *cut)
 	j = 0;
 	while (src[++i])
 	{
-		if (src[i] == cut[j])
+		if (src[i] == cut[j] || src[i] == cut[j] - 32)
 			j++;
 		else
 			j = 0;
@@ -74,8 +88,8 @@ char	*ft_cut_end(char *s, int bool)
 	i = -1;
 	while (s[++i])
 	{
-		if ((s[i] == '?' && s[i - 1] == '$') ||
-			(s[i] == '{' && s[i - 1] != '\\'))
+		if ((s[i] == 63 && s[i - 1] == 36) || (s[i] == '{' && s[i - 1] != 92) ||
+			((s[i] == 34 || s[i] == 39) && s[i + 1] == '}') || s[i] == '_')
 			i++;
 		else if ((bool && s[i] == '=') || (!ft_isalnum(s[i]) && i > 0) ||
 			(s[i] == '$' && (s[i + 1] == '\0' || s[i + 1] != ' ') && i != 0))

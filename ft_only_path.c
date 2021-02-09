@@ -6,58 +6,61 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 07:16:14 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/22 21:06:34 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/02/08 11:34:06 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_free_struct(t_test *t)
+int		ft_isupper(char *s)
 {
-	free(t->line);
-	ft_free_tab(g_envp);
+	int i;
+
+	i = -1;
+	while (s[++i])
+	{
+		if (s[i] >= 'A' && s[i] <= 'Z')
+			return (1);
+	}
+	return (0);
 }
 
-static int	ft_only_path_aux(t_shell *pcs, t_test *t)
+void	ft_change_case(char **s)
 {
-	if (!ft_strcmp(pcs->cmp[0], "$PATH"))
+	int i;
+
+	i = 0;
+	while ((*s)[i])
 	{
-		if (ft_get_var(t, "PATH", 0))
-		{
-			ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
-			ft_putstr_fd(ft_get_var(t, "PATH", 0), 1);
-			ft_putendl_fd(": No such file or directory", 1);
-		}
-		return (0);
+		if ((*s)[i] >= 'A' && (*s)[i] <= 'Z')
+			(*s)[i] += 32;
+		i++;
 	}
-	return (1);
 }
 
-int			ft_only_path(t_shell *pcs, t_test *t)
+void	ft_only_path(t_shell *pcs)
 {
-	if (!ft_strcmp(pcs->cmp[0], "$HOME"))
+	char *aux;
+
+	if (!ft_strcmp(pcs->upper[0], "$HOME") ||
+		!ft_strcmp(pcs->upper[0], "~") || !ft_strcmp(pcs->upper[0], "~/"))
 	{
-		if (ft_get_var(t, "HOME", 0))
-		{
-			ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
-			ft_putstr_fd(ft_get_var(t, "HOME", 0), 1);
-			ft_putendl_fd(": is a directory", 1);
-			t->status = 126;
-		}
-		return (0);
+		aux = ft_get_var("HOME=", 0);
+		if (aux || !ft_strcmp(pcs->upper[0], "~"))
+			ft_print_error(aux, NULL,
+							": is a directory");
+		pcs->ret = 126;
+		pcs->bool = 1;
+		free(aux);
 	}
-	else if (!ft_strcmp(pcs->cmp[0], "$PWD"))
+	else if (!ft_strcmp(pcs->upper[0], "$PWD"))
 	{
-		if (ft_get_var(t, "PWD", 0))
-		{
-			ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
-			ft_putstr_fd(ft_get_var(t, "PWD", 0), 1);
-			ft_putendl_fd(": is a directory", 1);
-			t->status = 126;
-		}
-		return (0);
+		aux = ft_get_var("PWD=", 0);
+		if (aux)
+			ft_print_error(aux, NULL,
+							": is a directory");
+		pcs->ret = 126;
+		pcs->bool = 1;
+		free(aux);
 	}
-	else if (!ft_only_path_aux(pcs, t))
-		return (0);
-	return (1);
 }

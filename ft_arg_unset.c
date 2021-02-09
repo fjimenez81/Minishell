@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 20:14:59 by fernando          #+#    #+#             */
-/*   Updated: 2021/01/23 13:46:11 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/02/07 17:38:47 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,54 +36,67 @@ static void	ft_unset_aux(t_test *t)
 	char	**split;
 
 	tmp = ft_strjoin(t->aux, "=");
+	split = ft_split(g_envp[t->k], '=');
 	if (ft_strchr(t->aux, '='))
-	{
-		split = ft_split(g_envp[t->k], '=');
 		unset = ft_strstr(g_envp[t->k], tmp);
-	}
 	else
-	{
-		split = ft_split(g_envp[t->k], '=');
 		unset = ft_strstr(g_envp[t->k], t->aux);
-	}
 	if (unset != NULL)
 	{
 		if (!ft_strcmp(split[0], t->aux))
-			ft_memmove(g_envp[t->k], "", ft_strlen(g_envp[t->k]));
+			ft_memmove(g_envp[t->k], " ", ft_strlen(g_envp[t->k]));
 	}
 	free(tmp);
 	ft_free_tab(split);
 }
 
-static void	ft_loop_unset(t_test *t, t_shell *pcs, int j, int i)
+static int	ft_unset_check(char *s)
 {
-	t->aux = ft_realloc_str(t, pcs->cmp[j], -1, 0);
-	if (!ft_strchr(pcs->cmp[j], '=') && i == pcs->n_pipe - 1 &&
-		ft_strlen(t->aux))
-		ft_unset_aux(t);
-	else if ((ft_strchr(pcs->cmp[j], '=') || !ft_strlen(t->aux)) && !t->bool2)
+	int i;
+
+	i = -1;
+	while (s[++i])
 	{
-		ft_putstr_fd("\033[1;31m[Minishell]: unset: `", 1);
-		ft_putstr_fd(t->aux, 1);
-		ft_putendl_fd("\': not a valid identifier", 1);
+		if (i == 0 && ft_isdigit(s[i]))
+			return (0);
+		if (s[i] == 92)
+			i++;
+		if (!ft_isalnum(s[i]) && s[i] != '_')
+			return (0);
+	}
+	return (1);
+}
+
+static void	ft_loop_unset(t_test *t, t_shell *pcs, int j)
+{
+	t->aux = ft_realloc_str(pcs->cmp[j], -1, 0);
+	if (ft_unset_check(t->aux) && ft_strlen(t->aux))
+		ft_unset_aux(t);
+	else if ((!ft_unset_check(t->aux) ||
+			!ft_strlen(t->aux)) && !t->bool2)
+	{
+		ft_print_error(t->aux, "unset: `", "\': not a valid identifier");
 		t->bool2 = 1;
-		t->status = 1;
+		pcs->ret = 1;
 	}
 	free(t->aux);
 }
 
-void		ft_arg_unset(t_shell *pcs, t_test *t, int i)
+int			ft_arg_unset(t_shell *p)
 {
-	int j;
+	int		j;
+	t_test	t;
 
-	t->k = -1;
-	t->bool2 = 0;
-	ft_free_tab(pcs->cmp);
-	pcs->cmp = ft_split_cmd(pcs->pipesplit[i], ' ');
-	while (g_envp[++t->k])
+	t.k = -1;
+	t.bool2 = 0;
+	p->ret = 0;
+	ft_free_tab(p->cmp);
+	p->cmp = ft_split_cmd(p->pipesplit[p->n], ' ');
+	while (g_envp[++t.k])
 	{
 		j = 0;
-		while (++j < ft_len_tab(pcs->cmp))
-			ft_loop_unset(t, pcs, j, i);
+		while (++j < ft_len_tab(p->cmp))
+			ft_loop_unset(&t, p, j);
 	}
+	return (p->ret);
 }

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/23 16:53:06 by fernando          #+#    #+#             */
-/*   Updated: 2021/01/21 19:20:09 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/31 21:00:14 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,26 @@ int		ft_len_tab(char **args)
 	return (i);
 }
 
-void	*ft_memalloc(size_t size)
+char	*ft_first_ap(const char *s, int c)
 {
-	unsigned char *mem;
+	char *first;
 
-	if (!(mem = (unsigned char*)malloc(sizeof(size_t) * size)))
-		return (NULL);
-	ft_bzero(mem, size);
-	return (mem);
+	first = NULL;
+	if (*s == c)
+		return (char*)s;
+	while (*s++)
+	{
+		if (*s == c)
+		{
+			first = (char*)s;
+			break ;
+		}
+	}
+	if (first)
+		return (first);
+	if (c == '\0')
+		return ((char*)s);
+	return (0);
 }
 
 void	ft_free_tab(char **str)

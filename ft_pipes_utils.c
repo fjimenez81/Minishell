@@ -6,88 +6,76 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 10:21:55 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/21 20:50:25 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/02/07 19:14:06 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	ft_free_int_tab(int **arr)
+{
+	int i;
+
+	i = 0;
+	while (arr[i])
+		i++;
+	while (i >= 0)
+	{
+		free(arr[i]);
+		arr[i] = NULL;
+		i--;
+	}
+	free(arr);
+	arr = NULL;
+}
+
 void	ft_ctrl_process(int sig)
 {
 	if (sig == SIGINT)
 	{
-		g_minish->exit = 130;
-		g_minish->status = 130;
 		g_quit = 0;
 		ft_putstr_fd("\n", 1);
 	}
 	else if (sig == SIGQUIT)
 	{
-		g_minish->exit = 131;
 		ft_putstr_fd("Quit\n", 1);
 	}
 }
 
-void	ft_cut_pcs(t_test *tst)
+void	ft_err_exit(t_shell *pcs)
 {
-	signal(SIGINT, &ft_ctrl_process);
-	if (g_quit == 1)
-	{
-		tst->cheat = 1;
-		g_quit = 0;
-	}
-}
+	int		i;
+	char	*aux;
 
-void	ft_close_fd(t_shell *pcs)
-{
-	if (pcs->flag_out)
-	{
-		dup2(pcs->std_out, 1);
-		pcs->flag_out = 0;
-		free(pcs->fd_out);
-	}
-	if (pcs->flag_in)
-	{
-		dup2(pcs->std_out, 0);
-		pcs->flag_in = 0;
-	}
-}
-
-void	ft_err_exit(t_shell *pcs, t_test *tst, int i)
-{
-	char *aux;
-
+	i = -1;
 	ft_free_tab(pcs->cmp);
-	pcs->cmp = ft_split_cmd(pcs->pipesplit[i], ' ');
-	if (g_minish->exit > 129 &&
-		WEXITSTATUS(g_minish->status) != 127 && !tst->cheat)
+	pcs->cmp = ft_split_cmd(pcs->pipesplit[pcs->n], ' ');
+	while (pcs->cmp[++i])
 	{
-		aux = ft_realloc_str(tst, pcs->cmp[0], -1, g_minish->exit);
-		ft_print_error(aux);
-		free(aux);
+		aux = ft_realloc_str(pcs->cmp[i], -1, 0);
+		free(pcs->cmp[i]);
+		pcs->cmp[i] = aux;
 	}
-	else if (tst->cheat)
+	i = -1;
+	while (pcs->cmp[0][++i])
 	{
-		aux = ft_realloc_str(tst, pcs->cmp[0], -1, 9);
-		ft_print_error(aux);
-		free(aux);
+		if (pcs->cmp[0][i] == '/')
+		{
+			ft_print_error(pcs->cmp[0], NULL, ": No such file or directory");
+			return ;
+		}
 	}
-	else
-	{
-		aux = ft_realloc_str(tst, pcs->cmp[0], -1, 0);
-		ft_print_error(aux);
-		free(aux);
-	}
+	ft_print_error(pcs->cmp[0], NULL, ": command not found");
 }
 
-int		ft_ck_rd_envp(t_shell *pcs, t_test *tst, char *str)
+int		ft_ck_rd_envp(t_shell *pcs, char *str)
 {
 	char	*aux;
 	int		len;
 	int		i;
 	int		check;
 
-	aux = ft_realloc_str(tst, pcs->cmp[0], -1, 1);
+	aux = ft_realloc_str(pcs->cmp[0], -1, 1);
 	len = ft_strlen(str);
 	check = 0;
 	i = -1;

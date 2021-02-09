@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/22 16:51:37 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/21 19:37:15 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/02/02 13:41:08 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,39 +18,23 @@ void	ft_ctrl(int sig)
 	{
 		g_minish->exit2 = 3;
 		ft_putstr_fd("\b\b  \n\033[1;92m[Minishell]-1.0$\033[0m ", 1);
-		g_minish->cheat = 1;
 		g_quit = 1;
+		g_status = 1;
 	}
 }
 
-void	ctrl_d(t_test *t)
+void	ctrl_d(void)
 {
 	g_minish->exit2 = -1;
 	if (g_minish->fd_line == 0)
 	{
 		ft_putendl_fd("\033[1;31mexit", 1);
-		if (g_quit && t->exit != 127)
-		{
-			ft_free_struct(t);
-			exit(1);
-		}
-		else if (t->exit > 129 && WEXITSTATUS(t->status) != 127)
-		{
-			ft_free_struct(t);
-			exit(t->exit);
-		}
-		else
-		{
-			ft_free_struct(t);
-			exit(WEXITSTATUS(t->status));
-		}
+		exit(g_status);
 	}
 }
 
 void	ft_init_struct(t_test *tst)
 {
-	tst->cheat = 0;
-	tst->cd = 0;
 	g_minish = tst;
 	g_minish->count = 0;
 	g_minish->count2 = 0;
@@ -66,7 +50,7 @@ void	ft_rd_line(t_test *tst)
 	ft_init_struct(tst);
 	line = ft_get_line_eof(line);
 	tst->line = line;
-	ctrl_d(tst);
+	ctrl_d();
 	if (g_minish->exit2 == -1 && g_quit == 1)
 	{
 		aux = g_minish->line_aux;
@@ -85,23 +69,17 @@ int		main(int ac, char **av, char **env)
 
 	if (ac != 1)
 	{
-		ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
-		ft_putstr_fd(av[1], 1);
-		ft_putendl_fd(": No such file or directory", 1);
+		ft_print_error(av[1], NULL, ": No such file or directory");
 		return (127);
 	}
 	init_env(env);
-	tst.status = 0;
+	g_status = 0;
 	while (1)
 	{
 		signal(SIGINT, &ft_ctrl);
 		signal(SIGQUIT, &ft_ctrl);
 		ft_putstr_fd("\033[1;92m[Minishell]-1.0$\033[0m ", 1);
 		ft_rd_line(&tst);
-		if (g_minish->exit == 130 && tst.status == 0)
-			g_minish->exit = 0;
-		if (tst.cheat == 1)
-			tst.cheat = 0;
 	}
 	return (0);
 }

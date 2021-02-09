@@ -6,81 +6,50 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 13:52:05 by fernando          #+#    #+#             */
-/*   Updated: 2021/01/23 14:30:29 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/02/08 21:40:39 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_free_all(t_test *t, t_shell *pcs)
+void	ft_change_dollar(t_shell *p, t_dup *redirs, int n)
 {
-	ft_free_tab(pcs->cmp);
-	ft_free_tab(pcs->pipesplit);
-	ft_free_tab(t->cmd);
-	free(t->line);
-	free(t->ckqu);
-	free(pcs);
-	ft_free_tab(g_envp);
+	int		i;
+	char	*aux;
+
+	p->n = n;
+	p->upper = ft_split_cmd(p->pipesplit[n], ' ');
+	if (redirs->bool_in || redirs->bool_out || redirs->bool)
+	{
+		ft_free_tab(p->cmp);
+		p->cmp = ft_split_cmd(p->pipesplit[p->n], ' ');
+	}
+	i = -1;
+	while (p->cmp[++i])
+	{
+		aux = ft_realloc_str(p->cmp[i], -1, 0);
+		free(p->cmp[i]);
+		p->cmp[i] = aux;
+		if (p->cmp[i] == NULL)
+			p->ret = 1;
+	}
+	p->args = ft_len_tab(p->cmp);
+	ft_lst_cmd(p->cmp[p->args - 1]);
 }
 
-void	ft_redir_quotes(t_test *tst, t_shell *pcs)
+void	ft_lst_cmd(char *s)
 {
-	if (tst->check_redir)
-		tst->check_redir = 0;
-	if ((pcs->redir[tst->i] == 34 || pcs->redir[tst->i] == 39) && !pcs->quotes)
-		pcs->quotes = 1;
-	else if ((pcs->redir[tst->i] == 34 || pcs->redir[tst->i] == 39) &&
-			pcs->quotes)
-		pcs->quotes = 0;
-	else if (pcs->redir[tst->i] == 92)
-	{
-		tst->i++;
-		if ((pcs->redir[tst->i] == '>' || pcs->redir[tst->i] == '<') &&
-			!pcs->quotes)
-			tst->check_redir = 1;
-	}
-}
+	int		i;
+	char	*tmp;
 
-void	ft_getcount_aux(char **s)
-{
-	if (**s == '\"')
+	i = -1;
+	while (g_envp[++i])
 	{
-		while (**s && **s == '\"')
-			*s += 1;
-		*s += 1;
-		while (**s && **s != '\"')
-			*s += 1;
-	}
-	if (**s == '\'')
-	{
-		while (**s && **s == '\'')
-			*s += 1;
-		*s += 1;
-		while (**s && **s != '\'')
-			*s += 1;
-	}
-}
-
-void	ft_wordlen_aux(char **s, int *count)
-{
-	if (**s == '\"')
-	{
-		*count += 1;
-		*s += 1;
-		while (**s && **s != '\"')
+		if (g_envp[i][0] == '_' && g_envp[i][1] == '=')
 		{
-			*s += 1;
-			*count += 1;
-		}
-	}
-	if (**s == '\'')
-	{
-		*s += 1;
-		*count += 1;
-		while (**s && **s != '\'')
-		{
-			*s += 1;
-			*count += 1;
+			tmp = ft_strjoin("_=", s);
+			free(g_envp[i]);
+			g_envp[i] = tmp;
 		}
 	}
 }

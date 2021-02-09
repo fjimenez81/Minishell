@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:02:40 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/23 17:23:09 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/02/08 19:47:38 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,28 @@ char		*ft_join_char(char *s, int c)
 	return (res);
 }
 
+char		*ft_tilde_redir(t_test *t, char *res)
+{
+	char	*tmp;
+	char	*aux;
+
+	tmp = ft_get_var("HOME=", 0);
+	if (tmp != NULL)
+	{
+		aux = ft_strjoin(res, tmp);
+		free(res);
+		res = aux;
+		t->i++;
+		t->tilde = 1;
+	}
+	free(tmp);
+	return (res);
+}
+
 static int	ft_quotes_aux(char *s, t_test *t)
 {
+	if (s[t->i] == 39 && s[t->i + 1] == 39)
+		t->i += 2;
 	if (s[t->i] == 39 && !t->s_qu && !t->d_qu)
 	{
 		t->i++;
@@ -48,8 +68,12 @@ static int	ft_quotes_aux(char *s, t_test *t)
 
 void		ft_aux_loop_quotes(char *s, t_test *t)
 {
-	while (s[t->i] == 34 || s[t->i] == 39)
+	while (s[t->i] && (s[t->i] == 34 || s[t->i] == 39))
 	{
+		if (s[t->i] == 34 && s[t->i + 1] == 34 && !t->d_qu && !t->s_qu)
+			t->i += 2;
+		if (s[t->i] == 34 && t->d_qu && s[t->i + 1] == '$')
+			t->cheat = 1;
 		if (s[t->i] == 34 && !t->d_qu && !t->s_qu)
 		{
 			t->i++;
@@ -75,10 +99,20 @@ void		ft_realloc_aux_two(char *s, t_test *t)
 		t->one_dollar = 0;
 	if (t->check_redir)
 		t->check_redir = 0;
-	else if (s[t->i] == ' ' && (!t->d_qu && !t->s_qu))
+	if (t->slash)
+		t->slash = 0;
+	if (t->tilde)
+		t->tilde = 2;
+	if (s[t->i] == 92 && s[t->i + 1] != 92 && (t->d_qu || t->s_qu))
 	{
-		while (ft_isspace(s[t->i]))
+		if (s[t->i + 1] == 34 || s[t->i + 1] == 39)
 			t->i++;
-		t->i--;
+		else if (s[t->i + 1] == '$')
+		{
+			t->i++;
+			t->one_dollar = 1;
+		}
+		else
+			t->slash = 1;
 	}
 }

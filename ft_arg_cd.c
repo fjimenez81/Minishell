@@ -6,103 +6,68 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/24 21:08:07 by fernando          #+#    #+#             */
-/*   Updated: 2021/01/21 07:39:23 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/02/08 11:26:21 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_get_up_var(char *oldpath)
+static void	ft_get_up_var(void)
 {
 	char	path[PATH_MAX];
-	char	*aux;
 	int		i;
 	int		pos;
+	int		j;
 
 	getcwd(path, -1);
 	i = -1;
-	aux = ft_strjoin("PWD=", oldpath);
 	pos = 0;
+	j = 0;
 	while (g_envp[++i])
 	{
-		if (ft_strstr(g_envp[i], "OLDPWD="))
-		{
+		if (!ft_strncmp(g_envp[i], "OLDPWD=", 7))
 			pos = i;
-			i++;
-		}
-		else if (ft_strstr(g_envp[i], aux))
-			break ;
+		else if (!ft_strncmp(g_envp[i], "PWD=", 4))
+			j = i;
 	}
-	free(aux);
-	free(g_envp[i]);
-	g_envp[i] = ft_strjoin("PWD=", path);
 	free(g_envp[pos]);
-	g_envp[pos] = ft_strjoin("OLDPWD=", oldpath);
+	g_envp[pos] = ft_strjoin("OLDPWD=", ft_first_ap(g_envp[j], '=') + 1);
+	free(g_envp[j]);
+	g_envp[j] = ft_strjoin("PWD=", path);
 }
 
-char		*ft_get_var(t_test *t, char *path, int find)
+static int	ft_arg_cd_aux(t_test *t)
 {
-	int i;
-
-	i = -1;
-	t->aux = NULL;
-	while (g_envp[++i])
-	{
-		if (ft_strstr(g_envp[i], path))
-		{
-			t->aux = ft_strrchr(g_envp[i], '=') + 1;
-			return (t->aux);
-		}
-	}
-	if (!t->aux && find == 1)
-	{
-		ft_putendl_fd("\033[1;31m[Minishell]: cd: HOME not set", 1);
-		t->status = 1;
-	}
-	return (NULL);
-}
-
-static void	ft_arg_cd_aux(t_shell *pcs, t_test *t, char *oldpath, int i)
-{
-	if (i == pcs->n_pipe - 1)
-	{
-		if (chdir(t->aux) == 0)
-		{
-			ft_get_up_var(oldpath);
-			t->cd = 1;
-		}
-	}
+	if (!ft_strlen(t->aux))
+		return (0);
+	t->cd = chdir(t->aux);
 	if (!t->cd)
 	{
-		if (chdir(t->aux) != 0)
-		{
-			ft_putstr_fd("\033[1;31m[Minishell]: cd: ", 1);
-			ft_putstr_fd(t->aux, 1);
-			ft_putendl_fd(": No such file or directory", 1);
-			t->status = 1;
-		}
-		chdir(oldpath);
+		ft_get_up_var();
+		return (0);
 	}
+	ft_print_error(t->aux, "cd: ", ": No such file or directory");
+	return (1);
 }
 
-void		ft_arg_cd(t_shell *pcs, t_test *t, int i)
+int			ft_arg_cd(t_shell *pcs)
 {
 	char	oldpath[PATH_MAX];
+	t_test	t;
 
+	pcs->ret = 0;
 	getcwd(oldpath, -1);
-	ft_free_tab(pcs->cmp);
-	pcs->cmp = ft_split_cmd(pcs->pipesplit[i], ' ');
-	if (!ft_only_path(pcs, t))
-		return ;
-	if (i == pcs->n_pipe - 1 && (ft_len_tab(pcs->cmp) == 1 ||
-		!ft_strcmp(pcs->cmp[0], "~") || pcs->cmp[1][0] == '<' ||
-		pcs->cmp[1][0] == '>'))
+	if (pcs->args == 1)
 	{
-		if (chdir(ft_get_var(t, "HOME", 1)) == 0)
-			ft_get_up_var(oldpath);
-		return ;
+		t.aux = ft_get_var("HOME=", 1);
+		if (t.aux == NULL)
+			pcs->ret = 1;
+		t.cd = chdir(t.aux);
+		if (!t.cd)
+			ft_get_up_var();
+		free(t.aux);
+		return (pcs->ret);
 	}
-	t->aux = ft_realloc_str(t, pcs->cmp[1], -1, 0);
-	ft_arg_cd_aux(pcs, t, oldpath, i);
-	free(t->aux);
+	t.aux = pcs->cmp[1];
+	return (ft_arg_cd_aux(&t));
 }

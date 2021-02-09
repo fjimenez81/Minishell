@@ -6,7 +6,7 @@
 #    By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/18 21:02:40 by fernando          #+#    #+#              #
-#    Updated: 2021/01/23 16:04:05 by fjimenez         ###   ########.fr        #
+#    Updated: 2021/02/08 12:00:25 by fjimenez         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,9 @@ SRC =	main \
 		ft_exp_print \
 		ft_check_export \
 		ft_realloc_var \
-		ft_check_pipes \
+		ft_check_forks \
+		ft_pipelize \
+		ft_close_fds \
 		ft_loop_pipes \
 		ft_arg_exe \
 		ft_arg_exit \
@@ -47,7 +49,7 @@ OFILES = $(addsuffix .o, $(SRC))
 LIBFT = libft/libft.a
 M_LIBFT = make -C libft/
 
-CC = gcc -Wall -Wextra -Werror 
+CC = gcc -Wall -Wextra -Werror
 
 RM = rm -rf
 

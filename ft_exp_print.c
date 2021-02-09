@@ -6,11 +6,37 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:28:04 by fjimenez          #+#    #+#             */
-/*   Updated: 2020/12/10 20:37:40 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/02/02 13:04:38 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int			ft_pt_syntax_aux_three(t_test *t)
+{
+	if (t->aux[t->i] == '>' && t->aux[t->i + 1] == '>')
+	{
+		while (t->aux[t->i] == ' ')
+			t->i++;
+		if (t->aux[t->i] == '>' && t->aux[t->i + 1] == '>' &&
+			t->aux[t->i + 2] != '>')
+		{
+			ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
+			ft_putendl_fd("syntax error near unexpected token `>'", 1);
+			free(t->aux);
+			return (0);
+		}
+		t->i++;
+		if (t->aux[t->i] == '>' && t->aux[t->i + 1] == '>')
+		{
+			ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
+			ft_putendl_fd("syntax error near unexpected token `>>'", 1);
+			free(t->aux);
+			return (0);
+		}
+	}
+	return (1);
+}
 
 static char	**ft_sort_export_aux(char **export, int len)
 {
@@ -31,35 +57,41 @@ static char	**ft_sort_export_aux(char **export, int len)
 	return (export);
 }
 
-static char	*ft_print_export(char **export, int i)
+static void	ft_print_export(char **export, int i, int fd)
 {
-	char *tmp;
+	int j;
+	int bool;
 
-	if (ft_strchr(export[i], '=') &&
-		export[i][ft_strlen(export[i]) - 1] == '=')
+	j = -1;
+	bool = 0;
+	while (export[i][++j])
 	{
-		tmp = export[i];
-		free(export[i]);
-		export[i] = ft_strjoin(tmp, "\'\'");
-		return (export[i]);
+		if (export[i][j] == '=' && export[i][j + 1] != 0 && !bool)
+		{
+			ft_putstr_fd("=\"", fd);
+			bool = 1;
+		}
+		else if (j == (int)ft_strlen(export[i]) - 1)
+		{
+			ft_putchar_fd(export[i][j], fd);
+			if (ft_strchr(export[i], '='))
+				ft_putchar_fd(34, fd);
+			ft_putchar_fd('\n', fd);
+		}
+		else
+			ft_putchar_fd(export[i][j], fd);
 	}
-	else if (ft_strcmp(export[i], "") != 0 && ft_strchr(export[i], '='))
-		return (export[i]);
-	else if (!ft_strchr(export[i], '=') && ft_strcmp(export[i], "") != 0)
-		return (export[i]);
-	return (NULL);
 }
 
-int			ft_sort_export(void)
+void		ft_sort_export(int fd)
 {
 	int		i;
 	int		len;
 	char	**export;
-	char	*aux;
 
 	len = ft_len_tab(g_envp);
 	if (!(export = (char**)malloc(sizeof(char*) * len + 1)))
-		return (-1);
+		return ;
 	i = -1;
 	while (g_envp[++i])
 		export[i] = ft_strdup(g_envp[i]);
@@ -68,10 +100,14 @@ int			ft_sort_export(void)
 	i = -1;
 	while (export[++i])
 	{
-		aux = ft_strjoin("declare -x ", ft_print_export(export, i));
-		ft_putendl_fd(aux, 1);
-		free(aux);
+		len = 0;
+		if (export[i][0] == '_' && export[i][1] == '=')
+			len = 1;
+		if (!len && export[i][0] != ' ')
+		{
+			ft_putstr_fd("declare -x ", fd);
+			ft_print_export(export, i, fd);
+		}
 	}
 	ft_free_tab(export);
-	return (0);
 }

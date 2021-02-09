@@ -6,13 +6,13 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:35:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/22 16:26:25 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/01/30 19:06:09 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char			*ft_get_line_eof(char *line)
+char	*ft_get_line_eof(char *line)
 {
 	int		byte;
 
@@ -38,7 +38,7 @@ char			*ft_get_line_eof(char *line)
 	return (line);
 }
 
-int				ft_check_sintax(t_test *t, char *line)
+int		ft_check_sintax(t_test *t, char *line)
 {
 	t->i = -1;
 	t->d_qu = 0;
@@ -49,15 +49,13 @@ int				ft_check_sintax(t_test *t, char *line)
 		ft_aux_loop_quotes(t->aux, t);
 		if (!ft_print_syntax(t))
 		{
-			g_minish->exit = 258;
-			t->status = 258;
+			g_status = 258;
 			return (0);
 		}
 		if ((t->aux[t->i] == 92 || t->aux[t->i] == '|') &&
 			t->aux[t->i + 1] == 0 && !t->d_qu && !t->s_qu)
 		{
-			ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
-			ft_putendl_fd("syntax error multilines are not allowed!!", 1);
+			ft_print_error("ADMIN: ", NULL, "Multilines are not allowed");
 			free(t->aux);
 			return (0);
 		}
@@ -66,81 +64,65 @@ int				ft_check_sintax(t_test *t, char *line)
 	return (1);
 }
 
-void			ft_comands(t_test *tst, char *line)
+void	ft_build_pipes(t_shell *p)
+{
+	int	i;
+	int	len;
+	int **pipearray;
+
+	i = 0;
+	len = 0;
+	p->pids = 0;
+	while (p->pipesplit[len])
+		len++;
+	if (len == 0)
+		return ;
+	pipearray = ft_calloc(len, sizeof(int *));
+	if (pipearray == NULL)
+		exit(1);
+	while (i + 1 < len)
+	{
+		pipearray[i] = ft_calloc(3, sizeof(int));
+		if (pipearray[i] == NULL)
+			exit(1);
+		if (pipe(pipearray[i]) == -1)
+			exit(1);
+		i++;
+	}
+	p->pipes = pipearray;
+}
+
+void	ft_comands(t_test *tst, char *line)
 {
 	int		i;
-	char	**aux;
-	t_shell	*pcs;
+	t_shell	pcs;
 
 	if (!ft_check_sintax(tst, line))
 	{
 		free(line);
 		return ;
 	}
+	ft_bzero(&pcs, sizeof(t_shell));
 	tst->cmd = ft_split_cmd(line, ';');
 	i = -1;
 	while (tst->cmd[++i])
 	{
-		aux = ft_split_cmd(tst->cmd[i], '|');
-		if (!(pcs = ft_calloc(ft_len_tab(aux), sizeof(t_shell))))
-			return ;
-		pcs->ret = EXIT_SUCCESS;
-		pcs->n_pipe = ft_len_tab(aux);
-		pcs->pipesplit = aux;
-		ft_loop_pipes(pcs, tst);
-		ft_free_tab(aux);
-		free(pcs);
+		pcs.pipesplit = ft_split_cmd(tst->cmd[i], '|');
+		pcs.ret = EXIT_SUCCESS;
+		pcs.n_pipe = ft_len_tab(pcs.pipesplit);
+		ft_loop_pipes(&pcs);
+		ft_free_tab(pcs.pipesplit);
 	}
 	ft_free_tab(tst->cmd);
 	free(line);
 }
 
-static void		ft_loop_pipes_aux(t_shell *pcs, t_test *tst, int j)
+void	ft_loop_pipes(t_shell *pcs)
 {
-	tst->bool = 0;
-	if ((!ft_ck_rd_envp(pcs, tst, "exit") ||
-		!ft_strcmp(pcs->cmp[0], "exit")) && (tst->bool = 1))
-		ft_arg_exit(tst, pcs, j);
-	else if ((!ft_ck_rd_envp(pcs, tst, "cd") ||
-			!ft_strcmp(pcs->cmp[0], "cd") ||
-			!ft_strcmp(pcs->cmp[0], "~") ||
-			!ft_strcmp(pcs->cmp[0], "$HOME") ||
-			!ft_strcmp(pcs->cmp[0], "$PWD") ||
-			!ft_strcmp(pcs->cmp[0], "$PATH")) && (tst->bool = 1))
-		ft_arg_cd(pcs, tst, j);
-	else if (!ft_strcmp(pcs->cmp[0], "export") &&
-			(tst->bool = 1) && !pcs->bool_redir)
-		ft_arg_export(tst, pcs, j);
-	else if ((!ft_ck_rd_envp(pcs, tst, "unset") ||
-			!ft_strcmp(pcs->cmp[0], "unset")) && (tst->bool = 1))
-		ft_arg_unset(pcs, tst, j);
-	ft_check_pipes(pcs, tst, j);
-}
+	int		n;
 
-void			ft_loop_pipes(t_shell *pcs, t_test *tst)
-{
-	int		j;
-	char	*tmp;
-
-	j = -1;
-	while (pcs->pipesplit[++j])
-	{
-		tmp = ft_strtrim(pcs->pipesplit[j], " \t");
-		free(pcs->pipesplit[j]);
-		pcs->pipesplit[j] = tmp;
-		tst->ckqu = ft_realloc_str(tst, pcs->pipesplit[j], -1, 13);
-		if (ft_strlen(pcs->pipesplit[j]) == 0 || !tst->ckqu)
-		{
-			if (!tst->ckqu)
-				ft_putendl_fd("multilines are not allowed!!", 1);
-			free(tst->ckqu);
-			break ;
-		}
-		pcs->cmp = ft_split(pcs->pipesplit[j], ' ');
-		pcs->args = ft_len_tab(pcs->cmp);
-		ft_check_redir(tst, pcs, j, 0);
-		ft_loop_pipes_aux(pcs, tst, j);
-		ft_free_tab(pcs->cmp);
-		free(tst->ckqu);
-	}
+	n = 0;
+	ft_build_pipes(pcs);
+	ft_pipelize(n, pcs);
+	ft_wait_pcs(pcs);
 }

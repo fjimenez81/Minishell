@@ -6,17 +6,19 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:23:10 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/22 10:40:44 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/02/08 21:08:00 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_print_error(char *error)
+void		ft_print_error(char *error, char *path, char *s)
 {
-	ft_putstr_fd("\033[1;31m[Minishell]: ", 1);
-	ft_putstr_fd(error, 1);
-	ft_putendl_fd(": command not found", 1);
+	ft_putstr_fd("\033[1;31m[Minishell]: ", 2);
+	if (path)
+		ft_putstr_fd(path, 2);
+	ft_putstr_fd(error, 2);
+	ft_putendl_fd(s, 2);
 }
 
 static char	**ft_path_split(void)
@@ -26,13 +28,13 @@ static char	**ft_path_split(void)
 	i = -1;
 	while (g_envp[++i])
 	{
-		if (ft_strstr(g_envp[i], "PATH="))
-			return (ft_split(ft_strrchr(g_envp[i], '=') + 1, ':'));
+		if (!ft_strncmp(g_envp[i], "PATH=", 5))
+			return (ft_split(ft_first_ap(g_envp[i], '=') + 1, ':'));
 	}
 	return (NULL);
 }
 
-static void	ft_exe_cmd(t_shell *pcs, t_test *tst, int i, char **aux)
+static void	ft_exe_cmd(t_shell *p, char **aux)
 {
 	char	*join;
 	char	**tmp;
@@ -44,56 +46,50 @@ static void	ft_exe_cmd(t_shell *pcs, t_test *tst, int i, char **aux)
 	tmp = ft_add_str(aux);
 	while (exe == -1 && ++j < ft_len_tab(tmp))
 	{
-		join = ft_strjoin(tmp[j], pcs->cmp[0]);
-		exe = execve(join, pcs->cmp, g_envp);
+		join = ft_strjoin(tmp[j], p->cmp[0]);
+		exe = execve(join, p->cmp, g_envp);
 		free(join);
 		if (j == ft_len_tab(tmp) - 1 && exe == -1)
 		{
-			dup2(pcs->std_out, 1);
-			ft_err_exit(pcs, tst, i);
+			ft_err_exit(p);
+			ft_free_tab(p->cmp);
 		}
 	}
 	ft_free_tab(tmp);
 }
 
-void		ft_not_path(t_shell *pcs, t_test *tst, int i, char **aux)
+static void	ft_point_exe(t_shell *p)
 {
-	int exe;
-
-	exe = -1;
-	if (aux == NULL)
+	if (!ft_strcmp(p->cmp[0], ".") && !p->cmp[1])
 	{
-		exe = execve(pcs->cmp[0], pcs->cmp, g_envp);
-		if (exe == -1)
-		{
-			dup2(pcs->std_out, 1);
-			ft_err_exit(pcs, tst, i);
-			free(tst->sub);
-			ft_free_all(tst, pcs);
-			exit(127);
-		}
+		ft_print_error(".", NULL, " filename argument required");
+		ft_putendl_fd(".: usage: . filename [arguments]", 2);
+		exit (2);
+	}
+	else if (!ft_strcmp(p->cmp[0], ".") && p->cmp[1])
+	{
+		ft_print_error(p->cmp[1], NULL, ": No such file or directory");
+		exit (1);
 	}
 }
 
-int			ft_arg_exe(t_shell *pcs, t_test *tst, int i)
+void		ft_arg_exe(t_shell *p)
 {
 	char	**aux;
-	int		len;
+	int		exe;
 
-	if (pcs->pipesplit[i][0] == '>' || pcs->pipesplit[i][0] == '<')
-		return (0);
-	len = ft_strlen(pcs->cmp[0]) - 1;
-	tst->sub = ft_realloc_str(tst, pcs->pipesplit[i], -1, 0);
-	ft_free_tab(pcs->cmp);
-	if (((pcs->pipesplit[i][0] == 34 || pcs->pipesplit[i][0] == 39 ||
-		pcs->pipesplit[i][0] == 92) && pcs->args > 1) ||
-		pcs->pipesplit[i][len] == 92)
-		pcs->cmp = ft_split_cmd(pcs->pipesplit[i], ' ');
-	else
-		pcs->cmp = ft_split_cmd(tst->sub, ' ');
+	ft_point_exe(p);
 	aux = ft_path_split();
-	ft_not_path(pcs, tst, i, aux);
-	ft_exe_cmd(pcs, tst, i, aux);
-	free(tst->sub);
-	return (127);
+	exe = -1;
+	if (aux == NULL)
+	{
+		exe = execve(p->cmp[0], p->cmp, g_envp);
+		if (exe == -1)
+		{
+			ft_err_exit(p);
+			ft_free_tab(p->cmp);
+			exit(127);
+		}
+	}
+	ft_exe_cmd(p, aux);
 }

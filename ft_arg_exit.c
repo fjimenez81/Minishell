@@ -6,61 +6,42 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/09 11:59:17 by fjimenez          #+#    #+#             */
-/*   Updated: 2021/01/23 16:12:57 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/02/08 11:40:10 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_print_exit_two(t_test *t, t_shell *pcs, int j, int bool)
-{
-	if (pcs->args > 2 && !bool)
-	{
-		ft_putstr_fd("\033[1;31m[Minishell]: exit", 1);
-		ft_putendl_fd(": too many arguments", 1);
-		if (j == pcs->n_pipe - 1)
-		{
-			free(t->aux);
-			ft_free_all(t, pcs);
-			exit(1);
-		}
-	}
-}
-
-static void	ft_print_exit(t_test *t, t_shell *pcs, int j, int bool)
+static void	ft_print_exit(t_test *t, t_shell *pcs, int bool)
 {
 	int out;
 
 	out = ft_atoi(pcs->cmp[1]);
-	ft_print_exit_two(t, pcs, j, bool);
+	if (pcs->args > 2 && !bool)
+	{
+		ft_print_error(NULL, "exit: ", "too many arguments");
+		free(t->aux);
+		t->bool = 1;
+		return ;
+	}
 	if (bool == 1)
 	{
-		ft_putstr_fd("\033[1;31m[Minishell]: exit: ", 1);
-		ft_putstr_fd(pcs->cmp[1], 1);
-		ft_putendl_fd(": numeric argument required", 1);
-		if (j == pcs->n_pipe - 1)
-		{
-			free(t->aux);
-			ft_free_all(t, pcs);
-			exit(-1);
-		}
-	}
-	else if (j == pcs->n_pipe - 1)
-	{
+		ft_print_error(pcs->cmp[1], "exit: ", ": numeric argument required");
 		free(t->aux);
-		ft_free_all(t, pcs);
-		exit(out);
+		exit(-1);
 	}
+	free(t->aux);
+	exit(out);
 }
 
-static void	ft_exit_aux(t_test *t, t_shell *pcs, int j)
+static void	ft_exit_aux(t_test *t, t_shell *pcs)
 {
 	int i;
 	int bool;
 
 	i = -1;
 	bool = 0;
-	t->aux = ft_realloc_str(t, pcs->pipesplit[j], -1, 0);
+	t->aux = ft_realloc_str(pcs->pipesplit[pcs->n], -1, 0);
 	ft_free_tab(pcs->cmp);
 	pcs->cmp = ft_split_cmd(t->aux, ' ');
 	while (pcs->cmp[1][++i])
@@ -70,46 +51,26 @@ static void	ft_exit_aux(t_test *t, t_shell *pcs, int j)
 		if (!ft_isdigit(pcs->cmp[1][i]))
 			bool = 1;
 	}
-	ft_print_exit(t, pcs, j, bool);
+	ft_print_exit(t, pcs, bool);
 }
 
-static void	ft_exit_aux_two(t_test *t, t_shell *pcs, int i)
+void		ft_arg_exit(t_shell *pcs)
 {
-	if (g_minish && i == pcs->n_pipe - 1)
-	{
-		if (g_quit && g_minish->exit != 127)
-		{
-			ft_free_all(t, pcs);
-			exit(1);
-		}
-		else if (g_minish->exit > 129 && WEXITSTATUS(g_minish->status) != 127)
-		{
-			ft_free_all(t, pcs);
-			exit(g_minish->exit);
-		}
-		else
-		{
-			ft_free_all(t, pcs);
-			exit(WEXITSTATUS(g_minish->status));
-		}
-	}
-	if (i == pcs->n_pipe - 1)
-	{
-		ft_free_all(t, pcs);
-		exit(0);
-	}
-}
+	t_test t;
 
-void		ft_arg_exit(t_test *t, t_shell *pcs, int i)
-{
-	if (!ft_strcmp(pcs->cmp[0], "exit"))
-		ft_check_redir(t, pcs, i, 1);
-	if (i == pcs->n_pipe - 1)
-		ft_putendl_fd("\033[1;31mexit", 1);
+	t.bool = 0;
 	if (pcs->args > 1)
 	{
 		if (pcs->cmp[1][0] != '<' && pcs->cmp[1][0] != '>')
-			ft_exit_aux(t, pcs, i);
+		{
+			ft_putendl_fd("\033[1;31mexit", 1);
+			ft_exit_aux(&t, pcs);
+		}
 	}
-	ft_exit_aux_two(t, pcs, i);
+	if (!t.bool && pcs->n_pipe == 1)
+	{
+		ft_putendl_fd("\033[1;31mexit", 1);
+		//system("leaks minishell");
+		exit(g_status);
+	}
 }
